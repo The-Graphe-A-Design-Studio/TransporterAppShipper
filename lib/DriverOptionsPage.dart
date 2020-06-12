@@ -13,7 +13,7 @@ class DriverOptionsPage extends StatefulWidget {
   _DriverOptionsPageState createState() => _DriverOptionsPageState();
 }
 
-enum WidgetMarker { options, credentials, documents }
+enum WidgetMarker { options, credentials, documents, otpVerification, signIn }
 
 class _DriverOptionsPageState extends State<DriverOptionsPage> {
   WidgetMarker selectedWidgetMarker = WidgetMarker.options;
@@ -22,15 +22,20 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final nameController = TextEditingController();
   final mobileNumberController = TextEditingController();
+  final mobileNumberControllerSignIn = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final passwordControllerSignIn = TextEditingController();
+  final otpController = TextEditingController();
   final confirmPasswordController = TextEditingController();
-  File rcFile, licenceFile;
+  File rcFile, licenceFile, insuranceFile, roadTaxFile, rtoPassingFile;
 
   final FocusNode _name = FocusNode();
   final FocusNode _mobileNumber = FocusNode();
+  final FocusNode _mobileNumberSignIn = FocusNode();
   final FocusNode _email = FocusNode();
   final FocusNode _password = FocusNode();
+  final FocusNode _passwordSignIn = FocusNode();
   final FocusNode _confirmPassword = FocusNode();
 
   @override
@@ -42,9 +47,12 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
   void dispose() {
     nameController.dispose();
     mobileNumberController.dispose();
+    mobileNumberControllerSignIn.dispose();
     emailController.dispose();
     passwordController.dispose();
+    passwordControllerSignIn.dispose();
     confirmPasswordController.dispose();
+    otpController.dispose();
     super.dispose();
   }
 
@@ -134,7 +142,11 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
           color: Colors.transparent,
           child: InkWell(
             splashColor: Colors.transparent,
-            onTap: () => print("Sign In"),
+            onTap: () {
+              setState(() {
+                selectedWidgetMarker = WidgetMarker.signIn;
+              });
+            },
             child: Container(
               width: MediaQuery.of(context).size.width * 0.7,
               height: 50.0,
@@ -339,7 +351,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                 textInputAction: TextInputAction.done,
                 focusNode: _confirmPassword,
                 decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.timer),
+                  prefixIcon: Icon(Icons.vpn_key),
                   hintText: "Confirm Password",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5.0),
@@ -401,6 +413,18 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
 
   Future<void> getLicenceFile() async {
     licenceFile = await FilePicker.getFile();
+  }
+
+  Future<void> getInsuranceFile() async {
+    insuranceFile = await FilePicker.getFile();
+  }
+
+  Future<void> getRoadTaxFile() async {
+    roadTaxFile = await FilePicker.getFile();
+  }
+
+  Future<void> getRtoPassingFile() async {
+    rtoPassingFile = await FilePicker.getFile();
   }
 
   Widget getDocumentsBottomSheetWidget(
@@ -467,7 +491,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                 readOnly: true,
                 onTap: () => getRcFile(),
                 decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.picture_as_pdf),
+                  prefixIcon: Icon(Icons.description),
                   suffixIcon: Icon(
                     Icons.add_box,
                     size: 35.0,
@@ -498,81 +522,52 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                 height: 16.0,
               ),
               TextFormField(
-                controller: emailController,
-                keyboardType: TextInputType.number,
-                textInputAction: TextInputAction.next,
-                focusNode: _email,
-                onFieldSubmitted: (term) {
-                  _email.unfocus();
-                  FocusScope.of(context).requestFocus(_password);
-                },
+                readOnly: true,
+                onTap: () => getInsuranceFile(),
                 decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.mail),
-                  hintText: "Email",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: BorderSide(
-                      color: Colors.amber,
-                      style: BorderStyle.solid,
-                    ),
+                  prefixIcon: Icon(Icons.description),
+                  suffixIcon: Icon(
+                    Icons.add_box,
+                    size: 35.0,
+                    color: Colors.black,
                   ),
-                ),
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return "This Field is Required";
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              TextFormField(
-                controller: passwordController,
-                keyboardType: TextInputType.visiblePassword,
-                textInputAction: TextInputAction.next,
-                focusNode: _password,
-                onFieldSubmitted: (term) {
-                  _password.unfocus();
-                  FocusScope.of(context).requestFocus(_confirmPassword);
-                },
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.vpn_key),
-                  hintText: "Password",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: BorderSide(
-                      color: Colors.amber,
-                      style: BorderStyle.solid,
-                    ),
-                  ),
+                  border: InputBorder.none,
+                  hintText: "Upload Insurance",
                 ),
               ),
               SizedBox(
                 height: 16.0,
               ),
               TextFormField(
-                controller: confirmPasswordController,
-                keyboardType: TextInputType.visiblePassword,
-                textInputAction: TextInputAction.done,
-                focusNode: _confirmPassword,
+                readOnly: true,
+                onTap: () => getRoadTaxFile(),
                 decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.timer),
-                  hintText: "Confirm Password",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: BorderSide(
-                      color: Colors.amber,
-                      style: BorderStyle.solid,
-                    ),
+                  prefixIcon: Icon(Icons.description),
+                  suffixIcon: Icon(
+                    Icons.add_box,
+                    size: 35.0,
+                    color: Colors.black,
                   ),
+                  border: InputBorder.none,
+                  hintText: "Upload Road Tax Certificate",
                 ),
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return "This Field is Required";
-                  }
-                  return null;
-                },
+              ),
+              SizedBox(
+                height: 16.0,
+              ),
+              TextFormField(
+                readOnly: true,
+                onTap: () => getRtoPassingFile(),
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.description),
+                  suffixIcon: Icon(
+                    Icons.add_box,
+                    size: 35.0,
+                    color: Colors.black,
+                  ),
+                  border: InputBorder.none,
+                  hintText: "Upload RTO Passing",
+                ),
               ),
               SizedBox(
                 height: 16.0,
@@ -583,7 +578,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                   splashColor: Colors.transparent,
                   onTap: () {
                     setState(() {
-                      selectedWidgetMarker = WidgetMarker.documents;
+                      selectedWidgetMarker = WidgetMarker.otpVerification;
                     });
                   },
                   child: Container(
@@ -600,6 +595,286 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                     ),
                     decoration: BoxDecoration(
                       color: Colors.black,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(width: 2.0, color: Colors.black),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ]);
+  }
+
+  Widget getOtpVerificationBottomSheetWidget(
+      context, ScrollController scrollController) {
+    return ListView(controller: scrollController, children: <Widget>[
+      SingleChildScrollView(
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            selectedWidgetMarker = WidgetMarker.documents;
+                          });
+                        },
+                        child: CircleAvatar(
+                          backgroundColor: Colors.transparent,
+                          child: Icon(
+                            Icons.arrow_back_ios,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Spacer(),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            selectedWidgetMarker = WidgetMarker.options;
+                          });
+                        },
+                        child: Text(
+                          "Skip",
+                          style: TextStyle(
+                              color: Colors.black12,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 26.0),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 10.0,
+                  ),
+                ],
+              ),
+              Align(
+                alignment: Alignment.center,
+                child: Image(
+                  image: AssetImage('assets/images/logo_black.png'),
+                  height: 145.0,
+                  width: 145.0,
+                ),
+              ),
+              SizedBox(
+                height: 20.0,
+              ),
+              TextFormField(
+                controller: otpController,
+                keyboardType: TextInputType.phone,
+                textCapitalization: TextCapitalization.words,
+                textInputAction: TextInputAction.next,
+                focusNode: _name,
+                onFieldSubmitted: (term) {
+                  _name.unfocus();
+                  FocusScope.of(context).requestFocus(_mobileNumber);
+                },
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.dialpad),
+                  hintText: "Enter OTP",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                    borderSide: BorderSide(
+                      color: Colors.amber,
+                      style: BorderStyle.solid,
+                    ),
+                  ),
+                ),
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return "This Field is Required";
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(
+                height: 40.0,
+              ),
+              Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  splashColor: Colors.transparent,
+                  onTap: ()=> print("OTP Verification"),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: 50.0,
+                    child: Center(
+                      child: Text(
+                        "Verify OTP",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 24.0,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(width: 2.0, color: Colors.black),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ]);
+  }
+
+  Widget getSignInBottomSheetWidget(
+      context, ScrollController scrollController) {
+    return ListView(controller: scrollController, children: <Widget>[
+      SingleChildScrollView(
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            selectedWidgetMarker = WidgetMarker.options;
+                          });
+                        },
+                        child: CircleAvatar(
+                          backgroundColor: Colors.transparent,
+                          child: Icon(
+                            Icons.arrow_back_ios,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Spacer(),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            selectedWidgetMarker = WidgetMarker.options;
+                          });
+                        },
+                        child: Text(
+                          "Skip",
+                          style: TextStyle(
+                              color: Colors.black12,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 26.0),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 10.0,
+                  ),
+                ],
+              ),
+              Align(
+                alignment: Alignment.center,
+                child: Image(
+                  image: AssetImage('assets/images/logo_black.png'),
+                  height: 145.0,
+                  width: 145.0,
+                ),
+              ),
+              SizedBox(
+                height: 20.0,
+              ),
+              TextFormField(
+                controller: mobileNumberControllerSignIn,
+                keyboardType: TextInputType.number,
+                textInputAction: TextInputAction.next,
+                focusNode: _mobileNumberSignIn,
+                onFieldSubmitted: (term) {
+                  _mobileNumberSignIn.unfocus();
+                  FocusScope.of(context).requestFocus(_passwordSignIn);
+                },
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.dialpad),
+                  hintText: "Mobile Number",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                    borderSide: BorderSide(
+                      color: Colors.amber,
+                      style: BorderStyle.solid,
+                    ),
+                  ),
+                ),
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return "This Field is Required";
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(
+                height: 16.0,
+              ),
+              TextFormField(
+                controller: passwordControllerSignIn,
+                keyboardType: TextInputType.visiblePassword,
+                textInputAction: TextInputAction.done,
+                focusNode: _passwordSignIn,
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.vpn_key),
+                  hintText: "Password",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                    borderSide: BorderSide(
+                      color: Colors.amber,
+                      style: BorderStyle.solid,
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 16.0,
+              ),
+              Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  splashColor: Colors.transparent,
+                  onTap: () => print("Sign In Successful"),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: 50.0,
+                    child: Center(
+                      child: Text(
+                        "Sign In",
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 24.0,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(width: 2.0, color: Colors.black),
                     ),
@@ -672,6 +947,46 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
     );
   }
 
+  Widget getOtpVerificationWidget(context) {
+    return Center(
+      child: Column(
+        children: <Widget>[
+          SizedBox(
+            height: MediaQuery.of(context).size.width * 0.3,
+          ),
+          Text(
+            "OTP Verification",
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: 40.0,
+                fontWeight: FontWeight.bold),
+          ),
+          Spacer(),
+        ],
+      ),
+    );
+  }
+
+  Widget getSignInWidget(context) {
+    return Center(
+      child: Column(
+        children: <Widget>[
+          SizedBox(
+            height: MediaQuery.of(context).size.width * 0.3,
+          ),
+          Text(
+            "Welcome Back!",
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: 40.0,
+                fontWeight: FontWeight.bold),
+          ),
+          Spacer(),
+        ],
+      ),
+    );
+  }
+
   Widget getCustomWidget(context) {
     switch (selectedWidgetMarker) {
       case WidgetMarker.options:
@@ -680,6 +995,10 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
         return getCredentialsWidget(context);
       case WidgetMarker.documents:
         return getDocumentsWidget(context);
+      case WidgetMarker.otpVerification:
+        return getOtpVerificationWidget(context);
+      case WidgetMarker.signIn:
+        return getSignInWidget(context);
     }
     return getOptionsWidget(context);
   }
@@ -693,12 +1012,16 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
         return getCredentialsBottomSheetWidget(context, scrollController);
       case WidgetMarker.documents:
         return getDocumentsBottomSheetWidget(context, scrollController);
+      case WidgetMarker.otpVerification:
+        return getOtpVerificationBottomSheetWidget(context, scrollController);
+      case WidgetMarker.signIn:
+        return getSignInBottomSheetWidget(context, scrollController);
     }
     return getOptionsBottomSheetWidget(context, scrollController);
   }
 
   Future<bool> onBackPressed() {
-    switch(selectedWidgetMarker) {
+    switch (selectedWidgetMarker) {
       case WidgetMarker.options:
         return Future.value(true);
       case WidgetMarker.credentials:
@@ -711,7 +1034,18 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
           selectedWidgetMarker = WidgetMarker.credentials;
         });
         return Future.value(false);
+      case WidgetMarker.otpVerification:
+        setState(() {
+          selectedWidgetMarker = WidgetMarker.documents;
+        });
+        return Future.value(false);
+      case WidgetMarker.signIn:
+        setState(() {
+          selectedWidgetMarker = WidgetMarker.options;
+        });
+        return Future.value(false);
     }
+    return Future.value(true);
   }
 
   @override
