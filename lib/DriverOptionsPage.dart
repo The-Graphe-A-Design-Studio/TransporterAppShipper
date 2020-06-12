@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -22,6 +25,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
+  File rcFile, licenceFile;
 
   final FocusNode _name = FocusNode();
   final FocusNode _mobileNumber = FocusNode();
@@ -397,6 +401,15 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
     ]);
   }
 
+  Future<void> getRcFile() async {
+    rcFile = await FilePicker.getFile();
+  }
+
+  Future<void> getLicenceFile() async {
+    licenceFile = await FilePicker.getFile();
+  }
+
+
   Widget getDocumentsBottomSheetWidget(
       context, ScrollController scrollController) {
     return ListView(controller: scrollController, children: <Widget>[
@@ -463,6 +476,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
               ),
               TextFormField(
                 readOnly: true,
+                onTap: ()=> getRcFile(),
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.picture_as_pdf),
                   suffixIcon: Icon(
@@ -479,6 +493,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
               ),
               TextFormField(
                 readOnly: true,
+                onTap: ()=> getLicenceFile(),
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.description),
                   suffixIcon: Icon(
@@ -614,7 +629,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
       child: Column(
         children: <Widget>[
           SizedBox(
-            height: 100.0,
+            height: MediaQuery.of(context).size.width * 0.3,
           ),
           Text(
             "Hi, User",

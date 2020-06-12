@@ -13,6 +13,7 @@ class MyApp extends StatelessWidget {
       title: 'Transportation App',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        primaryColor: Colors.black,
         canvasColor: Colors.transparent,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
