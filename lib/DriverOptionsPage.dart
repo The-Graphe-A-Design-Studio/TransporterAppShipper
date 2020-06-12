@@ -105,7 +105,6 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
             onTap: () {
               setState(() {
                 selectedWidgetMarker = WidgetMarker.credentials;
-                selectedBottomSheetWidgetMarker = WidgetMarker.credentials;
               });
             },
             child: Container(
@@ -178,8 +177,6 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                         onTap: () {
                           setState(() {
                             selectedWidgetMarker = WidgetMarker.options;
-                            selectedBottomSheetWidgetMarker =
-                                WidgetMarker.options;
                           });
                         },
                         child: CircleAvatar(
@@ -201,8 +198,6 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                         onTap: () {
                           setState(() {
                             selectedWidgetMarker = WidgetMarker.options;
-                            selectedBottomSheetWidgetMarker =
-                                WidgetMarker.options;
                           });
                         },
                         child: Text(
@@ -265,7 +260,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                 },
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.dialpad),
-                  hintText: "Policy Number",
+                  hintText: "Mobile Number",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5.0),
                     borderSide: BorderSide(
@@ -371,7 +366,6 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                   onTap: () {
                     setState(() {
                       selectedWidgetMarker = WidgetMarker.documents;
-                      selectedBottomSheetWidgetMarker = WidgetMarker.documents;
                     });
                   },
                   child: Container(
@@ -409,7 +403,6 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
     licenceFile = await FilePicker.getFile();
   }
 
-
   Widget getDocumentsBottomSheetWidget(
       context, ScrollController scrollController) {
     return ListView(controller: scrollController, children: <Widget>[
@@ -429,8 +422,6 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                         onTap: () {
                           setState(() {
                             selectedWidgetMarker = WidgetMarker.credentials;
-                            selectedBottomSheetWidgetMarker =
-                                WidgetMarker.credentials;
                           });
                         },
                         child: CircleAvatar(
@@ -452,8 +443,6 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                         onTap: () {
                           setState(() {
                             selectedWidgetMarker = WidgetMarker.options;
-                            selectedBottomSheetWidgetMarker =
-                                WidgetMarker.options;
                           });
                         },
                         child: Text(
@@ -476,7 +465,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
               ),
               TextFormField(
                 readOnly: true,
-                onTap: ()=> getRcFile(),
+                onTap: () => getRcFile(),
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.picture_as_pdf),
                   suffixIcon: Icon(
@@ -493,7 +482,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
               ),
               TextFormField(
                 readOnly: true,
-                onTap: ()=> getLicenceFile(),
+                onTap: () => getLicenceFile(),
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.description),
                   suffixIcon: Icon(
@@ -697,7 +686,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
 
   Widget getCustomBottomSheetWidget(
       context, ScrollController scrollController) {
-    switch (selectedBottomSheetWidgetMarker) {
+    switch (selectedWidgetMarker) {
       case WidgetMarker.options:
         return getOptionsBottomSheetWidget(context, scrollController);
       case WidgetMarker.credentials:
@@ -708,9 +697,28 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
     return getOptionsBottomSheetWidget(context, scrollController);
   }
 
+  Future<bool> onBackPressed() {
+    switch(selectedWidgetMarker) {
+      case WidgetMarker.options:
+        return Future.value(true);
+      case WidgetMarker.credentials:
+        setState(() {
+          selectedWidgetMarker = WidgetMarker.options;
+        });
+        return Future.value(false);
+      case WidgetMarker.documents:
+        setState(() {
+          selectedWidgetMarker = WidgetMarker.credentials;
+        });
+        return Future.value(false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return WillPopScope(
+      onWillPop: onBackPressed,
+      child: Scaffold(
         backgroundColor: Colors.black,
         body: Stack(children: <Widget>[
           getCustomWidget(context),
@@ -735,6 +743,8 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                       )));
             },
           ),
-        ]));
+        ]),
+      ),
+    );
   }
 }
