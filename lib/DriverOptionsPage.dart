@@ -585,7 +585,6 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                 readOnly: true,
                 onTap: () => getRcFile(),
                 decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.description),
                   suffixIcon: Icon(
                     rcDone ? Icons.check_box : Icons.add_box,
                     size: 35.0,
@@ -602,7 +601,6 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                 readOnly: true,
                 onTap: () => getLicenceFile(),
                 decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.description),
                   suffixIcon: Icon(
                     licenceDone ? Icons.check_box : Icons.add_box,
                     size: 35.0,
@@ -619,7 +617,6 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                 readOnly: true,
                 onTap: () => getInsuranceFile(),
                 decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.description),
                   suffixIcon: Icon(
                     insuranceDone ? Icons.check_box : Icons.add_box,
                     size: 35.0,
@@ -636,7 +633,6 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                 readOnly: true,
                 onTap: () => getRoadTaxFile(),
                 decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.description),
                   suffixIcon: Icon(
                     roadTaxDone ? Icons.check_box : Icons.add_box,
                     size: 35.0,
@@ -653,7 +649,6 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                 readOnly: true,
                 onTap: () => getRtoPassingFile(),
                 decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.description),
                   suffixIcon: Icon(
                     rtoPassingDone ? Icons.check_box : Icons.add_box,
                     size: 35.0,

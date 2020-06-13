@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:transportationapp/DriverOptionsPage.dart';
 import 'package:transportationapp/FadeTransition.dart';
-import 'package:transportationapp/TransporterOptions.dart';
+import 'package:transportationapp/TransporterOptionsPage.dart';
 
 class IntroPage extends StatefulWidget {
   IntroPage({Key key, this.title}) : super(key: key);
@@ -14,14 +14,6 @@ class IntroPage extends StatefulWidget {
 }
 
 class _IntroPageState extends State<IntroPage> {
-  _transporterOptionForm(context) {
-    showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        builder: (BuildContext context) {
-          return TransporterOptions();
-        });
-  }
 
   @override
   void initState() {
@@ -73,7 +65,8 @@ class _IntroPageState extends State<IntroPage> {
                             height: MediaQuery.of(context).size.width * 0.35,
                           ),
                           GestureDetector(
-                            onTap: () => _transporterOptionForm(context),
+                            onTap: () => Navigator.push(
+                                context, FadeRoute(page: TransporterOptionsPage())),
                             child: Container(
                                 decoration: BoxDecoration(
                                   color: Colors.white,
