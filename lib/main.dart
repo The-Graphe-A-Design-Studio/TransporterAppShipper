@@ -15,6 +15,8 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         primaryColor: Colors.black,
         canvasColor: Colors.transparent,
+        accentColor: Colors.black12,
+        accentColorBrightness: Brightness.light,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: IntroPage(title: 'Transportation App'),

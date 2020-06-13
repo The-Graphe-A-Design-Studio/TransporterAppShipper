@@ -19,7 +19,10 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
   WidgetMarker selectedWidgetMarker = WidgetMarker.options;
   WidgetMarker selectedBottomSheetWidgetMarker = WidgetMarker.options;
 
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKeyCredentials = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKeyDocuments = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKeyOtp = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKeySignIn = GlobalKey<FormState>();
   final nameController = TextEditingController();
   final mobileNumberController = TextEditingController();
   final mobileNumberControllerSignIn = TextEditingController();
@@ -28,7 +31,9 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
   final passwordControllerSignIn = TextEditingController();
   final otpController = TextEditingController();
   final confirmPasswordController = TextEditingController();
+
   File rcFile, licenceFile, insuranceFile, roadTaxFile, rtoPassingFile;
+  bool rcDone, licenceDone, insuranceDone, roadTaxDone, rtoPassingDone;
 
   final FocusNode _name = FocusNode();
   final FocusNode _mobileNumber = FocusNode();
@@ -41,6 +46,11 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
   @override
   void initState() {
     super.initState();
+    rcDone = false;
+    licenceDone = false;
+    insuranceDone = false;
+    roadTaxDone = false;
+    rtoPassingDone = false;
   }
 
   @override
@@ -54,6 +64,25 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
     confirmPasswordController.dispose();
     otpController.dispose();
     super.dispose();
+  }
+
+  void clearControllers() {
+    nameController.clear();
+    mobileNumberController.clear();
+    emailController.clear();
+    passwordController.clear();
+    confirmPasswordController.clear();
+
+    otpController.clear();
+
+    mobileNumberControllerSignIn.clear();
+    passwordControllerSignIn.clear();
+
+    rcDone = false;
+    licenceDone = false;
+    insuranceDone = false;
+    roadTaxDone = false;
+    rtoPassingDone = false;
   }
 
   Widget getOptionsBottomSheetWidget(
@@ -175,7 +204,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
     return ListView(controller: scrollController, children: <Widget>[
       SingleChildScrollView(
         child: Form(
-          key: _formKey,
+          key: _formKeyCredentials,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -188,6 +217,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                       child: InkWell(
                         onTap: () {
                           setState(() {
+                            clearControllers();
                             selectedWidgetMarker = WidgetMarker.options;
                           });
                         },
@@ -209,6 +239,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                       child: InkWell(
                         onTap: () {
                           setState(() {
+                            clearControllers();
                             selectedWidgetMarker = WidgetMarker.options;
                           });
                         },
@@ -284,6 +315,8 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                 validator: (value) {
                   if (value.isEmpty) {
                     return "This Field is Required";
+                  } else if (value.length < 10) {
+                    return "Enter Valid Mobile Number";
                   }
                   return null;
                 },
@@ -293,7 +326,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
               ),
               TextFormField(
                 controller: emailController,
-                keyboardType: TextInputType.number,
+                keyboardType: TextInputType.emailAddress,
                 textInputAction: TextInputAction.next,
                 focusNode: _email,
                 onFieldSubmitted: (term) {
@@ -322,26 +355,31 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                 height: 16.0,
               ),
               TextFormField(
-                controller: passwordController,
-                keyboardType: TextInputType.visiblePassword,
-                textInputAction: TextInputAction.next,
-                focusNode: _password,
-                onFieldSubmitted: (term) {
-                  _password.unfocus();
-                  FocusScope.of(context).requestFocus(_confirmPassword);
-                },
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.vpn_key),
-                  hintText: "Password",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: BorderSide(
-                      color: Colors.amber,
-                      style: BorderStyle.solid,
+                  controller: passwordController,
+                  keyboardType: TextInputType.visiblePassword,
+                  textInputAction: TextInputAction.next,
+                  focusNode: _password,
+                  onFieldSubmitted: (term) {
+                    _password.unfocus();
+                    FocusScope.of(context).requestFocus(_confirmPassword);
+                  },
+                  decoration: InputDecoration(
+                    prefixIcon: Icon(Icons.vpn_key),
+                    hintText: "Password",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                      borderSide: BorderSide(
+                        color: Colors.amber,
+                        style: BorderStyle.solid,
+                      ),
                     ),
                   ),
-                ),
-              ),
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return "This Field is Required";
+                    }
+                    return null;
+                  }),
               SizedBox(
                 height: 16.0,
               ),
@@ -364,6 +402,9 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                 validator: (value) {
                   if (value.isEmpty) {
                     return "This Field is Required";
+                  } else if (value.toString() !=
+                      passwordController.text.toString()) {
+                    return "Passwords Don't Match";
                   }
                   return null;
                 },
@@ -376,9 +417,11 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                 child: InkWell(
                   splashColor: Colors.transparent,
                   onTap: () {
-                    setState(() {
-                      selectedWidgetMarker = WidgetMarker.documents;
-                    });
+                    if (_formKeyCredentials.currentState.validate()) {
+                      setState(() {
+                        selectedWidgetMarker = WidgetMarker.documents;
+                      });
+                    }
                   },
                   child: Container(
                     width: MediaQuery.of(context).size.width,
@@ -409,22 +452,47 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
 
   Future<void> getRcFile() async {
     rcFile = await FilePicker.getFile();
+    if (rcFile.existsSync()) {
+      setState(() {
+        rcDone = true;
+      });
+    }
   }
 
   Future<void> getLicenceFile() async {
     licenceFile = await FilePicker.getFile();
+    if (licenceFile.existsSync()) {
+      setState(() {
+        licenceDone = true;
+      });
+    }
   }
 
   Future<void> getInsuranceFile() async {
     insuranceFile = await FilePicker.getFile();
+    if (insuranceFile.existsSync()) {
+      setState(() {
+        insuranceDone = true;
+      });
+    }
   }
 
   Future<void> getRoadTaxFile() async {
     roadTaxFile = await FilePicker.getFile();
+    if (roadTaxFile.existsSync()) {
+      setState(() {
+        roadTaxDone = true;
+      });
+    }
   }
 
   Future<void> getRtoPassingFile() async {
     rtoPassingFile = await FilePicker.getFile();
+    if (rtoPassingFile.existsSync()) {
+      setState(() {
+        rtoPassingDone = true;
+      });
+    }
   }
 
   Widget getDocumentsBottomSheetWidget(
@@ -432,7 +500,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
     return ListView(controller: scrollController, children: <Widget>[
       SingleChildScrollView(
         child: Form(
-          key: _formKey,
+          key: _formKeyDocuments,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -466,6 +534,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                       child: InkWell(
                         onTap: () {
                           setState(() {
+                            clearControllers();
                             selectedWidgetMarker = WidgetMarker.options;
                           });
                         },
@@ -493,9 +562,9 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.description),
                   suffixIcon: Icon(
-                    Icons.add_box,
+                    rcDone ? Icons.check_box : Icons.add_box,
                     size: 35.0,
-                    color: Colors.black,
+                    color: rcDone ? Colors.green : Colors.black,
                   ),
                   border: InputBorder.none,
                   hintText: "Upload RC Book",
@@ -510,9 +579,9 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.description),
                   suffixIcon: Icon(
-                    Icons.add_box,
+                    licenceDone ? Icons.check_box : Icons.add_box,
                     size: 35.0,
-                    color: Colors.black,
+                    color: licenceDone ? Colors.green : Colors.black,
                   ),
                   border: InputBorder.none,
                   hintText: "Upload Driver's License",
@@ -527,9 +596,9 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.description),
                   suffixIcon: Icon(
-                    Icons.add_box,
+                    insuranceDone ? Icons.check_box : Icons.add_box,
                     size: 35.0,
-                    color: Colors.black,
+                    color: insuranceDone ? Colors.green : Colors.black,
                   ),
                   border: InputBorder.none,
                   hintText: "Upload Insurance",
@@ -544,9 +613,9 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.description),
                   suffixIcon: Icon(
-                    Icons.add_box,
+                    roadTaxDone ? Icons.check_box : Icons.add_box,
                     size: 35.0,
-                    color: Colors.black,
+                    color: roadTaxDone ? Colors.green : Colors.black,
                   ),
                   border: InputBorder.none,
                   hintText: "Upload Road Tax Certificate",
@@ -561,9 +630,9 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.description),
                   suffixIcon: Icon(
-                    Icons.add_box,
+                    rtoPassingDone ? Icons.check_box : Icons.add_box,
                     size: 35.0,
-                    color: Colors.black,
+                    color: rtoPassingDone ? Colors.green : Colors.black,
                   ),
                   border: InputBorder.none,
                   hintText: "Upload RTO Passing",
@@ -577,9 +646,20 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                 child: InkWell(
                   splashColor: Colors.transparent,
                   onTap: () {
-                    setState(() {
-                      selectedWidgetMarker = WidgetMarker.otpVerification;
-                    });
+                    if (rcDone &&
+                        licenceDone &&
+                        insuranceDone &&
+                        roadTaxDone &&
+                        rtoPassingDone) {
+                      setState(() {
+                        selectedWidgetMarker = WidgetMarker.otpVerification;
+                      });
+                    } else {
+                      final snackBar = SnackBar(
+                        content: Text('Please Upload All the Documents'),
+                      );
+                      Scaffold.of(context).showSnackBar(snackBar);
+                    }
                   },
                   child: Container(
                     width: MediaQuery.of(context).size.width,
@@ -613,7 +693,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
     return ListView(controller: scrollController, children: <Widget>[
       SingleChildScrollView(
         child: Form(
-          key: _formKey,
+          key: _formKeyOtp,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -647,6 +727,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                       child: InkWell(
                         onTap: () {
                           setState(() {
+                            clearControllers();
                             selectedWidgetMarker = WidgetMarker.options;
                           });
                         },
@@ -711,7 +792,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                 color: Colors.transparent,
                 child: InkWell(
                   splashColor: Colors.transparent,
-                  onTap: ()=> print("OTP Verification"),
+                  onTap: () => print("OTP Verification"),
                   child: Container(
                     width: MediaQuery.of(context).size.width,
                     height: 50.0,
@@ -744,7 +825,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
     return ListView(controller: scrollController, children: <Widget>[
       SingleChildScrollView(
         child: Form(
-          key: _formKey,
+          key: _formKeySignIn,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -757,6 +838,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                       child: InkWell(
                         onTap: () {
                           setState(() {
+                            clearControllers();
                             selectedWidgetMarker = WidgetMarker.options;
                           });
                         },
@@ -778,6 +860,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                       child: InkWell(
                         onTap: () {
                           setState(() {
+                            clearControllers();
                             selectedWidgetMarker = WidgetMarker.options;
                           });
                         },
@@ -830,6 +913,8 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                 validator: (value) {
                   if (value.isEmpty) {
                     return "This Field is Required";
+                  } else if (value.length != 10) {
+                    return "Enter Valid Mobile Number";
                   }
                   return null;
                 },
@@ -853,6 +938,12 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                     ),
                   ),
                 ),
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return "This Field is Required";
+                  }
+                  return null;
+                },
               ),
               SizedBox(
                 height: 16.0,
@@ -861,7 +952,14 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                 color: Colors.transparent,
                 child: InkWell(
                   splashColor: Colors.transparent,
-                  onTap: () => print("Sign In Successful"),
+                  onTap: () {
+                    if (_formKeySignIn.currentState.validate()) {
+                      final snackBar = SnackBar(
+                        content: Text('Sign In Successful'),
+                      );
+                      Scaffold.of(context).showSnackBar(snackBar);
+                    }
+                  },
                   child: Container(
                     width: MediaQuery.of(context).size.width,
                     height: 50.0,
@@ -1026,6 +1124,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
         return Future.value(true);
       case WidgetMarker.credentials:
         setState(() {
+          clearControllers();
           selectedWidgetMarker = WidgetMarker.options;
         });
         return Future.value(false);
@@ -1041,6 +1140,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
         return Future.value(false);
       case WidgetMarker.signIn:
         setState(() {
+          clearControllers();
           selectedWidgetMarker = WidgetMarker.options;
         });
         return Future.value(false);
