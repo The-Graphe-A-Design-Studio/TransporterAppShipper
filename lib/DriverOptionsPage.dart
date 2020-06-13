@@ -13,7 +13,7 @@ class DriverOptionsPage extends StatefulWidget {
   _DriverOptionsPageState createState() => _DriverOptionsPageState();
 }
 
-enum WidgetMarker { options, credentials, documents, otpVerification, signIn }
+enum WidgetMarker { options, credentials, documents, otpVerification, signIn, ownerDetails }
 
 class _DriverOptionsPageState extends State<DriverOptionsPage> {
   WidgetMarker selectedWidgetMarker = WidgetMarker.options;
@@ -21,27 +21,41 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
 
   final GlobalKey<FormState> _formKeyCredentials = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKeyDocuments = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKeyOwnerDetails = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKeyOtp = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKeySignIn = GlobalKey<FormState>();
+
   final nameController = TextEditingController();
   final mobileNumberController = TextEditingController();
-  final mobileNumberControllerSignIn = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  final passwordControllerSignIn = TextEditingController();
-  final otpController = TextEditingController();
   final confirmPasswordController = TextEditingController();
+
+  final panCardNumberController = TextEditingController();
+  final bankAccountNumberController = TextEditingController();
+  final ifscCodeController = TextEditingController();
+
+  final otpController = TextEditingController();
+
+  final passwordControllerSignIn = TextEditingController();
+  final mobileNumberControllerSignIn = TextEditingController();
 
   File rcFile, licenceFile, insuranceFile, roadTaxFile, rtoPassingFile;
   bool rcDone, licenceDone, insuranceDone, roadTaxDone, rtoPassingDone;
 
   final FocusNode _name = FocusNode();
   final FocusNode _mobileNumber = FocusNode();
-  final FocusNode _mobileNumberSignIn = FocusNode();
   final FocusNode _email = FocusNode();
   final FocusNode _password = FocusNode();
-  final FocusNode _passwordSignIn = FocusNode();
   final FocusNode _confirmPassword = FocusNode();
+
+  final FocusNode _mobileNumberSignIn = FocusNode();
+  final FocusNode _passwordSignIn = FocusNode();
+
+  final FocusNode _panCardNumber = FocusNode();
+  final FocusNode _bankAccountNumber = FocusNode();
+  final FocusNode _ifscCode = FocusNode();
+
 
   @override
   void initState() {
@@ -57,12 +71,19 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
   void dispose() {
     nameController.dispose();
     mobileNumberController.dispose();
-    mobileNumberControllerSignIn.dispose();
     emailController.dispose();
     passwordController.dispose();
-    passwordControllerSignIn.dispose();
     confirmPasswordController.dispose();
+
+    panCardNumberController.dispose();
+    bankAccountNumberController.dispose();
+    ifscCodeController.dispose();
+
     otpController.dispose();
+
+    mobileNumberControllerSignIn.dispose();
+    passwordControllerSignIn.dispose();
+
     super.dispose();
   }
 
@@ -72,6 +93,10 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
     emailController.clear();
     passwordController.clear();
     confirmPasswordController.clear();
+
+    panCardNumberController.clear();
+    bankAccountNumberController.clear();
+    ifscCodeController.clear();
 
     otpController.clear();
 
@@ -652,7 +677,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                         roadTaxDone &&
                         rtoPassingDone) {
                       setState(() {
-                        selectedWidgetMarker = WidgetMarker.otpVerification;
+                        selectedWidgetMarker = WidgetMarker.ownerDetails;
                       });
                     } else {
                       final snackBar = SnackBar(
@@ -666,7 +691,194 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                     height: 50.0,
                     child: Center(
                       child: Text(
-                        "Sign Up",
+                        "Next",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 24.0,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(width: 2.0, color: Colors.black),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ]);
+  }
+
+  Widget getOwnerDetailsBottomSheetWidget(
+      context, ScrollController scrollController) {
+    return ListView(controller: scrollController, children: <Widget>[
+      SingleChildScrollView(
+        child: Form(
+          key: _formKeyOwnerDetails,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            selectedWidgetMarker = WidgetMarker.documents;
+                          });
+                        },
+                        child: CircleAvatar(
+                          backgroundColor: Colors.transparent,
+                          child: Icon(
+                            Icons.arrow_back_ios,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Spacer(),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            clearControllers();
+                            selectedWidgetMarker = WidgetMarker.options;
+                          });
+                        },
+                        child: Text(
+                          "Skip",
+                          style: TextStyle(
+                              color: Colors.black12,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 26.0),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 10.0,
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 16.0,
+              ),
+              TextFormField(
+                controller: panCardNumberController,
+                keyboardType: TextInputType.text,
+                textCapitalization: TextCapitalization.characters,
+                textInputAction: TextInputAction.next,
+                focusNode: _panCardNumber,
+                onFieldSubmitted: (term) {
+                  _panCardNumber.unfocus();
+                  FocusScope.of(context).requestFocus(_bankAccountNumber);
+                },
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.dialpad),
+                  hintText: "PAN Card Number",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                    borderSide: BorderSide(
+                      color: Colors.amber,
+                      style: BorderStyle.solid,
+                    ),
+                  ),
+                ),
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return "This Field is Required";
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(
+                height: 16.0,
+              ),
+              TextFormField(
+                controller: bankAccountNumberController,
+                keyboardType: TextInputType.number,
+                textInputAction: TextInputAction.next,
+                focusNode: _bankAccountNumber,
+                onFieldSubmitted: (term) {
+                  _bankAccountNumber.unfocus();
+                  FocusScope.of(context).requestFocus(_ifscCode);
+                },
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.credit_card),
+                  hintText: "Bank Account Number",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                    borderSide: BorderSide(
+                      color: Colors.amber,
+                      style: BorderStyle.solid,
+                    ),
+                  ),
+                ),
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return "This Field is Required";
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(
+                height: 16.0,
+              ),
+              TextFormField(
+                controller: ifscCodeController,
+                keyboardType: TextInputType.text,
+                textCapitalization: TextCapitalization.characters,
+                textInputAction: TextInputAction.done,
+                focusNode: _ifscCode,
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.code),
+                  hintText: "IFSC Code",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                    borderSide: BorderSide(
+                      color: Colors.amber,
+                      style: BorderStyle.solid,
+                    ),
+                  ),
+                ),
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return "This Field is Required";
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(
+                height: 16.0,
+              ),
+              Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  splashColor: Colors.transparent,
+                  onTap: () {
+                    if (_formKeyOwnerDetails.currentState.validate()) {
+                      setState(() {
+                        selectedWidgetMarker = WidgetMarker.otpVerification;
+                      });
+                    }
+                  },
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: 50.0,
+                    child: Center(
+                      child: Text(
+                        "Next",
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 24.0,
@@ -1010,7 +1222,14 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
       child: Column(
         children: <Widget>[
           SizedBox(
-            height: MediaQuery.of(context).size.width * 0.3,
+            height: MediaQuery.of(context).size.width * 0.3 - 20,
+          ),
+          Text(
+            "Enter",
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: 40.0,
+                fontWeight: FontWeight.bold),
           ),
           Text(
             "Credentials",
@@ -1030,10 +1249,44 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
       child: Column(
         children: <Widget>[
           SizedBox(
-            height: MediaQuery.of(context).size.width * 0.3,
+            height: MediaQuery.of(context).size.width * 0.3 - 20,
+          ),
+          Text(
+            "Upload",
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: 40.0,
+                fontWeight: FontWeight.bold),
           ),
           Text(
             "Documents",
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: 40.0,
+                fontWeight: FontWeight.bold),
+          ),
+          Spacer(),
+        ],
+      ),
+    );
+  }
+
+  Widget getOwnerDetailsWidget(context) {
+    return Center(
+      child: Column(
+        children: <Widget>[
+          SizedBox(
+            height: MediaQuery.of(context).size.width * 0.3 - 20,
+          ),
+          Text(
+            "Owner",
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: 40.0,
+                fontWeight: FontWeight.bold),
+          ),
+          Text(
+            "Details",
             style: TextStyle(
                 color: Colors.white,
                 fontSize: 40.0,
@@ -1050,10 +1303,17 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
       child: Column(
         children: <Widget>[
           SizedBox(
-            height: MediaQuery.of(context).size.width * 0.3,
+            height: MediaQuery.of(context).size.width * 0.3 - 20,
           ),
           Text(
-            "OTP Verification",
+            "OTP",
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: 40.0,
+                fontWeight: FontWeight.bold),
+          ),
+          Text(
+            "Verification",
             style: TextStyle(
                 color: Colors.white,
                 fontSize: 40.0,
@@ -1093,6 +1353,8 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
         return getCredentialsWidget(context);
       case WidgetMarker.documents:
         return getDocumentsWidget(context);
+      case WidgetMarker.ownerDetails:
+        return getOwnerDetailsWidget(context);
       case WidgetMarker.otpVerification:
         return getOtpVerificationWidget(context);
       case WidgetMarker.signIn:
@@ -1110,6 +1372,8 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
         return getCredentialsBottomSheetWidget(context, scrollController);
       case WidgetMarker.documents:
         return getDocumentsBottomSheetWidget(context, scrollController);
+      case WidgetMarker.ownerDetails:
+        return getOwnerDetailsBottomSheetWidget(context, scrollController);
       case WidgetMarker.otpVerification:
         return getOtpVerificationBottomSheetWidget(context, scrollController);
       case WidgetMarker.signIn:
@@ -1133,9 +1397,14 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
           selectedWidgetMarker = WidgetMarker.credentials;
         });
         return Future.value(false);
-      case WidgetMarker.otpVerification:
+      case WidgetMarker.ownerDetails:
         setState(() {
           selectedWidgetMarker = WidgetMarker.documents;
+        });
+        return Future.value(false);
+      case WidgetMarker.otpVerification:
+        setState(() {
+          selectedWidgetMarker = WidgetMarker.ownerDetails;
         });
         return Future.value(false);
       case WidgetMarker.signIn:
