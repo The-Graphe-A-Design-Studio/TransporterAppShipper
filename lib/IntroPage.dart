@@ -148,6 +148,20 @@ class _IntroPageState extends State<IntroPage> {
                       topRight: Radius.circular(30.0)),
                 ),
                 height: 60.0,
+                child: Padding(
+                  padding: EdgeInsets.only(top: 16.0),
+                  child: Align(
+                    alignment: Alignment.topCenter,
+                    child: Container(
+                      width: 60.0,
+                      height: 4.0,
+                      decoration: BoxDecoration(
+                        color: Colors.grey,
+                        borderRadius: BorderRadius.circular(30.0),
+                      ),
+                    ),
+                  ),
+                )
               ),
             ),
           ],

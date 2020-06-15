@@ -13,7 +13,14 @@ class DriverOptionsPage extends StatefulWidget {
   _DriverOptionsPageState createState() => _DriverOptionsPageState();
 }
 
-enum WidgetMarker { options, credentials, documents, otpVerification, signIn, ownerDetails }
+enum WidgetMarker {
+  options,
+  credentials,
+  documents,
+  otpVerification,
+  signIn,
+  ownerDetails
+}
 
 class _DriverOptionsPageState extends State<DriverOptionsPage> {
   WidgetMarker selectedWidgetMarker = WidgetMarker.options;
@@ -55,7 +62,6 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
   final FocusNode _panCardNumber = FocusNode();
   final FocusNode _bankAccountNumber = FocusNode();
   final FocusNode _ifscCode = FocusNode();
-
 
   @override
   void initState() {
@@ -1426,19 +1432,21 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
             maxChildSize: 0.9,
             builder: (BuildContext context, ScrollController scrollController) {
               return Hero(
-                  tag: 'AnimeBottom',
-                  child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(30.0),
-                            topRight: Radius.circular(30.0)),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.all(16.0),
-                        child: getCustomBottomSheetWidget(
-                            context, scrollController),
-                      )));
+                tag: 'AnimeBottom',
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(30.0),
+                        topRight: Radius.circular(30.0)),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child:
+                        getCustomBottomSheetWidget(context, scrollController),
+                  ),
+                ),
+              );
             },
           ),
         ]),

@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:transportationapp/FadeTransition.dart';
+import 'package:transportationapp/RequestTransport.dart';
 
 class TransporterOptionsPage extends StatefulWidget {
   TransporterOptionsPage({Key key, this.title}) : super(key: key);
@@ -1206,6 +1208,13 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                 color: Colors.white,
                 fontSize: 40.0,
                 fontWeight: FontWeight.bold),
+          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                  context, FadeRoute(page: RequestTransport()));
+            },
+            child: Icon(Icons.arrow_forward, size: 30, color: Colors.white,),
           ),
         ],
       ),
