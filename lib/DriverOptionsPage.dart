@@ -27,6 +27,7 @@ enum WidgetMarker {
 class _DriverOptionsPageState extends State<DriverOptionsPage> {
   WidgetMarker selectedWidgetMarker = WidgetMarker.options;
   WidgetMarker selectedBottomSheetWidgetMarker = WidgetMarker.options;
+  PostResultSignIn postResultSignIn;
 
   final GlobalKey<FormState> _formKeyCredentials = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKeyDocuments = GlobalKey<FormState>();
@@ -153,6 +154,38 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
       Scaffold.of(_context).showSnackBar(snackBar);
     });
     return postResultOne.success;
+  }
+
+  Future<bool> postSignInRequest(BuildContext _context) async {
+    var url = "https://developers.thegraphe.com/transport/api/drivers/login";
+
+    var result = await http.post(url, body: {
+      'phone_code' : '91',
+      'phone': mobileNumberControllerSignIn.text.toString(),
+      'password': passwordControllerSignIn.text.toString()
+    });
+    var jsonResult = json.decode(result.body);
+    if (jsonResult['success']=='1') {
+      postResultSignIn = PostResultSignIn.fromJson(jsonResult);
+      setState(() {
+        final snackBar = SnackBar(
+          backgroundColor: Colors.green,
+          content: Text("Welcome, ${postResultSignIn.dName}!"),
+        );
+        Scaffold.of(_context).showSnackBar(snackBar);
+      });
+      return postResultSignIn.success;
+    } else {
+      PostResultOne postResultOne = PostResultOne.fromJson(jsonResult);
+      setState(() {
+        final snackBar = SnackBar(
+          backgroundColor: Colors.red,
+          content: Text(postResultOne.message),
+        );
+        Scaffold.of(_context).showSnackBar(snackBar);
+      });
+      return postResultOne.success;
+    }
   }
 
   Future<bool> postResendOtpRequest(BuildContext _context) async {
@@ -404,34 +437,56 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
               SizedBox(
                 height: 16.0,
               ),
-              TextFormField(
-                controller: mobileNumberController,
-                keyboardType: TextInputType.number,
-                textInputAction: TextInputAction.next,
-                focusNode: _mobileNumber,
-                onFieldSubmitted: (term) {
-                  _mobileNumber.unfocus();
-                  FocusScope.of(context).requestFocus(_email);
-                },
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.dialpad),
-                  hintText: "Mobile Number",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: BorderSide(
-                      color: Colors.amber,
-                      style: BorderStyle.solid,
+              Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      readOnly: true,
+                      decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.dialpad),
+                        hintText: "+91",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5.0),
+                          borderSide: BorderSide(
+                            color: Colors.amber,
+                            style: BorderStyle.solid,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
-                ),
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return "This Field is Required";
-                  } else if (value.length < 10) {
-                    return "Enter Valid Mobile Number";
-                  }
-                  return null;
-                },
+                  SizedBox(width: 16.0),
+                  Expanded(
+                    child: TextFormField(
+                      controller: mobileNumberController,
+                      keyboardType: TextInputType.number,
+                      textInputAction: TextInputAction.next,
+                      focusNode: _mobileNumber,
+                      onFieldSubmitted: (term) {
+                        _mobileNumber.unfocus();
+                        FocusScope.of(context).requestFocus(_email);
+                      },
+                      decoration: InputDecoration(
+                        hintText: "Mobile Number",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5.0),
+                          borderSide: BorderSide(
+                            color: Colors.amber,
+                            style: BorderStyle.solid,
+                          ),
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return "This Field is Required";
+                        } else if (value.length < 10) {
+                          return "Enter Valid Mobile Number";
+                        }
+                        return null;
+                      },
+                    ),
+                  )
+                ],
               ),
               SizedBox(
                 height: 16.0,
@@ -1113,9 +1168,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                   return null;
                 },
               ),
-              SizedBox(
-                height: 16.0
-              ),
+              SizedBox(height: 16.0),
               Align(
                 alignment: Alignment.centerRight,
                 child: InkWell(
@@ -1144,7 +1197,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                     });
                     if (_formKeyOtp.currentState.validate()) {
                       postOtpVerificationRequest(context).then((value) {
-                        if (value==true) {
+                        if (value == true) {
                           print("OTP Verification Done");
                         }
                       });
@@ -1311,10 +1364,11 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                   splashColor: Colors.transparent,
                   onTap: () {
                     if (_formKeySignIn.currentState.validate()) {
-                      final snackBar = SnackBar(
-                        content: Text('Sign In Successful'),
-                      );
-                      Scaffold.of(context).showSnackBar(snackBar);
+                      postSignInRequest(context).then((value) {
+                        if (value==true) {
+                          print("Sign In Successful !");
+                        }
+                      });
                     }
                   },
                   child: Container(
