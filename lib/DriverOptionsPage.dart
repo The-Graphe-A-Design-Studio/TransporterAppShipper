@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'dart:io';
-
+import 'package:http/http.dart' as http;
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:transportationapp/PostMethodResult.dart';
 
 class DriverOptionsPage extends StatefulWidget {
   DriverOptionsPage({Key key, this.title}) : super(key: key);
@@ -35,6 +37,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
   final nameController = TextEditingController();
   final mobileNumberController = TextEditingController();
   final emailController = TextEditingController();
+  final addressController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
 
@@ -53,6 +56,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
   final FocusNode _name = FocusNode();
   final FocusNode _mobileNumber = FocusNode();
   final FocusNode _email = FocusNode();
+  final FocusNode _address = FocusNode();
   final FocusNode _password = FocusNode();
   final FocusNode _confirmPassword = FocusNode();
 
@@ -78,6 +82,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
     nameController.dispose();
     mobileNumberController.dispose();
     emailController.dispose();
+    addressController.dispose();
     passwordController.dispose();
     confirmPasswordController.dispose();
 
@@ -93,10 +98,86 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
     super.dispose();
   }
 
+  Future<bool> postSignUpRequest(BuildContext _context) async {
+    var url = "https://developers.thegraphe.com/transport/api/drivers/register";
+    var request = http.MultipartRequest('POST', Uri.parse(url));
+
+    request.fields['d_name'] = nameController.text.toString();
+    request.fields['d_email'] = emailController.text.toString();
+    request.fields['d_phone_code'] = '91';
+    request.fields['d_phone'] = mobileNumberController.text.toString();
+    request.fields['d_password'] = passwordController.text.toString();
+    request.fields['d_cnf_password'] =
+        confirmPasswordController.text.toString();
+    request.fields['d_address'] = addressController.text.toString();
+    request.files.add(await http.MultipartFile.fromPath('d_rc', rcFile.path));
+    request.files
+        .add(await http.MultipartFile.fromPath('d_license', rcFile.path));
+    request.files
+        .add(await http.MultipartFile.fromPath('d_insurance', rcFile.path));
+    request.files
+        .add(await http.MultipartFile.fromPath('d_road_tax', rcFile.path));
+    request.files.add(await http.MultipartFile.fromPath('d_rto', rcFile.path));
+    request.fields['d_pan'] = panCardNumberController.text.toString();
+    request.fields['d_bank'] = bankAccountNumberController.text.toString();
+    request.fields['d_ifsc'] = ifscCodeController.text.toString();
+
+    var result = await request.send();
+    var finalResult = await http.Response.fromStream(result);
+    PostResultOne postResultOne =
+        PostResultOne.fromJson(json.decode(finalResult.body));
+    setState(() {
+      final snackBar = SnackBar(
+        backgroundColor: postResultOne.success ? Colors.green : Colors.red,
+        content: Text(postResultOne.message),
+      );
+      Scaffold.of(_context).showSnackBar(snackBar);
+    });
+    return postResultOne.success;
+  }
+
+  Future<bool> postOtpVerificationRequest(BuildContext _context) async {
+    var url = "https://developers.thegraphe.com/transport/api/drivers/register";
+
+    var result = await http.post(url, body: {
+      'phone_number': mobileNumberController.text.toString(),
+      'otp': otpController.text.toString()
+    });
+    PostResultOne postResultOne =
+        PostResultOne.fromJson(json.decode(result.body));
+    setState(() {
+      final snackBar = SnackBar(
+        backgroundColor: postResultOne.success ? Colors.green : Colors.red,
+        content: Text(postResultOne.message),
+      );
+      Scaffold.of(_context).showSnackBar(snackBar);
+    });
+    return postResultOne.success;
+  }
+
+  Future<bool> postResendOtpRequest(BuildContext _context) async {
+    var url = "https://developers.thegraphe.com/transport/api/drivers/register";
+
+    var result = await http.post(url, body: {
+      'resend_otp': mobileNumberController.text.toString(),
+    });
+    PostResultOne postResultOne =
+        PostResultOne.fromJson(json.decode(result.body));
+    setState(() {
+      final snackBar = SnackBar(
+        backgroundColor: postResultOne.success ? Colors.green : Colors.red,
+        content: Text(postResultOne.message),
+      );
+      Scaffold.of(_context).showSnackBar(snackBar);
+    });
+    return postResultOne.success;
+  }
+
   void clearControllers() {
     nameController.clear();
     mobileNumberController.clear();
     emailController.clear();
+    addressController.clear();
     passwordController.clear();
     confirmPasswordController.clear();
 
@@ -362,11 +443,41 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                 focusNode: _email,
                 onFieldSubmitted: (term) {
                   _email.unfocus();
-                  FocusScope.of(context).requestFocus(_password);
+                  FocusScope.of(context).requestFocus(_address);
                 },
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.mail),
                   hintText: "Email",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                    borderSide: BorderSide(
+                      color: Colors.amber,
+                      style: BorderStyle.solid,
+                    ),
+                  ),
+                ),
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return "This Field is Required";
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(
+                height: 16.0,
+              ),
+              TextFormField(
+                controller: addressController,
+                keyboardType: TextInputType.text,
+                textInputAction: TextInputAction.next,
+                focusNode: _address,
+                onFieldSubmitted: (term) {
+                  _address.unfocus();
+                  FocusScope.of(context).requestFocus(_password);
+                },
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.location_on),
+                  hintText: "Your Address",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5.0),
                     borderSide: BorderSide(
@@ -869,8 +980,12 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                   splashColor: Colors.transparent,
                   onTap: () {
                     if (_formKeyOwnerDetails.currentState.validate()) {
-                      setState(() {
-                        selectedWidgetMarker = WidgetMarker.otpVerification;
+                      postSignUpRequest(context).then((value) {
+                        if (value == true) {
+                          setState(() {
+                            selectedWidgetMarker = WidgetMarker.otpVerification;
+                          });
+                        }
                       });
                     }
                   },
@@ -999,13 +1114,42 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                 },
               ),
               SizedBox(
+                height: 16.0
+              ),
+              Align(
+                alignment: Alignment.centerRight,
+                child: InkWell(
+                  onTap: () {
+                    postResendOtpRequest(context);
+                  },
+                  child: Text(
+                    "Resend OTP",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 16.0,
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
                 height: 40.0,
               ),
               Material(
                 color: Colors.transparent,
                 child: InkWell(
                   splashColor: Colors.transparent,
-                  onTap: () => print("OTP Verification"),
+                  onTap: () {
+                    setState(() {
+                      otpController.clear();
+                    });
+                    if (_formKeyOtp.currentState.validate()) {
+                      postOtpVerificationRequest(context).then((value) {
+                        if (value==true) {
+                          print("OTP Verification Done");
+                        }
+                      });
+                    }
+                  },
                   child: Container(
                     width: MediaQuery.of(context).size.width,
                     height: 50.0,
