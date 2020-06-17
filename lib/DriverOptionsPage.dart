@@ -4,6 +4,8 @@ import 'package:http/http.dart' as http;
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:transportationapp/DriverUpcomingOrder.dart';
+import 'package:transportationapp/FadeTransition.dart';
 import 'package:transportationapp/PostMethodResult.dart';
 
 class DriverOptionsPage extends StatefulWidget {
@@ -160,12 +162,12 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
     var url = "https://developers.thegraphe.com/transport/api/drivers/login";
 
     var result = await http.post(url, body: {
-      'phone_code' : '91',
+      'phone_code': '91',
       'phone': mobileNumberControllerSignIn.text.toString(),
       'password': passwordControllerSignIn.text.toString()
     });
     var jsonResult = json.decode(result.body);
-    if (jsonResult['success']=='1') {
+    if (jsonResult['success'] == '1') {
       postResultSignIn = PostResultSignIn.fromJson(jsonResult);
       setState(() {
         final snackBar = SnackBar(
@@ -1365,7 +1367,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                   onTap: () {
                     if (_formKeySignIn.currentState.validate()) {
                       postSignInRequest(context).then((value) {
-                        if (value==true) {
+                        if (value == true) {
                           print("Sign In Successful !");
                         }
                       });
@@ -1410,6 +1412,16 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                 color: Colors.white,
                 fontSize: 40.0,
                 fontWeight: FontWeight.bold),
+          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(context, FadeRoute(page: DriverUpcomingOrder()));
+            },
+            child: Icon(
+              Icons.arrow_forward,
+              size: 30,
+              color: Colors.white,
+            ),
           ),
         ],
       ),
