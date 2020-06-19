@@ -14,7 +14,6 @@ class IntroPage extends StatefulWidget {
 }
 
 class _IntroPageState extends State<IntroPage> {
-
   @override
   void initState() {
     super.initState();
@@ -23,7 +22,7 @@ class _IntroPageState extends State<IntroPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: Color(0xff252427),
         body: Column(
           children: <Widget>[
             SizedBox(
@@ -65,8 +64,8 @@ class _IntroPageState extends State<IntroPage> {
                             height: MediaQuery.of(context).size.width * 0.35,
                           ),
                           GestureDetector(
-                            onTap: () => Navigator.push(
-                                context, FadeRoute(page: TransporterOptionsPage())),
+                            onTap: () => Navigator.push(context,
+                                FadeRoute(page: TransporterOptionsPage())),
                             child: Container(
                                 decoration: BoxDecoration(
                                   color: Colors.white,
@@ -140,29 +139,28 @@ class _IntroPageState extends State<IntroPage> {
             Hero(
               tag: 'AnimeBottom',
               child: Container(
-                margin: EdgeInsets.only(bottom: 0),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(30.0),
-                      topRight: Radius.circular(30.0)),
-                ),
-                height: 60.0,
-                child: Padding(
-                  padding: EdgeInsets.only(top: 16.0),
-                  child: Align(
-                    alignment: Alignment.topCenter,
-                    child: Container(
-                      width: 60.0,
-                      height: 4.0,
-                      decoration: BoxDecoration(
-                        color: Colors.grey,
-                        borderRadius: BorderRadius.circular(30.0),
+                  margin: EdgeInsets.only(bottom: 0),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(30.0),
+                        topRight: Radius.circular(30.0)),
+                  ),
+                  height: 60.0,
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 16.0),
+                    child: Align(
+                      alignment: Alignment.topCenter,
+                      child: Container(
+                        width: 60.0,
+                        height: 4.0,
+                        decoration: BoxDecoration(
+                          color: Colors.grey,
+                          borderRadius: BorderRadius.circular(30.0),
+                        ),
                       ),
                     ),
-                  ),
-                )
-              ),
+                  )),
             ),
           ],
         ));

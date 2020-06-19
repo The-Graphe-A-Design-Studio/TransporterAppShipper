@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:transportationapp/IntroPage.dart';
 
-void main() {
-  runApp(MyApp());
-}
+void main() async => {
+  WidgetsFlutterBinding.ensureInitialized(),
+  await SystemChrome.setPreferredOrientations(
+  [DeviceOrientation.portraitUp]),
+  runApp(MyApp()),
+};
 
 class MyApp extends StatelessWidget {
 
@@ -14,7 +18,7 @@ class MyApp extends StatelessWidget {
       title: 'Transportation App',
       theme: ThemeData(
         primarySwatch: Colors.blue,
-        primaryColor: Colors.black,
+        primaryColor: Color(0xff252427),
         canvasColor: Colors.transparent,
         accentColor: Colors.black12,
         accentColorBrightness: Brightness.light,

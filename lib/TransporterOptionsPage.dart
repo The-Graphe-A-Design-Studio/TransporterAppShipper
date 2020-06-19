@@ -4,12 +4,11 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:transportationapp/FadeTransition.dart';
+import 'package:transportationapp/NewTransportingOrder.dart';
 import 'package:transportationapp/RequestTransport.dart';
 
 class TransporterOptionsPage extends StatefulWidget {
-  TransporterOptionsPage({Key key, this.title}) : super(key: key);
-
-  final String title;
+  TransporterOptionsPage({Key key}) : super(key: key);
 
   @override
   _TransporterOptionsPageState createState() => _TransporterOptionsPageState();
@@ -18,8 +17,7 @@ class TransporterOptionsPage extends StatefulWidget {
 enum WidgetMarker { options, credentials, documents, otpVerification, signIn, ownerDetails }
 
 class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
-  WidgetMarker selectedWidgetMarker = WidgetMarker.options;
-  WidgetMarker selectedBottomSheetWidgetMarker = WidgetMarker.options;
+  WidgetMarker selectedWidgetMarker;
 
   final GlobalKey<FormState> _formKeyCredentials = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKeyDocuments = GlobalKey<FormState>();
@@ -62,6 +60,7 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
   @override
   void initState() {
     super.initState();
+    selectedWidgetMarker = WidgetMarker.options;
     rcDone = false;
     licenceDone = false;
     insuranceDone = false;
@@ -1163,10 +1162,9 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                   splashColor: Colors.transparent,
                   onTap: () {
                     if (_formKeySignIn.currentState.validate()) {
-                      final snackBar = SnackBar(
-                        content: Text('Sign In Successful'),
-                      );
-                      Scaffold.of(context).showSnackBar(snackBar);
+                      setState(() {
+                        Navigator.push(context, FadeRoute(page: NewTransportingOrder()));
+                      });
                     }
                   },
                   child: Container(
@@ -1241,6 +1239,14 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                 color: Colors.white,
                 fontSize: 40.0,
                 fontWeight: FontWeight.bold),
+          ),
+
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                  context, FadeRoute(page: RequestTransport()));
+            },
+            child: Icon(Icons.arrow_forward, size: 30, color: Colors.white,),
           ),
           Spacer(),
         ],
