@@ -64,7 +64,7 @@ class _NewTransportingOrderState extends State<NewTransportingOrder> {
                           backgroundColor: Colors.white,
                           child: Icon(
                             Icons.add,
-                            color: Colors.black,
+                            color: Color(0xff252427),
                             size: 35.0,
                           ),
                         )

@@ -249,7 +249,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                 backgroundColor: Colors.transparent,
                 child: Icon(
                   Icons.arrow_back_ios,
-                  color: Colors.black,
+                  color: Color(0xff252427),
                 ),
               ),
             ),
@@ -304,9 +304,9 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                 ),
               ),
               decoration: BoxDecoration(
-                color: Colors.black,
+                color: Color(0xff252427),
                 borderRadius: BorderRadius.circular(10),
-                border: Border.all(width: 2.0, color: Colors.black),
+                border: Border.all(width: 2.0, color: Color(0xff252427)),
               ),
             ),
           ),
@@ -330,14 +330,14 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                 child: Text(
                   "Sign In",
                   style: TextStyle(
-                      color: Colors.black,
+                      color: Color(0xff252427),
                       fontSize: 24.0,
                       fontWeight: FontWeight.bold),
                 ),
               ),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                border: Border.all(width: 2.0, color: Colors.black),
+                border: Border.all(width: 2.0, color: Color(0xff252427)),
               ),
             ),
           ),
@@ -372,7 +372,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                           backgroundColor: Colors.transparent,
                           child: Icon(
                             Icons.arrow_back_ios,
-                            color: Colors.black,
+                            color: Color(0xff252427),
                           ),
                         ),
                       ),
@@ -635,9 +635,9 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                       ),
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.black,
+                      color: Color(0xff252427),
                       borderRadius: BorderRadius.circular(10),
-                      border: Border.all(width: 2.0, color: Colors.black),
+                      border: Border.all(width: 2.0, color: Color(0xff252427)),
                     ),
                   ),
                 ),
@@ -719,7 +719,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                           backgroundColor: Colors.transparent,
                           child: Icon(
                             Icons.arrow_back_ios,
-                            color: Colors.black,
+                            color: Color(0xff252427),
                           ),
                         ),
                       ),
@@ -762,7 +762,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                   suffixIcon: Icon(
                     rcDone ? Icons.check_box : Icons.add_box,
                     size: 35.0,
-                    color: rcDone ? Colors.green : Colors.black,
+                    color: rcDone ? Colors.green : Color(0xff252427),
                   ),
                   border: InputBorder.none,
                   hintText: "Upload RC Book",
@@ -778,7 +778,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                   suffixIcon: Icon(
                     licenceDone ? Icons.check_box : Icons.add_box,
                     size: 35.0,
-                    color: licenceDone ? Colors.green : Colors.black,
+                    color: licenceDone ? Colors.green : Color(0xff252427),
                   ),
                   border: InputBorder.none,
                   hintText: "Upload Driver's License",
@@ -794,7 +794,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                   suffixIcon: Icon(
                     insuranceDone ? Icons.check_box : Icons.add_box,
                     size: 35.0,
-                    color: insuranceDone ? Colors.green : Colors.black,
+                    color: insuranceDone ? Colors.green : Color(0xff252427),
                   ),
                   border: InputBorder.none,
                   hintText: "Upload Insurance",
@@ -810,7 +810,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                   suffixIcon: Icon(
                     roadTaxDone ? Icons.check_box : Icons.add_box,
                     size: 35.0,
-                    color: roadTaxDone ? Colors.green : Colors.black,
+                    color: roadTaxDone ? Colors.green : Color(0xff252427),
                   ),
                   border: InputBorder.none,
                   hintText: "Upload Road Tax Certificate",
@@ -826,7 +826,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                   suffixIcon: Icon(
                     rtoPassingDone ? Icons.check_box : Icons.add_box,
                     size: 35.0,
-                    color: rtoPassingDone ? Colors.green : Colors.black,
+                    color: rtoPassingDone ? Colors.green : Color(0xff252427),
                   ),
                   border: InputBorder.none,
                   hintText: "Upload RTO Passing",
@@ -868,9 +868,9 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                       ),
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.black,
+                      color: Color(0xff252427),
                       borderRadius: BorderRadius.circular(10),
-                      border: Border.all(width: 2.0, color: Colors.black),
+                      border: Border.all(width: 2.0, color: Color(0xff252427)),
                     ),
                   ),
                 ),
@@ -907,7 +907,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                           backgroundColor: Colors.transparent,
                           child: Icon(
                             Icons.arrow_back_ios,
-                            color: Colors.black,
+                            color: Color(0xff252427),
                           ),
                         ),
                       ),
@@ -1059,9 +1059,9 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                       ),
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.black,
+                      color: Color(0xff252427),
                       borderRadius: BorderRadius.circular(10),
-                      border: Border.all(width: 2.0, color: Colors.black),
+                      border: Border.all(width: 2.0, color: Color(0xff252427)),
                     ),
                   ),
                 ),
@@ -1098,7 +1098,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                           backgroundColor: Colors.transparent,
                           child: Icon(
                             Icons.arrow_back_ios,
-                            color: Colors.black,
+                            color: Color(0xff252427),
                           ),
                         ),
                       ),
@@ -1218,9 +1218,9 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                       ),
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.black,
+                      color: Color(0xff252427),
                       borderRadius: BorderRadius.circular(10),
-                      border: Border.all(width: 2.0, color: Colors.black),
+                      border: Border.all(width: 2.0, color: Color(0xff252427)),
                     ),
                   ),
                 ),
@@ -1258,7 +1258,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                           backgroundColor: Colors.transparent,
                           child: Icon(
                             Icons.arrow_back_ios,
-                            color: Colors.black,
+                            color: Color(0xff252427),
                           ),
                         ),
                       ),
@@ -1380,14 +1380,14 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                       child: Text(
                         "Sign In",
                         style: TextStyle(
-                            color: Colors.black,
+                            color: Color(0xff252427),
                             fontSize: 24.0,
                             fontWeight: FontWeight.bold),
                       ),
                     ),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      border: Border.all(width: 2.0, color: Colors.black),
+                      border: Border.all(width: 2.0, color: Color(0xff252427)),
                     ),
                   ),
                 ),
@@ -1633,7 +1633,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
     return WillPopScope(
       onWillPop: onBackPressed,
       child: Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: Color(0xff252427),
         body: Stack(children: <Widget>[
           getCustomWidget(context),
           DraggableScrollableSheet(

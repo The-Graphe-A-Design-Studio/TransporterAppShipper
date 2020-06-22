@@ -159,7 +159,7 @@ class _OrderSummaryScreenState extends State<OrderSummaryScreen> {
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10.0),
                           border: Border.all(color: Colors.white70, width: 3.0),
-                          color: Colors.black),
+                          color: Color(0xff252427)),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -171,7 +171,7 @@ class _OrderSummaryScreenState extends State<OrderSummaryScreen> {
                               backgroundColor: Colors.white,
                               child: Icon(
                                 Icons.add,
-                                color: Colors.black,
+                                color: Color(0xff252427),
                                 size: 28.0,
                               ),
                             ),
@@ -215,7 +215,7 @@ class _OrderSummaryScreenState extends State<OrderSummaryScreen> {
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10.0),
                           border: Border.all(color: Colors.white70, width: 3.0),
-                          color: Colors.black),
+                          color: Color(0xff252427)),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -227,7 +227,7 @@ class _OrderSummaryScreenState extends State<OrderSummaryScreen> {
                               backgroundColor: Colors.white,
                               child: Icon(
                                 Icons.add,
-                                color: Colors.black,
+                                color: Color(0xff252427),
                                 size: 28.0,
                               ),
                             ),
@@ -271,7 +271,7 @@ class _OrderSummaryScreenState extends State<OrderSummaryScreen> {
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10.0),
                           border: Border.all(color: Colors.white70, width: 3.0),
-                          color: Colors.black),
+                          color: Color(0xff252427)),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -283,7 +283,7 @@ class _OrderSummaryScreenState extends State<OrderSummaryScreen> {
                               backgroundColor: Colors.white,
                               child: Icon(
                                 Icons.add,
-                                color: Colors.black,
+                                color: Color(0xff252427),
                                 size: 28.0,
                               ),
                             ),

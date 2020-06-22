@@ -44,7 +44,7 @@ class _RequestTransportState extends State<RequestTransport> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Color(0xff252427),
       body: Stack(
         children: [
           Column(
@@ -90,7 +90,7 @@ class _RequestTransportState extends State<RequestTransport> {
                                 child: CircleAvatar(
                                   child: Icon(
                                     Icons.arrow_forward,
-                                    color: Colors.black,
+                                    color: Color(0xff252427),
                                     size: 20.0,
                                   ),
                                   backgroundColor: Colors.white,
@@ -311,7 +311,7 @@ class _RequestTransportState extends State<RequestTransport> {
                                     child: Text(
                                       "Submit",
                                       style: TextStyle(
-                                          color: Colors.black,
+                                          color: Color(0xff252427),
                                           fontSize: 24.0,
                                           fontWeight: FontWeight.bold),
                                     ),
@@ -320,7 +320,7 @@ class _RequestTransportState extends State<RequestTransport> {
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(10),
                                     border: Border.all(
-                                        width: 2.0, color: Colors.black),
+                                        width: 2.0, color: Color(0xff252427)),
                                   ),
                                 ),
                               ),

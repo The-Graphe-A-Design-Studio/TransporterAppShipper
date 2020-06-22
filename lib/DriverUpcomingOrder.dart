@@ -14,6 +14,7 @@ class DriverUpcomingOrder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xff252427),
       body: Stack(
         children: [
           Column(
@@ -74,7 +75,7 @@ class DriverUpcomingOrder extends StatelessWidget {
                                     Container(
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(20),
-                                        border: Border.all(color: Colors.black),
+                                        border: Border.all(color: Color(0xff252427)),
                                         color: Colors.white,
                                       ),
                                       child: Padding(
@@ -172,7 +173,7 @@ class DriverUpcomingOrder extends StatelessWidget {
                                 borderRadius: BorderRadius.only(
                                     topRight: Radius.circular(100.0),
                                     bottomRight: Radius.circular(100.0)),
-                                color: Colors.black,
+                                color: Color(0xff252427),
                               ),
                               height: 60.0,
                               width: 30.0,
@@ -196,7 +197,7 @@ class DriverUpcomingOrder extends StatelessWidget {
                                 borderRadius: BorderRadius.only(
                                     topLeft: Radius.circular(100.0),
                                     bottomLeft: Radius.circular(100.0)),
-                                color: Colors.black,
+                                color: Color(0xff252427),
                               ),
                               height: 60.0,
                               width: 30.0,
