@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:transportationapp/AccountBottomSheet.dart';
 
 class RequestTransport extends StatefulWidget {
   RequestTransport({Key key, this.title}) : super(key: key);
@@ -44,191 +45,239 @@ class _RequestTransportState extends State<RequestTransport> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      body: Column(
-        children: <Widget>[
-          SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  SizedBox(
-                    height: 60.0,
-                  ),
-                  Text(
-                    "Request",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        fontSize: 40.0),
-                  ),
-                  Text(
-                    "Transport",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        fontSize: 40.0),
-                  ),
-                  SizedBox(
-                    height: 20.0,
-                  ),
-                  Container(
-                      width: 120,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(20.0),
+      body: Stack(
+        children: [
+          Column(
+            children: <Widget>[
+              SingleChildScrollView(
+                child: Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      SizedBox(
+                        height: 60.0,
                       ),
-                      child: Row(
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.only(top: 4, bottom: 4, left: 1.0),
-                            child: CircleAvatar(
-                              child: Icon(
-                                Icons.arrow_forward,
-                                color: Colors.black,
-                                size: 20.0,
+                      Text(
+                        "Request",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontSize: 40.0),
+                      ),
+                      Text(
+                        "Transport",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontSize: 40.0),
+                      ),
+                      SizedBox(
+                        height: 20.0,
+                      ),
+                      Container(
+                          width: 120,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(20.0),
+                          ),
+                          child: Row(
+                            children: <Widget>[
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    top: 4, bottom: 4, left: 1.0),
+                                child: CircleAvatar(
+                                  child: Icon(
+                                    Icons.arrow_forward,
+                                    color: Colors.black,
+                                    size: 20.0,
+                                  ),
+                                  backgroundColor: Colors.white,
+                                ),
                               ),
-                              backgroundColor: Colors.white,
-                            ),
-                          ),
-                          SizedBox(width: 11.5,),
-                          Text(
-                            "One Way",
-                            style: TextStyle(
-                                color: Colors.white, fontWeight: FontWeight.bold),
-                          ),
-                          Spacer(),
-                        ],
-                      )),
-                  SizedBox(height: 30.0,),
-                  Form(
-                    key: _formRequestTransport,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        TextFormField(
-                          controller: fromController,
-                          keyboardType: TextInputType.text,
-                          textCapitalization: TextCapitalization.words,
-                          textInputAction: TextInputAction.next,
-                          focusNode: _from,
-                          onFieldSubmitted: (term) {
-                            _from.unfocus();
-                            FocusScope.of(context).requestFocus(_to);
-                          },
-                          decoration: InputDecoration(
-                            fillColor: Colors.white,
-                            filled: true,
-                            errorStyle: TextStyle(color: Colors.white),
-                            prefixIcon: Icon(Icons.flight_takeoff),
-                            hintText: "From",
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(5.0),
-                              borderSide: BorderSide(
-                                color: Colors.amber,
-                                style: BorderStyle.solid,
+                              SizedBox(
+                                width: 11.5,
                               ),
-                            ),
-                          ),
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return "This Field is Required";
-                            }
-                            return null;
-                          },
-                        ),
-                        SizedBox(
-                          height: 16.0,
-                        ),
-                        TextFormField(
-                          controller: toController,
-                          keyboardType: TextInputType.number,
-                          textInputAction: TextInputAction.next,
-                          focusNode: _to,
-                          onFieldSubmitted: (term) {
-                            _to.unfocus();
-                            FocusScope.of(context).requestFocus(_departure);
-                          },
-                          decoration: InputDecoration(
-                            fillColor: Colors.white,
-                            filled: true,
-                            errorStyle: TextStyle(color: Colors.white),
-                            prefixIcon: Icon(Icons.flight_land),
-                            hintText: "To",
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(5.0),
-                              borderSide: BorderSide(
-                                color: Colors.amber,
-                                style: BorderStyle.solid,
+                              Text(
+                                "One Way",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
                               ),
-                            ),
-                          ),
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return "This Field is Required";
-                            }
-                            return null;
-                          },
-                        ),
-                        SizedBox(
-                          height: 16.0,
-                        ),
-                        Row(
+                              Spacer(),
+                            ],
+                          )),
+                      SizedBox(
+                        height: 30.0,
+                      ),
+                      Form(
+                        key: _formRequestTransport,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Flexible(
-                              child: TextFormField(
-                                controller: departureController,
-                                keyboardType: TextInputType.emailAddress,
-                                textInputAction: TextInputAction.next,
-                                focusNode: _departure,
-                                onFieldSubmitted: (term) {
-                                  _departure.unfocus();
-                                  FocusScope.of(context).requestFocus(_weight);
-                                },
-                                decoration: InputDecoration(
-                                  fillColor: Colors.white,
-                                  filled: true,
-                                  errorStyle: TextStyle(color: Colors.white),
-                                  prefixIcon: Icon(Icons.calendar_today),
-                                  hintText: "Departure Date",
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(5.0),
-                                    borderSide: BorderSide(
-                                      color: Colors.amber,
-                                      style: BorderStyle.solid,
-                                    ),
+                            TextFormField(
+                              controller: fromController,
+                              keyboardType: TextInputType.text,
+                              textCapitalization: TextCapitalization.words,
+                              textInputAction: TextInputAction.next,
+                              focusNode: _from,
+                              onFieldSubmitted: (term) {
+                                _from.unfocus();
+                                FocusScope.of(context).requestFocus(_to);
+                              },
+                              decoration: InputDecoration(
+                                fillColor: Colors.white,
+                                filled: true,
+                                errorStyle: TextStyle(color: Colors.white),
+                                prefixIcon: Icon(Icons.flight_takeoff),
+                                hintText: "From",
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(5.0),
+                                  borderSide: BorderSide(
+                                    color: Colors.amber,
+                                    style: BorderStyle.solid,
                                   ),
                                 ),
-                                validator: (value) {
-                                  if (value.isEmpty) {
-                                    return "This Field is Required";
-                                  }
-                                  return null;
-                                },
                               ),
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return "This Field is Required";
+                                }
+                                return null;
+                              },
                             ),
-                            SizedBox(width: 20.0,),
-                            Flexible(
-                              child: TextFormField(
-                                controller: weightController,
-                                keyboardType: TextInputType.emailAddress,
-                                textInputAction: TextInputAction.next,
-                                focusNode: _weight,
-                                onFieldSubmitted: (term) {
-                                  _weight.unfocus();
-                                  FocusScope.of(context).requestFocus(_remark);
-                                },
+                            SizedBox(
+                              height: 16.0,
+                            ),
+                            TextFormField(
+                              controller: toController,
+                              keyboardType: TextInputType.number,
+                              textInputAction: TextInputAction.next,
+                              focusNode: _to,
+                              onFieldSubmitted: (term) {
+                                _to.unfocus();
+                                FocusScope.of(context).requestFocus(_departure);
+                              },
+                              decoration: InputDecoration(
+                                fillColor: Colors.white,
+                                filled: true,
+                                errorStyle: TextStyle(color: Colors.white),
+                                prefixIcon: Icon(Icons.flight_land),
+                                hintText: "To",
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(5.0),
+                                  borderSide: BorderSide(
+                                    color: Colors.amber,
+                                    style: BorderStyle.solid,
+                                  ),
+                                ),
+                              ),
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return "This Field is Required";
+                                }
+                                return null;
+                              },
+                            ),
+                            SizedBox(
+                              height: 16.0,
+                            ),
+                            Row(
+                              children: <Widget>[
+                                Flexible(
+                                  child: TextFormField(
+                                    controller: departureController,
+                                    keyboardType: TextInputType.emailAddress,
+                                    textInputAction: TextInputAction.next,
+                                    focusNode: _departure,
+                                    onFieldSubmitted: (term) {
+                                      _departure.unfocus();
+                                      FocusScope.of(context)
+                                          .requestFocus(_weight);
+                                    },
+                                    decoration: InputDecoration(
+                                      fillColor: Colors.white,
+                                      filled: true,
+                                      errorStyle:
+                                          TextStyle(color: Colors.white),
+                                      prefixIcon: Icon(Icons.calendar_today),
+                                      hintText: "Departure Date",
+                                      border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(5.0),
+                                        borderSide: BorderSide(
+                                          color: Colors.amber,
+                                          style: BorderStyle.solid,
+                                        ),
+                                      ),
+                                    ),
+                                    validator: (value) {
+                                      if (value.isEmpty) {
+                                        return "This Field is Required";
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 20.0,
+                                ),
+                                Flexible(
+                                  child: TextFormField(
+                                    controller: weightController,
+                                    keyboardType: TextInputType.emailAddress,
+                                    textInputAction: TextInputAction.next,
+                                    focusNode: _weight,
+                                    onFieldSubmitted: (term) {
+                                      _weight.unfocus();
+                                      FocusScope.of(context)
+                                          .requestFocus(_remark);
+                                    },
+                                    decoration: InputDecoration(
+                                      fillColor: Colors.white,
+                                      filled: true,
+                                      errorStyle:
+                                          TextStyle(color: Colors.white),
+                                      prefixIcon: Icon(Icons.event_seat),
+                                      hintText: "Weight",
+                                      border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(5.0),
+                                        borderSide: BorderSide(
+                                          color: Colors.amber,
+                                          style: BorderStyle.solid,
+                                        ),
+                                      ),
+                                    ),
+                                    validator: (value) {
+                                      if (value.isEmpty) {
+                                        return "This Field is Required";
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 16.0,
+                            ),
+                            TextFormField(
+                                controller: remarkController,
+                                keyboardType: TextInputType.visiblePassword,
+                                textInputAction: TextInputAction.done,
+                                focusNode: _remark,
                                 decoration: InputDecoration(
                                   fillColor: Colors.white,
                                   filled: true,
                                   errorStyle: TextStyle(color: Colors.white),
-                                  prefixIcon: Icon(Icons.event_seat),
-                                  hintText: "Weight",
+                                  prefixIcon: Icon(Icons.text_fields),
+                                  hintText: "Remark",
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(5.0),
                                     borderSide: BorderSide(
-                                      color: Colors.amber,
+                                      color: Colors.white,
                                       style: BorderStyle.solid,
                                     ),
                                   ),
@@ -238,111 +287,75 @@ class _RequestTransportState extends State<RequestTransport> {
                                     return "This Field is Required";
                                   }
                                   return null;
+                                }),
+                            SizedBox(
+                              height: 50.0,
+                            ),
+                            Material(
+                              color: Colors.transparent,
+                              child: InkWell(
+                                splashColor: Colors.transparent,
+                                onTap: () {
+                                  if (_formRequestTransport.currentState
+                                      .validate()) {
+                                    final snackBar = SnackBar(
+                                      content: Text('Request Sent'),
+                                    );
+                                    Scaffold.of(context).showSnackBar(snackBar);
+                                  }
                                 },
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  height: 50.0,
+                                  child: Center(
+                                    child: Text(
+                                      "Submit",
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 24.0,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(
+                                        width: 2.0, color: Colors.black),
+                                  ),
+                                ),
                               ),
                             ),
                           ],
                         ),
-                        SizedBox(
-                          height: 16.0,
-                        ),
-                        TextFormField(
-                            controller: remarkController,
-                            keyboardType: TextInputType.visiblePassword,
-                            textInputAction: TextInputAction.done,
-                            focusNode: _remark,
-                            decoration: InputDecoration(
-                              fillColor: Colors.white,
-                              filled: true,
-                              errorStyle: TextStyle(color: Colors.white),
-                              prefixIcon: Icon(Icons.text_fields),
-                              hintText: "Remark",
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5.0),
-                                borderSide: BorderSide(
-                                  color: Colors.white,
-                                  style: BorderStyle.solid,
-                                ),
-                              ),
-                            ),
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return "This Field is Required";
-                              }
-                              return null;
-                            }),
-                        SizedBox(
-                          height: 50.0,
-                        ),
-                        Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            splashColor: Colors.transparent,
-                            onTap: () {
-                              if (_formRequestTransport.currentState.validate()) {
-                                final snackBar = SnackBar(
-                                  content: Text('Request Sent'),
-                                );
-                                Scaffold.of(context).showSnackBar(snackBar);
-                              }
-                            },
-                            child: Container(
-                              width: MediaQuery.of(context).size.width,
-                              height: 50.0,
-                              child: Center(
-                                child: Text(
-                                  "Submit",
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 24.0,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(width: 2.0, color: Colors.black),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Spacer(),
-          Hero(
-            tag: 'AnimeBottom',
-            child: Container(
-                margin: EdgeInsets.only(bottom: 0),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(30.0),
-                      topRight: Radius.circular(30.0)),
-                ),
-                height: 60.0,
-                child: Padding(
-                  padding: EdgeInsets.only(top: 16.0),
-                  child: Align(
-                    alignment: Alignment.topCenter,
-                    child: Container(
-                      width: 60.0,
-                      height: 4.0,
-                      decoration: BoxDecoration(
-                        color: Colors.grey,
-                        borderRadius: BorderRadius.circular(30.0),
                       ),
-                    ),
+                    ],
                   ),
-                )
-            ),
+                ),
+              ),
+            ],
+          ),
+          DraggableScrollableSheet(
+            initialChildSize: 0.08,
+            minChildSize: 0.08,
+            maxChildSize: 0.9,
+            builder: (BuildContext context, ScrollController scrollController) {
+              return Hero(
+                tag: 'AnimeBottom',
+                child: Container(
+                    margin: EdgeInsets.only(bottom: 0),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(30.0),
+                          topRight: Radius.circular(30.0)),
+                    ),
+                    child:
+                        AccountBottomSheet(scrollController: scrollController)),
+              );
+            },
           ),
         ],
-      )
+      ),
     );
   }
 }

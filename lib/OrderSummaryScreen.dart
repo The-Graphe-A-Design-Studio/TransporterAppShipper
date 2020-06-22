@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:transportationapp/AccountBottomSheet.dart';
 
 class OrderSummaryScreen extends StatefulWidget {
   OrderSummaryScreen({Key key}) : super(key: key);
@@ -67,280 +68,280 @@ class _OrderSummaryScreenState extends State<OrderSummaryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xff252427),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      body: Stack(
         children: [
-          SizedBox(
-            height: 75.0,
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 16.0),
-            child: Text(
-              "Upcoming Orders",
-              style: TextStyle(
-                fontSize: 23.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 75.0,
               ),
-            ),
-          ),
-          SizedBox(
-            height: 5.0,
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 16.0),
-            child: Text(
-              "Select an Order to view",
-              style: TextStyle(
-                color: Colors.white12,
-                fontSize: 18.0,
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 15.0,
-          ),
-          Container(
-            child: Column(
-              children: <Widget>[
-                CarouselSlider(
-                  options: CarouselOptions(
-                    autoPlay: false,
-                    enableInfiniteScroll: false,
-                    aspectRatio: 2.0,
-                    enlargeCenterPage: true,
-                  ),
-                  items: imageSliders,
-                ),
-              ],
-            ),
-          ),
-          SizedBox(
-            height: 40.0,
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 16.0),
-            child: Text(
-              "Orders",
-              style: TextStyle(
-                fontSize: 23.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 5.0,
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 16.0),
-            child: Text(
-              "Select an Order to view",
-              style: TextStyle(
-                color: Colors.white12,
-                fontSize: 18.0,
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 15.0,
-          ),
-          Container(
-            height: 220.0,
-            child: ListView(
-              padding: EdgeInsets.only(right: 16.0, left: 16.0),
-              scrollDirection: Axis.horizontal,
-              children: <Widget>[
-                Container(
-                  width: 160,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.0),
-                      border: Border.all(color: Colors.white70, width: 3.0),
-                      color: Colors.black),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Spacer(),
-                      Align(
-                        alignment: Alignment.center,
-                        child: CircleAvatar(
-                          radius: 30.0,
-                          backgroundColor: Colors.white,
-                          child: Icon(
-                            Icons.add,
-                            color: Colors.black,
-                            size: 28.0,
-                          ),
-                        ),
-                      ),
-                      Spacer(),
-                      Padding(
-                        padding: EdgeInsets.only(left: 10.0),
-                        child: Text(
-                          "Create New",
-                          style: TextStyle(
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 5.0,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 10.0),
-                        child: Text(
-                          "Tap to create new",
-                          style: TextStyle(
-                            color: Colors.white12,
-                            fontSize: 13.0,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10.0,
-                      ),
-                    ],
+              Padding(
+                padding: EdgeInsets.only(left: 16.0),
+                child: Text(
+                  "Upcoming Orders",
+                  style: TextStyle(
+                    fontSize: 23.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
                   ),
                 ),
-                SizedBox(width: 16.0,),
-                Container(
-                  width: 160,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.0),
-                      border: Border.all(color: Colors.white70, width: 3.0),
-                      color: Colors.black),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Spacer(),
-                      Align(
-                        alignment: Alignment.center,
-                        child: CircleAvatar(
-                          radius: 30.0,
-                          backgroundColor: Colors.white,
-                          child: Icon(
-                            Icons.add,
-                            color: Colors.black,
-                            size: 28.0,
-                          ),
-                        ),
-                      ),
-                      Spacer(),
-                      Padding(
-                        padding: EdgeInsets.only(left: 10.0),
-                        child: Text(
-                          "Completed Order",
-                          style: TextStyle(
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 5.0,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 10.0),
-                        child: Text(
-                          "March 15th 2020",
-                          style: TextStyle(
-                            color: Colors.white12,
-                            fontSize: 13.0,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10.0,
-                      ),
-                    ],
+              ),
+              SizedBox(
+                height: 5.0,
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 16.0),
+                child: Text(
+                  "Select an Order to view",
+                  style: TextStyle(
+                    color: Colors.white12,
+                    fontSize: 18.0,
                   ),
                 ),
-                SizedBox(width: 16.0,),
-                Container(
-                  width: 160,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.0),
-                      border: Border.all(color: Colors.white70, width: 3.0),
-                      color: Colors.black),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Spacer(),
-                      Align(
-                        alignment: Alignment.center,
-                        child: CircleAvatar(
-                          radius: 30.0,
-                          backgroundColor: Colors.white,
-                          child: Icon(
-                            Icons.add,
-                            color: Colors.black,
-                            size: 28.0,
-                          ),
-                        ),
+              ),
+              SizedBox(
+                height: 15.0,
+              ),
+              Container(
+                child: Column(
+                  children: <Widget>[
+                    CarouselSlider(
+                      options: CarouselOptions(
+                        autoPlay: false,
+                        enableInfiniteScroll: false,
+                        aspectRatio: 2.0,
+                        enlargeCenterPage: true,
                       ),
-                      Spacer(),
-                      Padding(
-                        padding: EdgeInsets.only(left: 10.0),
-                        child: Text(
-                          "Create New",
-                          style: TextStyle(
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 5.0,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 10.0),
-                        child: Text(
-                          "Tap to create new",
-                          style: TextStyle(
-                            color: Colors.white12,
-                            fontSize: 13.0,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10.0,
-                      ),
-                    ],
+                      items: imageSliders,
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 40.0,
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 16.0),
+                child: Text(
+                  "Orders",
+                  style: TextStyle(
+                    fontSize: 23.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
                   ),
                 ),
-              ],
-            ),
-          ),
-          Spacer(),
-          Hero(
-            tag: 'AnimeBottom',
-            child: Container(
-                margin: EdgeInsets.only(bottom: 0),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(30.0),
-                      topRight: Radius.circular(30.0)),
+              ),
+              SizedBox(
+                height: 5.0,
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 16.0),
+                child: Text(
+                  "Select an Order to view",
+                  style: TextStyle(
+                    color: Colors.white12,
+                    fontSize: 18.0,
+                  ),
                 ),
-                height: 60.0,
-                child: Padding(
-                  padding: EdgeInsets.only(top: 16.0),
-                  child: Align(
-                    alignment: Alignment.topCenter,
-                    child: Container(
-                      width: 60.0,
-                      height: 4.0,
+              ),
+              SizedBox(
+                height: 15.0,
+              ),
+              Container(
+                height: 220.0,
+                child: ListView(
+                  padding: EdgeInsets.only(right: 16.0, left: 16.0),
+                  scrollDirection: Axis.horizontal,
+                  children: <Widget>[
+                    Container(
+                      width: 160,
                       decoration: BoxDecoration(
-                        color: Colors.grey,
-                        borderRadius: BorderRadius.circular(30.0),
+                          borderRadius: BorderRadius.circular(10.0),
+                          border: Border.all(color: Colors.white70, width: 3.0),
+                          color: Colors.black),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Spacer(),
+                          Align(
+                            alignment: Alignment.center,
+                            child: CircleAvatar(
+                              radius: 30.0,
+                              backgroundColor: Colors.white,
+                              child: Icon(
+                                Icons.add,
+                                color: Colors.black,
+                                size: 28.0,
+                              ),
+                            ),
+                          ),
+                          Spacer(),
+                          Padding(
+                            padding: EdgeInsets.only(left: 10.0),
+                            child: Text(
+                              "Create New",
+                              style: TextStyle(
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5.0,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(left: 10.0),
+                            child: Text(
+                              "Tap to create new",
+                              style: TextStyle(
+                                color: Colors.white12,
+                                fontSize: 13.0,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                )),
+                    SizedBox(
+                      width: 16.0,
+                    ),
+                    Container(
+                      width: 160,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.0),
+                          border: Border.all(color: Colors.white70, width: 3.0),
+                          color: Colors.black),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Spacer(),
+                          Align(
+                            alignment: Alignment.center,
+                            child: CircleAvatar(
+                              radius: 30.0,
+                              backgroundColor: Colors.white,
+                              child: Icon(
+                                Icons.add,
+                                color: Colors.black,
+                                size: 28.0,
+                              ),
+                            ),
+                          ),
+                          Spacer(),
+                          Padding(
+                            padding: EdgeInsets.only(left: 10.0),
+                            child: Text(
+                              "Completed Order",
+                              style: TextStyle(
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5.0,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(left: 10.0),
+                            child: Text(
+                              "March 15th 2020",
+                              style: TextStyle(
+                                color: Colors.white12,
+                                fontSize: 13.0,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      width: 16.0,
+                    ),
+                    Container(
+                      width: 160,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.0),
+                          border: Border.all(color: Colors.white70, width: 3.0),
+                          color: Colors.black),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Spacer(),
+                          Align(
+                            alignment: Alignment.center,
+                            child: CircleAvatar(
+                              radius: 30.0,
+                              backgroundColor: Colors.white,
+                              child: Icon(
+                                Icons.add,
+                                color: Colors.black,
+                                size: 28.0,
+                              ),
+                            ),
+                          ),
+                          Spacer(),
+                          Padding(
+                            padding: EdgeInsets.only(left: 10.0),
+                            child: Text(
+                              "Create New",
+                              style: TextStyle(
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5.0,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(left: 10.0),
+                            child: Text(
+                              "Tap to create new",
+                              style: TextStyle(
+                                color: Colors.white12,
+                                fontSize: 13.0,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          DraggableScrollableSheet(
+            initialChildSize: 0.08,
+            minChildSize: 0.08,
+            maxChildSize: 0.9,
+            builder: (BuildContext context, ScrollController scrollController) {
+              return Hero(
+                tag: 'AnimeBottom',
+                child: Container(
+                    margin: EdgeInsets.only(bottom: 0),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(30.0),
+                          topRight: Radius.circular(30.0)),
+                    ),
+                    child: AccountBottomSheet(scrollController: scrollController)),
+              );
+            },
           ),
         ],
       ),
