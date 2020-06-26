@@ -1,5 +1,10 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:transportationapp/EmiCalculator.dart';
+import 'package:transportationapp/FadeTransition.dart';
+import 'package:transportationapp/FreightCalculator.dart';
+import 'package:transportationapp/TollCalculator.dart';
+import 'package:transportationapp/TripPlanner.dart';
 
 class AccountBottomSheet extends StatefulWidget {
   final ScrollController scrollController;
@@ -27,43 +32,45 @@ class _AccountBottomSheetState extends State<AccountBottomSheet> {
 
   final List<Widget> imageSliders = imgList
       .map((item) => Container(
-    child: Container(
-      child: ClipRRect(
-          borderRadius: BorderRadius.all(Radius.circular(5.0)),
-          child: Stack(
-            children: <Widget>[
-              Image.network(item, fit: BoxFit.cover, width: 1000.0),
-              Positioned(
-                bottom: 0.0,
-                left: 0.0,
-                right: 0.0,
-                child: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Color.fromARGB(200, 0, 0, 0),
-                        Color.fromARGB(0, 0, 0, 0)
-                      ],
-                      begin: Alignment.bottomCenter,
-                      end: Alignment.topCenter,
-                    ),
-                  ),
-                  padding: EdgeInsets.symmetric(
-                      vertical: 10.0, horizontal: 20.0),
-                  child: Text(
-                    'No. ${imgList.indexOf(item)} image',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          )),
-    ),
-  ))
+            child: Container(
+              child: ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                  child: Stack(
+                    children: <Widget>[
+                      Image.network(item, fit: BoxFit.cover, width: 1000.0),
+                      Positioned(
+                        bottom: 0.0,
+                        left: 0.0,
+                        right: 0.0,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                Color.fromARGB(200, 0, 0, 0),
+                                Color.fromARGB(0, 0, 0, 0)
+                              ],
+                              begin: Alignment.bottomCenter,
+                              end: Alignment.topCenter,
+                            ),
+                          ),
+                          padding: EdgeInsets.symmetric(
+                              vertical: 10.0, horizontal: 20.0),
+                          child: Material(
+                            child: Text(
+                              'No. ${imgList.indexOf(item)} image',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )),
+            ),
+          ))
       .toList();
 
   @override
@@ -84,15 +91,256 @@ class _AccountBottomSheetState extends State<AccountBottomSheet> {
               ),
             ),
           ),
-          SizedBox(height: 40.0,),
+          SizedBox(
+            height: 40.0,
+          ),
           Padding(
             padding: EdgeInsets.only(left: 16.0),
-            child: Text(
-              "Upcoming Orders",
-              style: TextStyle(
-                fontSize: 23.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
+            child: Material(
+              child: Text(
+                "Plan Your Trip",
+                style: TextStyle(
+                  fontSize: 23.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 15.0,
+          ),
+          Container(
+            height: 150.0,
+            child: ListView(
+              padding: EdgeInsets.only(right: 16.0, left: 16.0),
+              scrollDirection: Axis.horizontal,
+              children: <Widget>[
+                Material(
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(context, FadeRoute(page: TripPlanner()));
+                    },
+                    child: Container(
+                      width: 160,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.0),
+                          border:
+                              Border.all(color: Color(0xff252427), width: 3.0),
+                          color: Colors.transparent),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Spacer(),
+                          Align(
+                            alignment: Alignment.center,
+                            child: CircleAvatar(
+                              radius: 30.0,
+                              backgroundColor: Color(0xff252427),
+                              child: Icon(
+                                Icons.link,
+                                color: Colors.white,
+                                size: 30.0,
+                              ),
+                            ),
+                          ),
+                          Spacer(),
+                          Align(
+                            alignment: Alignment.center,
+                            child: Material(
+                              child: Text(
+                                "Trip Planner",
+                                style: TextStyle(
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xff252427),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: 16.0,
+                ),
+                Material(
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(context, FadeRoute(page: FreightCalculator()));
+                    },
+                    child: Container(
+                      width: 160,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.0),
+                          border:
+                              Border.all(color: Color(0xff252427), width: 3.0),
+                          color: Colors.transparent),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Spacer(),
+                          Align(
+                            alignment: Alignment.center,
+                            child: CircleAvatar(
+                              radius: 30.0,
+                              backgroundColor: Color(0xff252427),
+                              child: Icon(
+                                Icons.link,
+                                color: Colors.white,
+                                size: 30.0,
+                              ),
+                            ),
+                          ),
+                          Spacer(),
+                          Align(
+                            alignment: Alignment.center,
+                            child: Material(
+                              child: Text(
+                                "Freight Calculator",
+                                style: TextStyle(
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xff252427),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: 16.0,
+                ),
+                Material(
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(context, FadeRoute(page: TollCalculator()));
+                    },
+                    child: Container(
+                      width: 160,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.0),
+                          border:
+                              Border.all(color: Color(0xff252427), width: 3.0),
+                          color: Colors.transparent),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Spacer(),
+                          Align(
+                            alignment: Alignment.center,
+                            child: CircleAvatar(
+                              radius: 30.0,
+                              backgroundColor: Color(0xff252427),
+                              child: Icon(
+                                Icons.link,
+                                color: Colors.white,
+                                size: 30.0,
+                              ),
+                            ),
+                          ),
+                          Spacer(),
+                          Align(
+                            alignment: Alignment.center,
+                            child: Material(
+                              child: Text(
+                                "Toll Calculator",
+                                style: TextStyle(
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xff252427),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: 16.0,
+                ),
+                Material(
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(context, FadeRoute(page: EmiCalculator()));
+                    },
+                    child: Container(
+                      width: 160,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.0),
+                          border:
+                              Border.all(color: Color(0xff252427), width: 3.0),
+                          color: Colors.transparent),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Spacer(),
+                          Align(
+                            alignment: Alignment.center,
+                            child: CircleAvatar(
+                              radius: 30.0,
+                              backgroundColor: Color(0xff252427),
+                              child: Icon(
+                                Icons.link,
+                                color: Colors.white,
+                                size: 30.0,
+                              ),
+                            ),
+                          ),
+                          Spacer(),
+                          Align(
+                            alignment: Alignment.center,
+                            child: Material(
+                              child: Text(
+                                "EMI Calculator",
+                                style: TextStyle(
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xff252427),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 20.0,
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 16.0),
+            child: Material(
+              child: Text(
+                "Upcoming Orders",
+                style: TextStyle(
+                  fontSize: 23.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
               ),
             ),
           ),
@@ -101,11 +349,13 @@ class _AccountBottomSheetState extends State<AccountBottomSheet> {
           ),
           Padding(
             padding: EdgeInsets.only(left: 16.0),
-            child: Text(
-              "Select an Order to view",
-              style: TextStyle(
-                color: Colors.black12,
-                fontSize: 18.0,
+            child: Material(
+              child: Text(
+                "Select an Order to view",
+                style: TextStyle(
+                  color: Colors.black12,
+                  fontSize: 18.0,
+                ),
               ),
             ),
           ),
@@ -129,207 +379,6 @@ class _AccountBottomSheetState extends State<AccountBottomSheet> {
           ),
           SizedBox(
             height: 40.0,
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 16.0),
-            child: Text(
-              "Orders",
-              style: TextStyle(
-                fontSize: 23.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 5.0,
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 16.0),
-            child: Text(
-              "Select an Order to view",
-              style: TextStyle(
-                color: Colors.black12,
-                fontSize: 18.0,
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 15.0,
-          ),
-          Container(
-            height: 220.0,
-            child: ListView(
-              padding: EdgeInsets.only(right: 16.0, left: 16.0),
-              scrollDirection: Axis.horizontal,
-              children: <Widget>[
-                Container(
-                  width: 160,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.0),
-                      border: Border.all(color: Colors.white70, width: 3.0),
-                      color: Color(0xff252427)),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Spacer(),
-                      Align(
-                        alignment: Alignment.center,
-                        child: CircleAvatar(
-                          radius: 30.0,
-                          backgroundColor: Colors.white,
-                          child: Icon(
-                            Icons.add,
-                            color: Color(0xff252427),
-                            size: 28.0,
-                          ),
-                        ),
-                      ),
-                      Spacer(),
-                      Padding(
-                        padding: EdgeInsets.only(left: 10.0),
-                        child: Text(
-                          "Create New",
-                          style: TextStyle(
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 5.0,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 10.0),
-                        child: Text(
-                          "Tap to create new",
-                          style: TextStyle(
-                            color: Colors.white12,
-                            fontSize: 13.0,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10.0,
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  width: 16.0,
-                ),
-                Container(
-                  width: 160,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.0),
-                      border: Border.all(color: Colors.white70, width: 3.0),
-                      color: Color(0xff252427)),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Spacer(),
-                      Align(
-                        alignment: Alignment.center,
-                        child: CircleAvatar(
-                          radius: 30.0,
-                          backgroundColor: Colors.white,
-                          child: Icon(
-                            Icons.add,
-                            color: Color(0xff252427),
-                            size: 28.0,
-                          ),
-                        ),
-                      ),
-                      Spacer(),
-                      Padding(
-                        padding: EdgeInsets.only(left: 10.0),
-                        child: Text(
-                          "Completed Order",
-                          style: TextStyle(
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 5.0,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 10.0),
-                        child: Text(
-                          "March 15th 2020",
-                          style: TextStyle(
-                            color: Colors.white12,
-                            fontSize: 13.0,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10.0,
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  width: 16.0,
-                ),
-                Container(
-                  width: 160,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.0),
-                      border: Border.all(color: Colors.white70, width: 3.0),
-                      color: Color(0xff252427)),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Spacer(),
-                      Align(
-                        alignment: Alignment.center,
-                        child: CircleAvatar(
-                          radius: 30.0,
-                          backgroundColor: Colors.white,
-                          child: Icon(
-                            Icons.add,
-                            color: Color(0xff252427),
-                            size: 28.0,
-                          ),
-                        ),
-                      ),
-                      Spacer(),
-                      Padding(
-                        padding: EdgeInsets.only(left: 10.0),
-                        child: Text(
-                          "Create New",
-                          style: TextStyle(
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 5.0,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 10.0),
-                        child: Text(
-                          "Tap to create new",
-                          style: TextStyle(
-                            color: Colors.white12,
-                            fontSize: 13.0,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10.0,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
           ),
         ],
       ),
