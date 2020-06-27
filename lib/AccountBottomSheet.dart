@@ -377,6 +377,26 @@ class _AccountBottomSheetState extends State<AccountBottomSheet> {
               ],
             ),
           ),
+
+          SizedBox(
+            height: 20.0,
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 16.0),
+            child: Material(
+              child: Text(
+                "Temporary Links",
+                style: TextStyle(
+                  fontSize: 23.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 15.0,
+          ),
           SizedBox(
             height: 40.0,
           ),

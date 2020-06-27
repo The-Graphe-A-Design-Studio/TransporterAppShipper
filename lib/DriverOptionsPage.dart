@@ -4,8 +4,10 @@ import 'package:http/http.dart' as http;
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:transportationapp/DriverUpcomingOrder.dart';
 import 'package:transportationapp/FadeTransition.dart';
+import 'package:transportationapp/HomePage.dart';
 import 'package:transportationapp/PostMethodResult.dart';
 
 class DriverOptionsPage extends StatefulWidget {
@@ -176,6 +178,8 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
         );
         Scaffold.of(_context).showSnackBar(snackBar);
       });
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setBool('isLoggedIn', true);
       return postResultSignIn.success;
     } else {
       PostResultOne postResultOne = PostResultOne.fromJson(jsonResult);
@@ -186,6 +190,8 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
         );
         Scaffold.of(_context).showSnackBar(snackBar);
       });
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setBool('isLoggedIn', false);
       return postResultOne.success;
     }
   }
@@ -1338,6 +1344,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                 controller: passwordControllerSignIn,
                 keyboardType: TextInputType.visiblePassword,
                 textInputAction: TextInputAction.done,
+                obscureText: true,
                 focusNode: _passwordSignIn,
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.vpn_key),
@@ -1368,7 +1375,8 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                     if (_formKeySignIn.currentState.validate()) {
                       postSignInRequest(context).then((value) {
                         if (value == true) {
-                          print("Sign In Successful !");
+                          Navigator.pop(context);
+                          Navigator.pushReplacement(context, FadeRoute(page: HomePage()));
                         }
                       });
                     }

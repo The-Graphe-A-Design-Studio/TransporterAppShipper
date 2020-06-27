@@ -3,18 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:transportationapp/AccountBottomSheet.dart';
 import 'package:transportationapp/DriverOptionsPage.dart';
 import 'package:transportationapp/FadeTransition.dart';
+import 'package:transportationapp/IntroPageLoginOptions.dart';
 import 'package:transportationapp/TransporterOptionsPage.dart';
 
-class IntroPage extends StatefulWidget {
-  IntroPage({Key key, this.title}) : super(key: key);
-
-  final String title;
+class HomePage extends StatefulWidget {
+  HomePage({Key key}) : super(key: key);
 
   @override
-  _IntroPageState createState() => _IntroPageState();
+  _HomePageState createState() => _HomePageState();
 }
 
-class _IntroPageState extends State<IntroPage> {
+class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
@@ -46,7 +45,7 @@ class _IntroPageState extends State<IntroPage> {
                           height: 30.0,
                         ),
                         Text(
-                          "Choose Your Account Type",
+                          "You Are Logged in !",
                           style: TextStyle(
                             fontSize: 18.0,
                             fontWeight: FontWeight.bold,
@@ -67,8 +66,8 @@ class _IntroPageState extends State<IntroPage> {
                               height: MediaQuery.of(context).size.width * 0.35,
                             ),
                             GestureDetector(
-                              onTap: () => Navigator.push(context,
-                                  FadeRoute(page: TransporterOptionsPage())),
+                              onTap: () => Navigator.pushReplacement(context,
+                                  FadeRoute(page: IntroPageLoginOptions())),
                               child: Container(
                                   decoration: BoxDecoration(
                                     color: Colors.white,
@@ -84,7 +83,7 @@ class _IntroPageState extends State<IntroPage> {
                                       padding: EdgeInsets.only(
                                           left: 18.0, bottom: 10.0),
                                       child: Text(
-                                        "Transporter",
+                                        "Sign Out",
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 17.0),
@@ -96,44 +95,6 @@ class _IntroPageState extends State<IntroPage> {
                         ),
                         SizedBox(
                           height: 40.0,
-                        ),
-                        Stack(
-                          children: <Widget>[
-                            Container(
-                              decoration: BoxDecoration(
-                                color: Colors.grey,
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              width: MediaQuery.of(context).size.width * 0.7,
-                              height: MediaQuery.of(context).size.width * 0.35,
-                            ),
-                            GestureDetector(
-                              onTap: () => Navigator.push(context,
-                                  FadeRoute(page: DriverOptionsPage())),
-                              child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.38,
-                                  height:
-                                      MediaQuery.of(context).size.width * 0.35,
-                                  child: Align(
-                                    alignment: Alignment.bottomLeft,
-                                    child: Padding(
-                                      padding: EdgeInsets.only(
-                                          left: 18.0, bottom: 10.0),
-                                      child: Text(
-                                        "Driver",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 17.0),
-                                      ),
-                                    ),
-                                  )),
-                            ),
-                          ],
                         ),
                       ],
                     ),
