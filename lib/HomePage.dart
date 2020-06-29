@@ -1,10 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:transportationapp/AccountBottomSheet.dart';
-import 'package:transportationapp/DriverOptionsPage.dart';
 import 'package:transportationapp/FadeTransition.dart';
 import 'package:transportationapp/IntroPageLoginOptions.dart';
-import 'package:transportationapp/TransporterOptionsPage.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
@@ -17,6 +16,10 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+  }
+
+  signOut() async {
+    await SharedPreferences.getInstance().then((value) => value.setBool("isLoggedIn", false));
   }
 
   @override
@@ -36,10 +39,13 @@ class _HomePageState extends State<HomePage> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        Image(
-                          image: AssetImage('assets/images/logo_white.png'),
-                          height: 145.0,
-                          width: 145.0,
+                        Hero(
+                          tag: "WhiteLogo",
+                          child: Image(
+                            image: AssetImage('assets/images/logo_white.png'),
+                            height: 145.0,
+                            width: 145.0,
+                          ),
                         ),
                         SizedBox(
                           height: 30.0,
@@ -66,8 +72,11 @@ class _HomePageState extends State<HomePage> {
                               height: MediaQuery.of(context).size.width * 0.35,
                             ),
                             GestureDetector(
-                              onTap: () => Navigator.pushReplacement(context,
-                                  FadeRoute(page: IntroPageLoginOptions())),
+                              onTap: () {
+                                signOut();
+                                Navigator.pushReplacement(context,
+                                    FadeRoute(page: IntroPageLoginOptions()));
+                              },
                               child: Container(
                                   decoration: BoxDecoration(
                                     color: Colors.white,
@@ -118,7 +127,8 @@ class _HomePageState extends State<HomePage> {
                           topLeft: Radius.circular(30.0),
                           topRight: Radius.circular(30.0)),
                     ),
-                    child: AccountBottomSheet(scrollController: scrollController)),
+                    child:
+                        AccountBottomSheet(scrollController: scrollController)),
               );
             },
           ),

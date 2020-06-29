@@ -35,10 +35,13 @@ class _IntroPageLoginOptionsState extends State<IntroPageLoginOptions> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        Image(
-                          image: AssetImage('assets/images/logo_white.png'),
-                          height: 145.0,
-                          width: 145.0,
+                        Hero(
+                          tag: "WhiteLogo",
+                          child: Image(
+                            image: AssetImage('assets/images/logo_white.png'),
+                            height: 145.0,
+                            width: 145.0,
+                          ),
                         ),
                         SizedBox(
                           height: 30.0,
@@ -155,7 +158,8 @@ class _IntroPageLoginOptionsState extends State<IntroPageLoginOptions> {
                           topLeft: Radius.circular(30.0),
                           topRight: Radius.circular(30.0)),
                     ),
-                    child: AccountBottomSheet(scrollController: scrollController)),
+                    child:
+                        AccountBottomSheet(scrollController: scrollController)),
               );
             },
           ),
