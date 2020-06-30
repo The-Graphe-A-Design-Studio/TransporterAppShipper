@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:transportationapp/RouteGenerator.dart';
 import 'package:transportationapp/SplashScreen.dart';
 
 void main() async {
@@ -21,7 +22,8 @@ class StartApp extends StatelessWidget {
         accentColor: Colors.black12,
         accentColorBrightness: Brightness.light,
         visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
+      ),initialRoute: '/',
+      onGenerateRoute: RouteGenerator.generateRoute,
       home: SplashScreen(),
     );
   }

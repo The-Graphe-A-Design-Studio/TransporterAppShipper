@@ -180,6 +180,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
       });
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setBool('isLoggedIn', true);
+      prefs.setString('userData', jsonResult);
       return postResultSignIn.success;
     } else {
       PostResultOne postResultOne = PostResultOne.fromJson(jsonResult);
