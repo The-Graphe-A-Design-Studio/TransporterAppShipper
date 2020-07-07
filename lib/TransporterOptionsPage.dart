@@ -15,7 +15,14 @@ class TransporterOptionsPage extends StatefulWidget {
   _TransporterOptionsPageState createState() => _TransporterOptionsPageState();
 }
 
-enum WidgetMarker { options, credentials, documents, otpVerification, signIn, ownerDetails }
+enum WidgetMarker {
+  options,
+  credentials,
+  documents,
+  otpVerification,
+  signIn,
+  ownerDetails
+}
 
 class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
   WidgetMarker selectedWidgetMarker;
@@ -56,7 +63,6 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
   final FocusNode _panCardNumber = FocusNode();
   final FocusNode _bankAccountNumber = FocusNode();
   final FocusNode _ifscCode = FocusNode();
-
 
   @override
   void initState() {
@@ -300,7 +306,7 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                 },
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.person),
-                  hintText: "Full Name",
+                  labelText: "Full Name",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5.0),
                     borderSide: BorderSide(
@@ -319,34 +325,57 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
               SizedBox(
                 height: 16.0,
               ),
-              TextFormField(
-                controller: mobileNumberController,
-                keyboardType: TextInputType.number,
-                textInputAction: TextInputAction.next,
-                focusNode: _mobileNumber,
-                onFieldSubmitted: (term) {
-                  _mobileNumber.unfocus();
-                  FocusScope.of(context).requestFocus(_email);
-                },
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.dialpad),
-                  hintText: "Mobile Number",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: BorderSide(
-                      color: Colors.amber,
-                      style: BorderStyle.solid,
+              Row(
+                children: [
+                  SizedBox(
+                    child: TextFormField(
+                      readOnly: true,
+                      decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.dialpad),
+                        hintText: "+91",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5.0),
+                          borderSide: BorderSide(
+                            color: Colors.amber,
+                            style: BorderStyle.solid,
+                          ),
+                        ),
+                      ),
                     ),
+                    width: 97.0,
                   ),
-                ),
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return "This Field is Required";
-                  } else if (value.length < 10) {
-                    return "Enter Valid Mobile Number";
-                  }
-                  return null;
-                },
+                  SizedBox(width: 16.0),
+                  Flexible(
+                    child: TextFormField(
+                      controller: mobileNumberController,
+                      keyboardType: TextInputType.number,
+                      textInputAction: TextInputAction.next,
+                      focusNode: _mobileNumber,
+                      onFieldSubmitted: (term) {
+                        _mobileNumber.unfocus();
+                        FocusScope.of(context).requestFocus(_email);
+                      },
+                      decoration: InputDecoration(
+                        labelText: "Mobile Number",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5.0),
+                          borderSide: BorderSide(
+                            color: Colors.amber,
+                            style: BorderStyle.solid,
+                          ),
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return "This Field is Required";
+                        } else if (value.length < 10) {
+                          return "Enter Valid Mobile Number";
+                        }
+                        return null;
+                      },
+                    ),
+                  )
+                ],
               ),
               SizedBox(
                 height: 16.0,
@@ -362,7 +391,7 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                 },
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.mail),
-                  hintText: "Email",
+                  labelText: "Email",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5.0),
                     borderSide: BorderSide(
@@ -392,7 +421,7 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                   },
                   decoration: InputDecoration(
                     prefixIcon: Icon(Icons.vpn_key),
-                    hintText: "Password",
+                    labelText: "Password",
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5.0),
                       borderSide: BorderSide(
@@ -417,7 +446,7 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                 focusNode: _confirmPassword,
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.vpn_key),
-                  hintText: "Confirm Password",
+                  labelText: "Confirm Password",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5.0),
                     borderSide: BorderSide(
@@ -783,7 +812,7 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                 },
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.dialpad),
-                  hintText: "PAN Card Number",
+                  labelText: "PAN Card Number",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5.0),
                     borderSide: BorderSide(
@@ -813,7 +842,7 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                 },
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.credit_card),
-                  hintText: "Bank Account Number",
+                  labelText: "Bank Account Number",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5.0),
                     borderSide: BorderSide(
@@ -840,7 +869,7 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                 focusNode: _ifscCode,
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.code),
-                  hintText: "IFSC Code",
+                  labelText: "IFSC Code",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5.0),
                     borderSide: BorderSide(
@@ -978,7 +1007,7 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                 },
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.dialpad),
-                  hintText: "Enter OTP",
+                  labelText: "Enter OTP",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5.0),
                     borderSide: BorderSide(
@@ -1099,34 +1128,57 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
               SizedBox(
                 height: 20.0,
               ),
-              TextFormField(
-                controller: mobileNumberControllerSignIn,
-                keyboardType: TextInputType.number,
-                textInputAction: TextInputAction.next,
-                focusNode: _mobileNumberSignIn,
-                onFieldSubmitted: (term) {
-                  _mobileNumberSignIn.unfocus();
-                  FocusScope.of(context).requestFocus(_passwordSignIn);
-                },
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.dialpad),
-                  hintText: "Mobile Number",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: BorderSide(
-                      color: Colors.amber,
-                      style: BorderStyle.solid,
+              Row(
+                children: [
+                  SizedBox(
+                    child: TextFormField(
+                      readOnly: true,
+                      decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.dialpad),
+                        hintText: "+91",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5.0),
+                          borderSide: BorderSide(
+                            color: Colors.amber,
+                            style: BorderStyle.solid,
+                          ),
+                        ),
+                      ),
                     ),
+                    width: 97.0,
                   ),
-                ),
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return "This Field is Required";
-                  } else if (value.length != 10) {
-                    return "Enter Valid Mobile Number";
-                  }
-                  return null;
-                },
+                  SizedBox(width: 16.0),
+                  Flexible(
+                    child: TextFormField(
+                      controller: mobileNumberControllerSignIn,
+                      keyboardType: TextInputType.number,
+                      textInputAction: TextInputAction.next,
+                      focusNode: _mobileNumberSignIn,
+                      onFieldSubmitted: (term) {
+                        _mobileNumberSignIn.unfocus();
+                        FocusScope.of(context).requestFocus(_passwordSignIn);
+                      },
+                      decoration: InputDecoration(
+                        labelText: "Mobile Number",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5.0),
+                          borderSide: BorderSide(
+                            color: Colors.amber,
+                            style: BorderStyle.solid,
+                          ),
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return "This Field is Required";
+                        } else if (value.length != 10) {
+                          return "Enter Valid Mobile Number";
+                        }
+                        return null;
+                      },
+                    ),
+                  )
+                ],
               ),
               SizedBox(
                 height: 16.0,
@@ -1138,7 +1190,7 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                 focusNode: _passwordSignIn,
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.vpn_key),
-                  hintText: "Password",
+                  labelText: "Password",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5.0),
                     borderSide: BorderSide(
@@ -1164,7 +1216,8 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                   onTap: () {
                     if (_formKeySignIn.currentState.validate()) {
                       setState(() {
-                        Navigator.push(context, FadeRoute(page: NewTransportingOrder()));
+                        Navigator.push(
+                            context, FadeRoute(page: NewTransportingOrder()));
                       });
                     }
                   },
@@ -1210,10 +1263,13 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
           ),
           GestureDetector(
             onTap: () {
-              Navigator.push(
-                  context, FadeRoute(page: RequestTransport()));
+              Navigator.push(context, FadeRoute(page: RequestTransport()));
             },
-            child: Icon(Icons.arrow_forward, size: 30, color: Colors.white,),
+            child: Icon(
+              Icons.arrow_forward,
+              size: 30,
+              color: Colors.white,
+            ),
           ),
         ],
       ),
@@ -1243,10 +1299,13 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
           ),
           GestureDetector(
             onTap: () {
-              Navigator.push(
-                  context, FadeRoute(page: OrderSummaryScreen()));
+              Navigator.push(context, FadeRoute(page: OrderSummaryScreen()));
             },
-            child: Icon(Icons.arrow_forward, size: 30, color: Colors.white,),
+            child: Icon(
+              Icons.arrow_forward,
+              size: 30,
+              color: Colors.white,
+            ),
           ),
           Spacer(),
         ],

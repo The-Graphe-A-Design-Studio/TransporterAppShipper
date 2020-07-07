@@ -427,7 +427,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                 },
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.person),
-                  hintText: "Full Name",
+                  labelText: "Full Name",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5.0),
                     borderSide: BorderSide(
@@ -448,7 +448,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
               ),
               Row(
                 children: [
-                  Expanded(
+                  SizedBox(
                     child: TextFormField(
                       readOnly: true,
                       decoration: InputDecoration(
@@ -463,9 +463,10 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                         ),
                       ),
                     ),
+                    width: 97.0,
                   ),
                   SizedBox(width: 16.0),
-                  Expanded(
+                  Flexible(
                     child: TextFormField(
                       controller: mobileNumberController,
                       keyboardType: TextInputType.number,
@@ -476,7 +477,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                         FocusScope.of(context).requestFocus(_email);
                       },
                       decoration: InputDecoration(
-                        hintText: "Mobile Number",
+                        labelText: "Mobile Number",
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(5.0),
                           borderSide: BorderSide(
@@ -511,7 +512,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                 },
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.mail),
-                  hintText: "Email",
+                  labelText: "Email",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5.0),
                     borderSide: BorderSide(
@@ -541,7 +542,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                 },
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.location_on),
-                  hintText: "Your Address",
+                  labelText: "Your Address",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5.0),
                     borderSide: BorderSide(
@@ -571,7 +572,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                   },
                   decoration: InputDecoration(
                     prefixIcon: Icon(Icons.vpn_key),
-                    hintText: "Password",
+                    labelText: "Password",
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5.0),
                       borderSide: BorderSide(
@@ -596,7 +597,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                 focusNode: _confirmPassword,
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.vpn_key),
-                  hintText: "Confirm Password",
+                  labelText: "Confirm Password",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5.0),
                     borderSide: BorderSide(
@@ -962,7 +963,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                 },
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.dialpad),
-                  hintText: "PAN Card Number",
+                  labelText: "PAN Card Number",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5.0),
                     borderSide: BorderSide(
@@ -992,7 +993,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                 },
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.credit_card),
-                  hintText: "Bank Account Number",
+                  labelText: "Bank Account Number",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5.0),
                     borderSide: BorderSide(
@@ -1019,7 +1020,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                 focusNode: _ifscCode,
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.code),
-                  hintText: "IFSC Code",
+                  labelText: "IFSC Code",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5.0),
                     borderSide: BorderSide(
@@ -1058,7 +1059,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                     height: 50.0,
                     child: Center(
                       child: Text(
-                        "Next",
+                        "Sign Up",
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 24.0,
@@ -1161,7 +1162,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                 },
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.dialpad),
-                  hintText: "Enter OTP",
+                  labelText: "Enter OTP",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5.0),
                     borderSide: BorderSide(
@@ -1309,34 +1310,57 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
               SizedBox(
                 height: 20.0,
               ),
-              TextFormField(
-                controller: mobileNumberControllerSignIn,
-                keyboardType: TextInputType.number,
-                textInputAction: TextInputAction.next,
-                focusNode: _mobileNumberSignIn,
-                onFieldSubmitted: (term) {
-                  _mobileNumberSignIn.unfocus();
-                  FocusScope.of(context).requestFocus(_passwordSignIn);
-                },
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.dialpad),
-                  hintText: "Mobile Number",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: BorderSide(
-                      color: Colors.amber,
-                      style: BorderStyle.solid,
+              Row(
+                children: [
+                  SizedBox(
+                    child: TextFormField(
+                      readOnly: true,
+                      decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.dialpad),
+                        hintText: "+91",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5.0),
+                          borderSide: BorderSide(
+                            color: Colors.amber,
+                            style: BorderStyle.solid,
+                          ),
+                        ),
+                      ),
                     ),
+                    width: 97.0,
                   ),
-                ),
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return "This Field is Required";
-                  } else if (value.length != 10) {
-                    return "Enter Valid Mobile Number";
-                  }
-                  return null;
-                },
+                  SizedBox(width: 16.0),
+                  Flexible(
+                    child: TextFormField(
+                      controller: mobileNumberControllerSignIn,
+                      keyboardType: TextInputType.number,
+                      textInputAction: TextInputAction.next,
+                      focusNode: _mobileNumberSignIn,
+                      onFieldSubmitted: (term) {
+                        _mobileNumberSignIn.unfocus();
+                        FocusScope.of(context).requestFocus(_passwordSignIn);
+                      },
+                      decoration: InputDecoration(
+                        labelText: "Mobile Number",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5.0),
+                          borderSide: BorderSide(
+                            color: Colors.amber,
+                            style: BorderStyle.solid,
+                          ),
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return "This Field is Required";
+                        } else if (value.length != 10) {
+                          return "Enter Valid Mobile Number";
+                        }
+                        return null;
+                      },
+                    ),
+                  )
+                ],
               ),
               SizedBox(
                 height: 16.0,
@@ -1349,7 +1373,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                 focusNode: _passwordSignIn,
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.vpn_key),
-                  hintText: "Password",
+                  labelText: "Password",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5.0),
                     borderSide: BorderSide(
@@ -1377,7 +1401,8 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                       postSignInRequest(context).then((value) {
                         if (value == true) {
                           Navigator.pop(context);
-                          Navigator.pushReplacement(context, FadeRoute(page: HomePage()));
+                          Navigator.pushReplacement(
+                              context, FadeRoute(page: HomePage()));
                         }
                       });
                     }
