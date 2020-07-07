@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:transportationapp/EmiCalculator.dart';
-import 'package:transportationapp/FadeTransition.dart';
-import 'package:transportationapp/FreightCalculator.dart';
-import 'package:transportationapp/TollCalculator.dart';
-import 'package:transportationapp/TripPlanner.dart';
+import 'package:transportationapp/MyConstants.dart';
 
 class AccountBottomSheetLoggedOut extends StatefulWidget {
   final ScrollController scrollController;
@@ -69,7 +65,7 @@ class _AccountBottomSheetLoggedOutState
                 Material(
                   child: InkWell(
                     onTap: () {
-                      Navigator.push(context, FadeRoute(page: TripPlanner()));
+                      Navigator.pushNamed(context, tripPlannerPage);
                     },
                     child: Container(
                       width: 160,
@@ -122,8 +118,7 @@ class _AccountBottomSheetLoggedOutState
                 Material(
                   child: InkWell(
                     onTap: () {
-                      Navigator.push(
-                          context, FadeRoute(page: FreightCalculator()));
+                      Navigator.pushNamed(context, freightCalculatorPage);
                     },
                     child: Container(
                       width: 160,
@@ -176,8 +171,7 @@ class _AccountBottomSheetLoggedOutState
                 Material(
                   child: InkWell(
                     onTap: () {
-                      Navigator.push(
-                          context, FadeRoute(page: TollCalculator()));
+                      Navigator.pushNamed(context, tollCalculatorPage);
                     },
                     child: Container(
                       width: 160,
@@ -230,7 +224,7 @@ class _AccountBottomSheetLoggedOutState
                 Material(
                   child: InkWell(
                     onTap: () {
-                      Navigator.push(context, FadeRoute(page: EmiCalculator()));
+                      Navigator.pushNamed(context, tripPlannerPage);
                     },
                     child: Container(
                       width: 160,

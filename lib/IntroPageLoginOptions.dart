@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:transportationapp/AccountBottomSheetLoggedOut.dart';
-import 'package:transportationapp/DriverOptionsPage.dart';
-import 'package:transportationapp/FadeTransition.dart';
-import 'package:transportationapp/TransporterOptionsPage.dart';
+import 'package:transportationapp/MyConstants.dart';
 
 class IntroPageLoginOptions extends StatefulWidget {
   IntroPageLoginOptions({Key key}) : super(key: key);
@@ -68,8 +66,10 @@ class _IntroPageLoginOptionsState extends State<IntroPageLoginOptions> {
                               height: MediaQuery.of(context).size.width * 0.35,
                             ),
                             GestureDetector(
-                              onTap: () => Navigator.push(context,
-                                  FadeRoute(page: TransporterOptionsPage())),
+                              onTap: () {
+                                Navigator.pushNamed(
+                                    context, transporterOptionPage);
+                              },
                               child: Container(
                                   decoration: BoxDecoration(
                                     color: Colors.white,
@@ -109,8 +109,9 @@ class _IntroPageLoginOptionsState extends State<IntroPageLoginOptions> {
                               height: MediaQuery.of(context).size.width * 0.35,
                             ),
                             GestureDetector(
-                              onTap: () => Navigator.push(context,
-                                  FadeRoute(page: DriverOptionsPage())),
+                              onTap: () {
+                                Navigator.pushNamed(context, driverOptionPage);
+                              },
                               child: Container(
                                   decoration: BoxDecoration(
                                     color: Colors.white,
@@ -158,8 +159,8 @@ class _IntroPageLoginOptionsState extends State<IntroPageLoginOptions> {
                           topLeft: Radius.circular(30.0),
                           topRight: Radius.circular(30.0)),
                     ),
-                    child:
-                        AccountBottomSheetLoggedOut(scrollController: scrollController)),
+                    child: AccountBottomSheetLoggedOut(
+                        scrollController: scrollController)),
               );
             },
           ),

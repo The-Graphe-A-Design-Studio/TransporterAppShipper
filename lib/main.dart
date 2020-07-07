@@ -22,7 +22,8 @@ class StartApp extends StatelessWidget {
         accentColor: Colors.black12,
         accentColorBrightness: Brightness.light,
         visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),initialRoute: '/',
+      ),
+      initialRoute: '/',
       onGenerateRoute: RouteGenerator.generateRoute,
       home: SplashScreen(),
     );

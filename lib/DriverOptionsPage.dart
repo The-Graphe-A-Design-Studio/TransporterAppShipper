@@ -5,10 +5,10 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:transportationapp/FadeTransition.dart';
-import 'package:transportationapp/HomePage.dart';
 import 'package:transportationapp/HttpHandler.dart';
+import 'package:transportationapp/MyConstants.dart';
 import 'package:transportationapp/PostMethodResult.dart';
+import 'package:transportationapp/User.dart';
 
 class DriverOptionsPage extends StatefulWidget {
   DriverOptionsPage({Key key, this.title}) : super(key: key);
@@ -31,7 +31,7 @@ enum WidgetMarker {
 class _DriverOptionsPageState extends State<DriverOptionsPage> {
   WidgetMarker selectedWidgetMarker = WidgetMarker.options;
   WidgetMarker selectedBottomSheetWidgetMarker = WidgetMarker.options;
-  PostResultSignIn postResultSignIn;
+  UserDriver userDriver;
 
   final GlobalKey<FormState> _formKeyCredentials = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKeyDocuments = GlobalKey<FormState>();
@@ -168,19 +168,18 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
     });
     var jsonResult = json.decode(result.body);
     if (jsonResult['success'] == '1') {
-      postResultSignIn = PostResultSignIn.fromJson(jsonResult);
+      userDriver = UserDriver.fromJson(jsonResult);
       setState(() {
         final snackBar = SnackBar(
           backgroundColor: Colors.green,
-          content: Text("Welcome, ${postResultSignIn.dName}!"),
+          content: Text("Welcome, ${userDriver.dName}!"),
         );
         Scaffold.of(_context).showSnackBar(snackBar);
       });
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setBool('isLoggedIn', true);
       prefs.setBool('rememberMe', rememberMe);
-      prefs.setString('userData', result.body);
-      return postResultSignIn.success;
+      prefs.setString('userDriver', result.body);
+      return userDriver.success;
     } else {
       PostResultOne postResultOne = PostResultOne.fromJson(jsonResult);
       setState(() {
@@ -1426,9 +1425,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                       postSignInRequest(context).then((value) {
                         print(value.toString());
                         if (value == true) {
-                          Navigator.pop(context);
-                          Navigator.pushReplacement(
-                              context, FadeRoute(page: HomePage()));
+                          Navigator.pushNamedAndRemoveUntil(context, homePage, (route) => false);
                         }
                       });
                     }

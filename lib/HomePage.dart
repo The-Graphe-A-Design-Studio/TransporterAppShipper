@@ -2,24 +2,26 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:transportationapp/AccountBottomSheetLoggedIn.dart';
-import 'package:transportationapp/FadeTransition.dart';
-import 'package:transportationapp/IntroPageLoginOptions.dart';
+import 'package:transportationapp/MyConstants.dart';
+import 'package:transportationapp/User.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({Key key}) : super(key: key);
+  final UserDriver userDriver;
+  HomePage({Key key, this.userDriver}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+
   @override
   void initState() {
     super.initState();
   }
 
   signOut() async {
-    await SharedPreferences.getInstance().then((value) => value.setBool("isLoggedIn", false));
+    await SharedPreferences.getInstance().then((value) => value.setBool("rememberMe", false));
   }
 
   @override
@@ -51,7 +53,7 @@ class _HomePageState extends State<HomePage> {
                           height: 30.0,
                         ),
                         Text(
-                          "You Are Logged in !",
+                          "You Are Logged in : Name - ${widget.userDriver.dName}",
                           style: TextStyle(
                             fontSize: 18.0,
                             fontWeight: FontWeight.bold,
@@ -74,8 +76,7 @@ class _HomePageState extends State<HomePage> {
                             GestureDetector(
                               onTap: () {
                                 signOut();
-                                Navigator.pushReplacement(context,
-                                    FadeRoute(page: IntroPageLoginOptions()));
+                                Navigator.pushNamedAndRemoveUntil(context, introLoginOptionPage, (route) => false);
                               },
                               child: Container(
                                   decoration: BoxDecoration(

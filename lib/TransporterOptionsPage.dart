@@ -3,8 +3,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:transportationapp/FadeTransition.dart';
-import 'package:transportationapp/NewTransportingOrder.dart';
+import 'package:transportationapp/MyConstants.dart';
 
 class TransporterOptionsPage extends StatefulWidget {
   TransporterOptionsPage({Key key}) : super(key: key);
@@ -1214,8 +1213,7 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                   onTap: () {
                     if (_formKeySignIn.currentState.validate()) {
                       setState(() {
-                        Navigator.push(
-                            context, FadeRoute(page: NewTransportingOrder()));
+                        Navigator.pushReplacementNamed(context, newTransportingOrderPage);
                       });
                     }
                   },
