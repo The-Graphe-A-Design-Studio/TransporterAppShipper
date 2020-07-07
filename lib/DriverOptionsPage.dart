@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:transportationapp/FadeTransition.dart';
 import 'package:transportationapp/HomePage.dart';
+import 'package:transportationapp/HttpHandler.dart';
 import 'package:transportationapp/PostMethodResult.dart';
 
 class DriverOptionsPage extends StatefulWidget {
@@ -102,42 +103,38 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
     super.dispose();
   }
 
-  Future<bool> postSignUpRequest(BuildContext _context) async {
-    var url = "https://developers.thegraphe.com/transport/api/drivers/register";
-    var request = http.MultipartRequest('POST', Uri.parse(url));
-
-    request.fields['d_name'] = nameController.text.toString();
-    request.fields['d_email'] = emailController.text.toString();
-    request.fields['d_phone_code'] = '91';
-    request.fields['d_phone'] = mobileNumberController.text.toString();
-    request.fields['d_password'] = passwordController.text.toString();
-    request.fields['d_cnf_password'] =
-        confirmPasswordController.text.toString();
-    request.fields['d_address'] = addressController.text.toString();
-    request.files.add(await http.MultipartFile.fromPath('d_rc', rcFile.path));
-    request.files
-        .add(await http.MultipartFile.fromPath('d_license', rcFile.path));
-    request.files
-        .add(await http.MultipartFile.fromPath('d_insurance', rcFile.path));
-    request.files
-        .add(await http.MultipartFile.fromPath('d_road_tax', rcFile.path));
-    request.files.add(await http.MultipartFile.fromPath('d_rto', rcFile.path));
-    request.fields['d_pan'] = panCardNumberController.text.toString();
-    request.fields['d_bank'] = bankAccountNumberController.text.toString();
-    request.fields['d_ifsc'] = ifscCodeController.text.toString();
-
-    var result = await request.send();
-    var finalResult = await http.Response.fromStream(result);
-    PostResultOne postResultOne =
-        PostResultOne.fromJson(json.decode(finalResult.body));
-    setState(() {
+  bool postSignUpRequest(BuildContext _context) {
+    HTTPHandler().registerDriver([
+      nameController.text.toString(),
+      emailController.text.toString(),
+      '91',
+      mobileNumberController.text.toString(),
+      passwordController.text.toString(),
+      confirmPasswordController.text.toString(),
+      addressController.text.toString(),
+      rcFile.path,
+      licenceFile.path,
+      insuranceFile.path,
+      roadTaxFile.path,
+      rtoPassingFile.path,
+      panCardNumberController.text.toString(),
+      bankAccountNumberController.text.toString(),
+      ifscCodeController.text.toString()
+    ]).then((value) {
       final snackBar = SnackBar(
-        backgroundColor: postResultOne.success ? Colors.green : Colors.red,
-        content: Text(postResultOne.message),
+        backgroundColor: value.success ? Colors.green : Colors.red,
+        content: Text(value.message),
       );
       Scaffold.of(_context).showSnackBar(snackBar);
+      return value.success;
+    }).catchError((error) {
+      final snackBar = SnackBar(
+        backgroundColor: Colors.red,
+        content: Text(error),
+      );
+      Scaffold.of(_context).showSnackBar(snackBar);
+      return false;
     });
-    return postResultOne.success;
   }
 
   Future<bool> postOtpVerificationRequest(BuildContext _context) async {
@@ -179,7 +176,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
       });
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setBool('isLoggedIn', true);
-      prefs.setString('userData', jsonResult);
+      prefs.setString('userData', result.body);
       return postResultSignIn.success;
     } else {
       PostResultOne postResultOne = PostResultOne.fromJson(jsonResult);
@@ -1044,13 +1041,11 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                   splashColor: Colors.transparent,
                   onTap: () {
                     if (_formKeyOwnerDetails.currentState.validate()) {
-                      postSignUpRequest(context).then((value) {
-                        if (value == true) {
-                          setState(() {
-                            selectedWidgetMarker = WidgetMarker.otpVerification;
-                          });
-                        }
-                      });
+                      if (postSignUpRequest(context)) {
+                        setState(() {
+                          selectedWidgetMarker = WidgetMarker.otpVerification;
+                        });
+                      }
                     }
                   },
                   child: Container(
@@ -1398,6 +1393,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                   onTap: () {
                     if (_formKeySignIn.currentState.validate()) {
                       postSignInRequest(context).then((value) {
+                        print(value.toString());
                         if (value == true) {
                           Navigator.pop(context);
                           Navigator.pushReplacement(
