@@ -55,6 +55,8 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
   final passwordControllerSignIn = TextEditingController();
   final mobileNumberControllerSignIn = TextEditingController();
 
+  bool rememberMe = false;
+
   File rcFile, licenceFile, insuranceFile, roadTaxFile, rtoPassingFile;
   bool rcDone, licenceDone, insuranceDone, roadTaxDone, rtoPassingDone;
 
@@ -176,6 +178,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
       });
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setBool('isLoggedIn', true);
+      prefs.setBool('rememberMe', rememberMe);
       prefs.setString('userData', result.body);
       return postResultSignIn.success;
     } else {
@@ -189,6 +192,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
       });
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setBool('isLoggedIn', false);
+      prefs.setBool('rememberMe', false);
       return postResultOne.success;
     }
   }
@@ -1383,8 +1387,35 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                   return null;
                 },
               ),
+              Row(
+                children: [
+                  Checkbox(
+                    value: rememberMe,
+                    checkColor: Colors.white,
+                    activeColor: Color(0xff252427),
+                    onChanged: (bool value) {
+                      setState(() {
+                        rememberMe = value;
+                      });
+                    },
+                  ),
+                  SizedBox(
+                    width: 0.0,
+                  ),
+                  Text("Remember Me"),
+                  Spacer(),
+                  GestureDetector(
+                    onTap: () {
+                      print("Forgot Password");
+                    },
+                    child: Container(
+                      child: Text("Forgot Password?"),
+                    ),
+                  )
+                ],
+              ),
               SizedBox(
-                height: 16.0,
+                height: 30.0,
               ),
               Material(
                 color: Colors.transparent,
@@ -1656,7 +1687,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
         body: Stack(children: <Widget>[
           getCustomWidget(context),
           DraggableScrollableSheet(
-            initialChildSize: 0.65,
+            initialChildSize: 0.64,
             minChildSize: 0.4,
             maxChildSize: 0.9,
             builder: (BuildContext context, ScrollController scrollController) {
