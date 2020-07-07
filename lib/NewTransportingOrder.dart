@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:transportationapp/AccountBottomSheet.dart';
+import 'package:transportationapp/AccountBottomSheetLoggedIn.dart';
 
 class NewTransportingOrder extends StatefulWidget {
   NewTransportingOrder({Key key}) : super(key: key);
@@ -91,7 +91,7 @@ class _NewTransportingOrderState extends State<NewTransportingOrder> {
                           topLeft: Radius.circular(30.0),
                           topRight: Radius.circular(30.0)),
                     ),
-                    child: AccountBottomSheet(scrollController: scrollController)),
+                    child: AccountBottomSheetLoggedIn(scrollController: scrollController)),
               );
             },
           ),

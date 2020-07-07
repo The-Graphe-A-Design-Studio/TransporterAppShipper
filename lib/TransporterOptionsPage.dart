@@ -5,8 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:transportationapp/FadeTransition.dart';
 import 'package:transportationapp/NewTransportingOrder.dart';
-import 'package:transportationapp/OrderSummaryScreen.dart';
-import 'package:transportationapp/RequestTransport.dart';
 
 class TransporterOptionsPage extends StatefulWidget {
   TransporterOptionsPage({Key key}) : super(key: key);
@@ -1261,16 +1259,6 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                 fontSize: 40.0,
                 fontWeight: FontWeight.bold),
           ),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(context, FadeRoute(page: RequestTransport()));
-            },
-            child: Icon(
-              Icons.arrow_forward,
-              size: 30,
-              color: Colors.white,
-            ),
-          ),
         ],
       ),
     );
@@ -1296,16 +1284,6 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                 color: Colors.white,
                 fontSize: 40.0,
                 fontWeight: FontWeight.bold),
-          ),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(context, FadeRoute(page: OrderSummaryScreen()));
-            },
-            child: Icon(
-              Icons.arrow_forward,
-              size: 30,
-              color: Colors.white,
-            ),
           ),
           Spacer(),
         ],

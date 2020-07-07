@@ -4,7 +4,7 @@ class AccountBottomSheetDummy extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(top:16.0, left: 16.0, right: 16.0),
+      padding: EdgeInsets.only(top:24.0, left: 16.0, right: 16.0),
       child: Align(
         alignment: Alignment.topCenter,
         child: Container(

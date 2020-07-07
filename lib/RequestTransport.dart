@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:transportationapp/AccountBottomSheet.dart';
+import 'package:transportationapp/AccountBottomSheetLoggedIn.dart';
 
 class RequestTransport extends StatefulWidget {
   RequestTransport({Key key, this.title}) : super(key: key);
@@ -350,7 +350,7 @@ class _RequestTransportState extends State<RequestTransport> {
                           topRight: Radius.circular(30.0)),
                     ),
                     child:
-                        AccountBottomSheet(scrollController: scrollController)),
+                        AccountBottomSheetLoggedIn(scrollController: scrollController)),
               );
             },
           ),

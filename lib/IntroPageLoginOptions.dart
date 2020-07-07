@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:transportationapp/AccountBottomSheet.dart';
+import 'package:transportationapp/AccountBottomSheetLoggedOut.dart';
 import 'package:transportationapp/DriverOptionsPage.dart';
 import 'package:transportationapp/FadeTransition.dart';
 import 'package:transportationapp/TransporterOptionsPage.dart';
@@ -159,7 +159,7 @@ class _IntroPageLoginOptionsState extends State<IntroPageLoginOptions> {
                           topRight: Radius.circular(30.0)),
                     ),
                     child:
-                        AccountBottomSheet(scrollController: scrollController)),
+                        AccountBottomSheetLoggedOut(scrollController: scrollController)),
               );
             },
           ),

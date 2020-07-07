@@ -5,7 +5,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:transportationapp/DriverUpcomingOrder.dart';
 import 'package:transportationapp/FadeTransition.dart';
 import 'package:transportationapp/HomePage.dart';
 import 'package:transportationapp/PostMethodResult.dart';
@@ -1446,16 +1445,6 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                 color: Colors.white,
                 fontSize: 40.0,
                 fontWeight: FontWeight.bold),
-          ),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(context, FadeRoute(page: DriverUpcomingOrder()));
-            },
-            child: Icon(
-              Icons.arrow_forward,
-              size: 30,
-              color: Colors.white,
-            ),
           ),
         ],
       ),

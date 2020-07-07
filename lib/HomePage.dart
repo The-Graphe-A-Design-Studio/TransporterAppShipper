@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:transportationapp/AccountBottomSheet.dart';
+import 'package:transportationapp/AccountBottomSheetLoggedIn.dart';
 import 'package:transportationapp/FadeTransition.dart';
 import 'package:transportationapp/IntroPageLoginOptions.dart';
 
@@ -128,7 +128,7 @@ class _HomePageState extends State<HomePage> {
                           topRight: Radius.circular(30.0)),
                     ),
                     child:
-                        AccountBottomSheet(scrollController: scrollController)),
+                        AccountBottomSheetLoggedIn(scrollController: scrollController)),
               );
             },
           ),

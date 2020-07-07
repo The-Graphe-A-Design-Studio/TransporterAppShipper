@@ -1,6 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:transportationapp/AccountBottomSheet.dart';
+import 'package:transportationapp/AccountBottomSheetLoggedIn.dart';
 
 class OrderSummaryScreen extends StatefulWidget {
   OrderSummaryScreen({Key key}) : super(key: key);
@@ -339,7 +339,7 @@ class _OrderSummaryScreenState extends State<OrderSummaryScreen> {
                           topLeft: Radius.circular(30.0),
                           topRight: Radius.circular(30.0)),
                     ),
-                    child: AccountBottomSheet(scrollController: scrollController)),
+                    child: AccountBottomSheetLoggedIn(scrollController: scrollController)),
               );
             },
           ),
