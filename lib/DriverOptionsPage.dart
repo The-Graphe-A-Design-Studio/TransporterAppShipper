@@ -55,7 +55,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
   final passwordControllerSignIn = TextEditingController();
   final mobileNumberControllerSignIn = TextEditingController();
 
-  bool rememberMe = false;
+  bool rememberMe = true;
 
   File rcFile, licenceFile, insuranceFile, roadTaxFile, rtoPassingFile;
   bool rcDone, licenceDone, insuranceDone, roadTaxDone, rtoPassingDone;
@@ -1423,9 +1423,8 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                   onTap: () {
                     if (_formKeySignIn.currentState.validate()) {
                       postSignInRequest(context).then((value) {
-                        print(value.toString());
                         if (value == true) {
-                          Navigator.pushNamedAndRemoveUntil(context, homePage, (route) => false);
+                          Navigator.pushNamedAndRemoveUntil(context, homePage, (route) => false, arguments: userDriver);
                         }
                       });
                     }
