@@ -7,9 +7,9 @@ import 'package:transportationapp/User.dart';
 
 class HTTPHandler {
   String baseURLDriver =
-      'https://developers.thegraphe.com/transport/api/drivers/login';
+      'https://developers.thegraphe.com/transport/api/drivers';
   String baseURLTransporter =
-      'https://developers.thegraphe.com/transport/api/drivers/login';
+      'https://developers.thegraphe.com/transport/api/drivers';
 
   Future<PostResultOne> registerDriver(List data) async {
     try {

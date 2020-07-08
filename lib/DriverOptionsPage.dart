@@ -102,7 +102,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
     super.dispose();
   }
 
-  bool postSignUpRequest(BuildContext _context) {
+  void postSignUpRequest(BuildContext _context) {
     HTTPHandler().registerDriver([
       nameController.text.toString(),
       emailController.text.toString(),
@@ -124,36 +124,36 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
         backgroundColor: value.success ? Colors.green : Colors.red,
         content: Text(value.message),
       ));
-      return value.success;
+      setState(() {
+        selectedWidgetMarker = WidgetMarker.otpVerification;
+      });
     }).catchError((error) {
       Scaffold.of(_context).showSnackBar(SnackBar(
         backgroundColor: Colors.red,
         content: Text("Network Error!"),
       ));
-      return false;
     });
-    return false;
   }
 
-  bool postOtpVerificationRequest(BuildContext _context) {
+  void postOtpVerificationRequest(BuildContext _context) {
     HTTPHandler().registerVerifyOtpDriver(
         [mobileNumberController.text, otpController.text]).then((value) {
       Scaffold.of(_context).showSnackBar(SnackBar(
         backgroundColor: value.success ? Colors.green : Colors.red,
         content: Text(value.message),
       ));
-      return value.success;
+      if (value.success) {
+        print("OTP Verification Done");
+      }
     }).catchError((error) {
       Scaffold.of(_context).showSnackBar(SnackBar(
         backgroundColor: Colors.red,
         content: Text("Network Error!"),
       ));
-      return false;
     });
-    return false;
   }
 
-  bool postSignInRequest(BuildContext _context) {
+  void postSignInRequest(BuildContext _context) {
     HTTPHandler().loginDriver([
       mobileNumberControllerSignIn.text,
       passwordControllerSignIn.text,
@@ -165,41 +165,36 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
           backgroundColor: Colors.green,
           content: Text("Welcome, ${userDriver.dName}!"),
         ));
-        return true;
+        Navigator.pushNamedAndRemoveUntil(_context, homePage, (route) => false,
+            arguments: userDriver);
       } else {
         PostResultOne postResultOne = value[1];
         Scaffold.of(_context).showSnackBar(SnackBar(
           backgroundColor: Colors.red,
           content: Text("${postResultOne.message}"),
         ));
-        return false;
       }
     }).catchError((error) {
       Scaffold.of(_context).showSnackBar(SnackBar(
         backgroundColor: Colors.red,
         content: Text("Network Error!"),
       ));
-      return false;
     });
-    return false;
   }
 
-  bool postResendOtpRequest(BuildContext _context) {
+  void postResendOtpRequest(BuildContext _context) {
     HTTPHandler()
         .registerVerifyOtpDriver([mobileNumberController.text]).then((value) {
       Scaffold.of(_context).showSnackBar(SnackBar(
         backgroundColor: value.success ? Colors.green : Colors.red,
         content: Text(value.message),
       ));
-      return value.success;
     }).catchError((error) {
       Scaffold.of(_context).showSnackBar(SnackBar(
         backgroundColor: Colors.red,
         content: Text("Network Error!"),
       ));
-      return false;
     });
-    return false;
   }
 
   void clearControllers() {
@@ -1032,11 +1027,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                   splashColor: Colors.transparent,
                   onTap: () {
                     if (_formKeyOwnerDetails.currentState.validate()) {
-                      if (postSignUpRequest(context)) {
-                        setState(() {
-                          selectedWidgetMarker = WidgetMarker.otpVerification;
-                        });
-                      }
+                      postSignUpRequest(context);
                     }
                   },
                   child: Container(
@@ -1191,9 +1182,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                       otpController.clear();
                     });
                     if (_formKeyOtp.currentState.validate()) {
-                      if (postOtpVerificationRequest(context) == true) {
-                        print("OTP Verification Done");
-                      }
+                      postOtpVerificationRequest(context);
                     }
                   },
                   child: Container(
@@ -1408,11 +1397,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                   splashColor: Colors.transparent,
                   onTap: () {
                     if (_formKeySignIn.currentState.validate()) {
-                      if (postSignInRequest(context)) {
-                        Navigator.pushNamedAndRemoveUntil(
-                            context, homePage, (route) => false,
-                            arguments: userDriver);
-                      }
+                      postSignInRequest(context);
                     }
                   },
                   child: Container(
