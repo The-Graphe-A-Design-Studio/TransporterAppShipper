@@ -1,10 +1,7 @@
-import 'dart:convert';
 import 'dart:io';
-import 'package:http/http.dart' as http;
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:transportationapp/HttpHandler.dart';
 import 'package:transportationapp/MyConstants.dart';
 import 'package:transportationapp/PostMethodResult.dart';
@@ -123,95 +120,86 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
       bankAccountNumberController.text.toString(),
       ifscCodeController.text.toString()
     ]).then((value) {
-      final snackBar = SnackBar(
+      Scaffold.of(_context).showSnackBar(SnackBar(
         backgroundColor: value.success ? Colors.green : Colors.red,
         content: Text(value.message),
-      );
-      Scaffold.of(_context).showSnackBar(snackBar);
+      ));
       return value.success;
     }).catchError((error) {
-      final snackBar = SnackBar(
+      Scaffold.of(_context).showSnackBar(SnackBar(
         backgroundColor: Colors.red,
-        content: Text(error),
-      );
-      Scaffold.of(_context).showSnackBar(snackBar);
+        content: Text("Network Error!"),
+      ));
       return false;
     });
+    return false;
   }
 
-  Future<bool> postOtpVerificationRequest(BuildContext _context) async {
-    var url = "https://developers.thegraphe.com/transport/api/drivers/register";
-
-    var result = await http.post(url, body: {
-      'phone_number': mobileNumberController.text.toString(),
-      'otp': otpController.text.toString()
+  bool postOtpVerificationRequest(BuildContext _context) {
+    HTTPHandler().registerVerifyOtpDriver(
+        [mobileNumberController.text, otpController.text]).then((value) {
+      Scaffold.of(_context).showSnackBar(SnackBar(
+        backgroundColor: value.success ? Colors.green : Colors.red,
+        content: Text(value.message),
+      ));
+      return value.success;
+    }).catchError((error) {
+      Scaffold.of(_context).showSnackBar(SnackBar(
+        backgroundColor: Colors.red,
+        content: Text("Network Error!"),
+      ));
+      return false;
     });
-    PostResultOne postResultOne =
-        PostResultOne.fromJson(json.decode(result.body));
-    setState(() {
-      final snackBar = SnackBar(
-        backgroundColor: postResultOne.success ? Colors.green : Colors.red,
-        content: Text(postResultOne.message),
-      );
-      Scaffold.of(_context).showSnackBar(snackBar);
-    });
-    return postResultOne.success;
+    return false;
   }
 
-  Future<bool> postSignInRequest(BuildContext _context) async {
-    var url = "https://developers.thegraphe.com/transport/api/drivers/login";
-
-    var result = await http.post(url, body: {
-      'phone_code': '91',
-      'phone': mobileNumberControllerSignIn.text.toString(),
-      'password': passwordControllerSignIn.text.toString()
-    });
-    var jsonResult = json.decode(result.body);
-    if (jsonResult['success'] == '1') {
-      userDriver = UserDriver.fromJson(jsonResult);
-      setState(() {
-        final snackBar = SnackBar(
+  bool postSignInRequest(BuildContext _context) {
+    HTTPHandler().loginDriver([
+      mobileNumberControllerSignIn.text,
+      passwordControllerSignIn.text,
+      rememberMe
+    ]).then((value) {
+      if (value[0]) {
+        userDriver = value[1];
+        Scaffold.of(_context).showSnackBar(SnackBar(
           backgroundColor: Colors.green,
           content: Text("Welcome, ${userDriver.dName}!"),
-        );
-        Scaffold.of(_context).showSnackBar(snackBar);
-      });
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setBool('rememberMe', rememberMe);
-      prefs.setString('userDriver', result.body);
-      return userDriver.success;
-    } else {
-      PostResultOne postResultOne = PostResultOne.fromJson(jsonResult);
-      setState(() {
-        final snackBar = SnackBar(
+        ));
+        return true;
+      } else {
+        PostResultOne postResultOne = value[1];
+        Scaffold.of(_context).showSnackBar(SnackBar(
           backgroundColor: Colors.red,
-          content: Text(postResultOne.message),
-        );
-        Scaffold.of(_context).showSnackBar(snackBar);
-      });
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setBool('isLoggedIn', false);
-      prefs.setBool('rememberMe', false);
-      return postResultOne.success;
-    }
+          content: Text("${postResultOne.message}"),
+        ));
+        return false;
+      }
+    }).catchError((error) {
+      Scaffold.of(_context).showSnackBar(SnackBar(
+        backgroundColor: Colors.red,
+        content: Text("Network Error!"),
+      ));
+      return false;
+    });
+    return false;
   }
 
-  Future<bool> postResendOtpRequest(BuildContext _context) async {
-    var url = "https://developers.thegraphe.com/transport/api/drivers/register";
-
-    var result = await http.post(url, body: {
-      'resend_otp': mobileNumberController.text.toString(),
+  bool postResendOtpRequest(BuildContext _context) {
+    HTTPHandler()
+        .registerVerifyOtpDriver([mobileNumberController.text]).then((value) {
+      Scaffold.of(_context).showSnackBar(SnackBar(
+        backgroundColor: value.success ? Colors.green : Colors.red,
+        content: Text(value.message),
+      ));
+      return value.success;
+    }).catchError((error) {
+      Scaffold.of(_context).showSnackBar(SnackBar(
+        backgroundColor: Colors.red,
+        content: Text("Network Error!"),
+      ));
+      return false;
     });
-    PostResultOne postResultOne =
-        PostResultOne.fromJson(json.decode(result.body));
-    setState(() {
-      final snackBar = SnackBar(
-        backgroundColor: postResultOne.success ? Colors.green : Colors.red,
-        content: Text(postResultOne.message),
-      );
-      Scaffold.of(_context).showSnackBar(snackBar);
-    });
-    return postResultOne.success;
+    return false;
   }
 
   void clearControllers() {
@@ -1203,11 +1191,9 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                       otpController.clear();
                     });
                     if (_formKeyOtp.currentState.validate()) {
-                      postOtpVerificationRequest(context).then((value) {
-                        if (value == true) {
-                          print("OTP Verification Done");
-                        }
-                      });
+                      if (postOtpVerificationRequest(context) == true) {
+                        print("OTP Verification Done");
+                      }
                     }
                   },
                   child: Container(
@@ -1422,11 +1408,11 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                   splashColor: Colors.transparent,
                   onTap: () {
                     if (_formKeySignIn.currentState.validate()) {
-                      postSignInRequest(context).then((value) {
-                        if (value == true) {
-                          Navigator.pushNamedAndRemoveUntil(context, homePage, (route) => false, arguments: userDriver);
-                        }
-                      });
+                      if (postSignInRequest(context)) {
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, homePage, (route) => false,
+                            arguments: userDriver);
+                      }
                     }
                   },
                   child: Container(
