@@ -106,6 +106,8 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
   }
 
   void postSignUpRequest(BuildContext _context) {
+    DialogProcessing().showCustomDialog(context,
+        title: "Sign Up Request", text: "Processing, Please Wait!");
     HTTPHandler().registerDriver([
       nameController.text.toString(),
       emailController.text.toString(),
@@ -122,42 +124,75 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
       panCardNumberController.text.toString(),
       bankAccountNumberController.text.toString(),
       ifscCodeController.text.toString()
-    ]).then((value) {
-      Scaffold.of(_context).showSnackBar(SnackBar(
-        backgroundColor: value.success ? Colors.green : Colors.red,
-        content: Text(value.message),
-      ));
-      setState(() {
-        selectedWidgetMarker = WidgetMarker.otpVerification;
-      });
-    }).catchError((error) {
-      Scaffold.of(_context).showSnackBar(SnackBar(
-        backgroundColor: Colors.red,
-        content: Text("Network Error!"),
-      ));
+    ]).then((value) async {
+      Navigator.pop(context);
+      if (value.success) {
+        DialogSuccess().showCustomDialog(context, title: "Sign Up");
+        await Future.delayed(Duration(seconds: 1), () {});
+        setState(() {
+          selectedWidgetMarker = WidgetMarker.otpVerification;
+        });
+        Navigator.pop(context);
+        Scaffold.of(_context).showSnackBar(SnackBar(
+          backgroundColor: Colors.black,
+          content: Text(
+            value.message,
+            style: TextStyle(color: Colors.white),
+          ),
+        ));
+      } else {
+        DialogFailed()
+            .showCustomDialog(context, title: "Sign Up", text: value.message);
+        await Future.delayed(Duration(seconds: 3), () {});
+        Navigator.pop(context);
+      }
+    }).catchError((error) async {
+      Navigator.pop(context);
+      DialogFailed()
+          .showCustomDialog(context, title: "Sign Up", text: "Network Error");
+      await Future.delayed(Duration(seconds: 3), () {});
+      Navigator.pop(context);
     });
   }
 
   void postOtpVerificationRequest(BuildContext _context) {
+    DialogProcessing().showCustomDialog(context,
+        title: "OTP Verification", text: "Processing, Please Wait!");
     HTTPHandler().registerVerifyOtpDriver(
-        [mobileNumberController.text, otpController.text]).then((value) {
-      Scaffold.of(_context).showSnackBar(SnackBar(
-        backgroundColor: value.success ? Colors.green : Colors.red,
-        content: Text(value.message),
-      ));
+        [mobileNumberController.text, otpController.text]).then((value) async {
+      Navigator.pop(context);
       if (value.success) {
-        print("OTP Verification Done");
+        DialogSuccess().showCustomDialog(context, title: "OTP Verification");
+        await Future.delayed(Duration(seconds: 1), () {});
+        setState(() {
+          selectedWidgetMarker = WidgetMarker.signIn;
+        });
+        Navigator.pop(context);
+        Scaffold.of(_context).showSnackBar(SnackBar(
+          backgroundColor: Colors.black,
+          content: Text(
+            "You may now Sign In to your Account.",
+            style: TextStyle(color: Colors.white),
+          ),
+        ));
+      } else {
+        DialogFailed().showCustomDialog(context,
+            title: "OTP Verification", text: value.message);
+        await Future.delayed(Duration(seconds: 3), () {});
+        Navigator.pop(context);
       }
-    }).catchError((error) {
-      Scaffold.of(_context).showSnackBar(SnackBar(
-        backgroundColor: Colors.red,
-        content: Text("Network Error!"),
-      ));
+    }).catchError((error) async {
+      Navigator.pop(context);
+      DialogFailed().showCustomDialog(context,
+          title: "OTP Verification", text: "Network Error");
+      await Future.delayed(Duration(seconds: 3), () {});
+      Navigator.pop(context);
     });
   }
 
   void postSignInRequest(BuildContext _context) {
-    DialogProcessing().showCustomDialog(context, title: "Sign In Request", text: "Processing, Please Wait!");
+    DialogProcessing().showCustomDialog(context,
+        title: "Sign In", text: "Processing, Please Wait!");
     HTTPHandler().loginDriver([
       mobileNumberControllerSignIn.text,
       passwordControllerSignIn.text,
@@ -166,7 +201,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
       if (value[0]) {
         userDriver = value[1];
         Navigator.pop(context);
-        DialogSuccess().showCustomDialog(context, title: "Sign In Request");
+        DialogSuccess().showCustomDialog(context, title: "Sign In");
         await Future.delayed(Duration(seconds: 1), () {});
         Navigator.pop(context);
         Navigator.pushNamedAndRemoveUntil(_context, homePage, (route) => false,
@@ -174,29 +209,49 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
       } else {
         PostResultOne postResultOne = value[1];
         Navigator.pop(context);
-        DialogFailed().showCustomDialog(context, title: "Sign In Request", text: postResultOne.message);
+        DialogFailed().showCustomDialog(context,
+            title: "Sign In", text: postResultOne.message);
         await Future.delayed(Duration(seconds: 3), () {});
         Navigator.pop(context);
       }
-    }).catchError((error) async{
+    }).catchError((error) async {
       Navigator.pop(context);
-      DialogFailed().showCustomDialog(context, title: "Sign In Request", text: "Network Error");
+      DialogFailed()
+          .showCustomDialog(context, title: "Sign In", text: "Network Error");
       await Future.delayed(Duration(seconds: 3), () {});
+      Navigator.pop(context);
     });
   }
 
   void postResendOtpRequest(BuildContext _context) {
-    HTTPHandler()
-        .registerVerifyOtpDriver([mobileNumberController.text]).then((value) {
-      Scaffold.of(_context).showSnackBar(SnackBar(
-        backgroundColor: value.success ? Colors.green : Colors.red,
-        content: Text(value.message),
-      ));
-    }).catchError((error) {
-      Scaffold.of(_context).showSnackBar(SnackBar(
-        backgroundColor: Colors.red,
-        content: Text("Network Error!"),
-      ));
+    DialogProcessing().showCustomDialog(context,
+        title: "Resend OTP", text: "Processing, Please Wait!");
+    HTTPHandler().registerResendOtpDriver([mobileNumberController.text]).then(
+        (value) async {
+      Navigator.pop(context);
+      if (value.success) {
+        DialogSuccess().showCustomDialog(context, title: "Resend OTP");
+        await Future.delayed(Duration(seconds: 1), () {});
+        Navigator.pop(context);
+        Scaffold.of(_context).showSnackBar(SnackBar(
+          backgroundColor: Colors.black,
+          content: Text(
+            value.message,
+            style: TextStyle(color: Colors.white),
+          ),
+        ));
+      } else {
+        DialogFailed().showCustomDialog(context,
+            title: "Resend OTP", text: value.message);
+        await Future.delayed(Duration(seconds: 3), () {});
+        Navigator.pop(context);
+      }
+    }).catchError((error) async {
+      Navigator.pop(context);
+      DialogFailed().showCustomDialog(context,
+          title: "Resend OTP", text: "Network Error");
+      await Future.delayed(Duration(seconds: 3), () {});
+      Navigator.pop(context);
     });
   }
 
@@ -1133,12 +1188,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                 controller: otpController,
                 keyboardType: TextInputType.phone,
                 textCapitalization: TextCapitalization.words,
-                textInputAction: TextInputAction.next,
-                focusNode: _name,
-                onFieldSubmitted: (term) {
-                  _name.unfocus();
-                  FocusScope.of(context).requestFocus(_mobileNumber);
-                },
+                textInputAction: TextInputAction.done,
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.dialpad),
                   labelText: "Enter OTP",
@@ -1162,6 +1212,9 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                 alignment: Alignment.centerRight,
                 child: InkWell(
                   onTap: () {
+                    setState(() {
+                      otpController.clear();
+                    });
                     postResendOtpRequest(context);
                   },
                   child: Text(
@@ -1181,9 +1234,6 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
                 child: InkWell(
                   splashColor: Colors.transparent,
                   onTap: () {
-                    setState(() {
-                      otpController.clear();
-                    });
                     if (_formKeyOtp.currentState.validate()) {
                       postOtpVerificationRequest(context);
                     }

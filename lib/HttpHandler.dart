@@ -15,11 +15,11 @@ class HTTPHandler {
       'https://developers.thegraphe.com/transport/api/drivers';
 
   void signOut(BuildContext context) async {
-    DialogProcessing().showCustomDialog(context, title: "Sign Out Request", text: "Processing, Please Wait!");
+    DialogProcessing().showCustomDialog(context, title: "Sign Out", text: "Processing, Please Wait!");
     await SharedPreferences.getInstance().then((value) => value.setBool("rememberMe", false));
     await Future.delayed(Duration(seconds: 1), () {});
     Navigator.pop(context);
-    DialogSuccess().showCustomDialog(context, title: "Sign Out Request");
+    DialogSuccess().showCustomDialog(context, title: "Sign Out");
     await Future.delayed(Duration(seconds: 1), () {});
     Navigator.pop(context);
     Navigator.pushNamedAndRemoveUntil(context, introLoginOptionPage, (route) => false);

@@ -393,6 +393,71 @@ class _AccountBottomSheetLoggedInState extends State<AccountBottomSheetLoggedIn>
           SizedBox(
             height: 15.0,
           ),
+          Row(
+            children: [
+              Text(
+                "Driver Upcoming Order"
+              ),
+              Spacer(),
+              FlatButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, driverUpcomingOrderPage);
+                },
+                child: Text("Link"),
+              )
+            ],
+          ),
+          SizedBox(
+            height: 8.0,
+          ),
+          Row(
+            children: [
+              Text(
+                  "New Transporting Order"
+              ),
+              Spacer(),
+              FlatButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, newTransportingOrderPage);
+                },
+                child: Text("Link"),
+              )
+            ],
+          ),
+          SizedBox(
+            height: 8.0,
+          ),
+          Row(
+            children: [
+              Text(
+                  "Order Summary Page"
+              ),
+              Spacer(),
+              FlatButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, orderSummaryPage);
+                },
+                child: Text("Link"),
+              )
+            ],
+          ),
+          SizedBox(
+            height: 8.0,
+          ),
+          Row(
+            children: [
+              Text(
+                  "Request Transport"
+              ),
+              Spacer(),
+              FlatButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, requestTransportPage);
+                },
+                child: Text("Link"),
+              )
+            ],
+          ),
           SizedBox(
             height: 40.0,
           ),
