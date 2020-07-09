@@ -1,8 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:transportationapp/AccountBottomSheetLoggedIn.dart';
-import 'package:transportationapp/MyConstants.dart';
+import 'package:transportationapp/HttpHandler.dart';
 import 'package:transportationapp/User.dart';
 
 class HomePage extends StatefulWidget {
@@ -18,10 +17,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-  }
-
-  signOut() async {
-    await SharedPreferences.getInstance().then((value) => value.setBool("rememberMe", false));
   }
 
   @override
@@ -75,8 +70,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                             GestureDetector(
                               onTap: () {
-                                signOut();
-                                Navigator.pushNamedAndRemoveUntil(context, introLoginOptionPage, (route) => false);
+                                HTTPHandler().signOut(context);
                               },
                               child: Container(
                                   decoration: BoxDecoration(

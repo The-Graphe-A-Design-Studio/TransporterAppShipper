@@ -2,6 +2,9 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:transportationapp/DialogFailed.dart';
+import 'package:transportationapp/DialogProcessing.dart';
+import 'package:transportationapp/DialogSuccess.dart';
 import 'package:transportationapp/HttpHandler.dart';
 import 'package:transportationapp/MyConstants.dart';
 import 'package:transportationapp/PostMethodResult.dart';
@@ -154,31 +157,31 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
   }
 
   void postSignInRequest(BuildContext _context) {
+    DialogProcessing().showCustomDialog(context, title: "Sign In Request", text: "Processing, Please Wait!");
     HTTPHandler().loginDriver([
       mobileNumberControllerSignIn.text,
       passwordControllerSignIn.text,
       rememberMe
-    ]).then((value) {
+    ]).then((value) async {
       if (value[0]) {
         userDriver = value[1];
-        Scaffold.of(_context).showSnackBar(SnackBar(
-          backgroundColor: Colors.green,
-          content: Text("Welcome, ${userDriver.dName}!"),
-        ));
+        Navigator.pop(context);
+        DialogSuccess().showCustomDialog(context, title: "Sign In Request");
+        await Future.delayed(Duration(seconds: 1), () {});
+        Navigator.pop(context);
         Navigator.pushNamedAndRemoveUntil(_context, homePage, (route) => false,
             arguments: userDriver);
       } else {
         PostResultOne postResultOne = value[1];
-        Scaffold.of(_context).showSnackBar(SnackBar(
-          backgroundColor: Colors.red,
-          content: Text("${postResultOne.message}"),
-        ));
+        Navigator.pop(context);
+        DialogFailed().showCustomDialog(context, title: "Sign In Request", text: postResultOne.message);
+        await Future.delayed(Duration(seconds: 3), () {});
+        Navigator.pop(context);
       }
-    }).catchError((error) {
-      Scaffold.of(_context).showSnackBar(SnackBar(
-        backgroundColor: Colors.red,
-        content: Text("Network Error!"),
-      ));
+    }).catchError((error) async{
+      Navigator.pop(context);
+      DialogFailed().showCustomDialog(context, title: "Sign In Request", text: "Network Error");
+      await Future.delayed(Duration(seconds: 3), () {});
     });
   }
 

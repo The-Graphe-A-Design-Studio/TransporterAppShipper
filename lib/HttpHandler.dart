@@ -1,7 +1,10 @@
 import 'dart:convert';
-
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:transportationapp/DialogProcessing.dart';
+import 'package:transportationapp/DialogSuccess.dart';
+import 'package:transportationapp/MyConstants.dart';
 import 'package:transportationapp/PostMethodResult.dart';
 import 'package:transportationapp/User.dart';
 
@@ -10,6 +13,17 @@ class HTTPHandler {
       'https://developers.thegraphe.com/transport/api/drivers';
   String baseURLTransporter =
       'https://developers.thegraphe.com/transport/api/drivers';
+
+  void signOut(BuildContext context) async {
+    DialogProcessing().showCustomDialog(context, title: "Sign Out Request", text: "Processing, Please Wait!");
+    await SharedPreferences.getInstance().then((value) => value.setBool("rememberMe", false));
+    await Future.delayed(Duration(seconds: 1), () {});
+    Navigator.pop(context);
+    DialogSuccess().showCustomDialog(context, title: "Sign Out Request");
+    await Future.delayed(Duration(seconds: 1), () {});
+    Navigator.pop(context);
+    Navigator.pushNamedAndRemoveUntil(context, introLoginOptionPage, (route) => false);
+  }
 
   Future<PostResultOne> registerDriver(List data) async {
     try {
