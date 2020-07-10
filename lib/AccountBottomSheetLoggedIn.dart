@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:transportationapp/HttpHandler.dart';
 import 'package:transportationapp/MyConstants.dart';
 
 class AccountBottomSheetLoggedIn extends StatefulWidget {
@@ -392,6 +393,23 @@ class _AccountBottomSheetLoggedInState extends State<AccountBottomSheetLoggedIn>
           ),
           SizedBox(
             height: 15.0,
+          ),
+          Row(
+            children: [
+              Text(
+                  "Sign Out"
+              ),
+              Spacer(),
+              FlatButton(
+                onPressed: () {
+                  HTTPHandler().signOut(context);
+                },
+                child: Text("Link"),
+              )
+            ],
+          ),
+          SizedBox(
+            height: 8.0,
           ),
           Row(
             children: [
