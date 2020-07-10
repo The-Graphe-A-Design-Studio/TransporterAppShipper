@@ -10,7 +10,12 @@ final List<Color> imgList = [
   Colors.blue,
 ];
 
-class DriverUpcomingOrder extends StatelessWidget {
+class DriverUpcomingOrder extends StatefulWidget {
+  @override
+  _DriverUpcomingOrderState createState() => new _DriverUpcomingOrderState();
+}
+
+class _DriverUpcomingOrderState extends State<DriverUpcomingOrder> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,6 +61,7 @@ class DriverUpcomingOrder extends StatelessWidget {
                           children: <Widget>[
                             Container(
                               height: 500.0,
+                              padding: EdgeInsets.all(22.0),
                               width: MediaQuery.of(context).size.width,
                               margin: EdgeInsets.symmetric(horizontal: 5.0),
                               decoration: BoxDecoration(
@@ -65,106 +71,121 @@ class DriverUpcomingOrder extends StatelessWidget {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  SizedBox(
-                                    height: 10.0,
-                                  ),
                                   Row(
                                     children: [
-                                      SizedBox(
-                                        width: 10.0,
-                                      ),
                                       Container(
                                         decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(20),
-                                          border: Border.all(color: Color(0xff252427)),
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          border: Border.all(
+                                              color: Color(0xff252427)),
                                           color: Colors.white,
                                         ),
                                         child: Padding(
-                                          padding: EdgeInsets.all(6.0),
+                                          padding: EdgeInsets.only(
+                                              top: 4.0,
+                                              right: 20.0,
+                                              left: 20.0,
+                                              bottom: 4.0),
                                           child: Text("WB 02Q 9401"),
                                         ),
                                       ),
                                       Spacer(),
-                                      Text("KOL"),
+                                      Text(
+                                        "KOL",
+                                        style: TextStyle(
+                                          color: Colors.blueGrey,
+                                        ),
+                                      ),
                                       SizedBox(
                                         width: 10.0,
                                       ),
-                                      Icon(Icons.directions_car),
+                                      Icon(
+                                        Icons.directions_car,
+                                        color: Colors.black.withOpacity(0.6),
+                                      ),
                                       SizedBox(
                                         width: 10.0,
                                       ),
-                                      Text("DEL"),
-                                      SizedBox(width: 10.0),
+                                      Text("DEL",
+                                          style: TextStyle(
+                                            color: Colors.blueGrey,
+                                          )),
                                     ],
                                     mainAxisAlignment: MainAxisAlignment.center,
                                   ),
-                                  SizedBox(height: 10.0),
-                                  Padding(
-                                    padding: EdgeInsets.only(left: 10.0),
-                                    child: Text(
-                                      "Transporter Name",
-                                      style: TextStyle(
-                                          fontSize: 25.0,
-                                          fontWeight: FontWeight.bold),
-                                    ),
+                                  SizedBox(height: 20.0),
+                                  Text(
+                                    "Transporter Name",
+                                    style: TextStyle(
+                                        fontSize: 25.0,
+                                        color: Colors.blueGrey,
+                                        fontWeight: FontWeight.bold),
                                   ),
                                   SizedBox(
-                                    height: 20.0,
+                                    height: 25.0,
                                   ),
-                                  Padding(
-                                    padding: EdgeInsets.only(left: 10.0),
-                                    child: Row(
-                                      children: [
-                                        Flexible(
-                                          child: Column(
-                                            children: [
-                                              Text("Client"),
-                                              Text("Transporter User"),
-                                            ],
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "Client",
+                                            style: TextStyle(
+                                                color: Colors.blueGrey
+                                                    .withOpacity(0.9)),
                                           ),
-                                        ),
-                                        Spacer(),
-                                        Flexible(
-                                          child: Column(
-                                            children: [
-                                              Text("Date"),
-                                              Text("15 May, 2020"),
-                                            ],
+                                          SizedBox(
+                                            height: 8.0,
                                           ),
-                                        ),
-                                      ],
-                                    ),
+                                          Text("Transporter User"),
+                                        ],
+                                      ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "Date",
+                                            style: TextStyle(
+                                                color: Colors.blueGrey
+                                                    .withOpacity(0.9)),
+                                          ),
+                                          SizedBox(
+                                            height: 8.0,
+                                          ),
+                                          Text("15 May, 2020"),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        width: 1.0,
+                                      ),
+                                    ],
                                   ),
-                                  SizedBox(height: 15.0),
-                                  Padding(
-                                    padding: EdgeInsets.only(left: 10.0),
-                                    child: Text("Pickup Address"),
+                                  SizedBox(height: 20.0),
+                                  Text(
+                                    "Pickup Address",
+                                    style: TextStyle(
+                                        color:
+                                            Colors.blueGrey.withOpacity(0.9)),
                                   ),
-                                  SizedBox(height: 5.0),
-                                  Padding(
-                                    padding: EdgeInsets.only(left: 10.0),
-                                    child:
-                                    Text("Road 15a, Jheel Road, Bank plot"),
+                                  SizedBox(height: 8.0),
+                                  Text("Road 15a, Jheel Road, Bank plot"),
+                                  Text("Kolkata - 700075"),
+                                  SizedBox(height: 20.0),
+                                  Text(
+                                    "Delivery Address",
+                                    style: TextStyle(
+                                        color:
+                                            Colors.blueGrey.withOpacity(0.9)),
                                   ),
-                                  Padding(
-                                    padding: EdgeInsets.only(left: 10.0),
-                                    child: Text("Kolkata - 700075"),
-                                  ),
-                                  SizedBox(height: 15.0),
-                                  Padding(
-                                    padding: EdgeInsets.only(left: 10.0),
-                                    child: Text("Delivery Address"),
-                                  ),
-                                  SizedBox(height: 5.0),
-                                  Padding(
-                                    padding: EdgeInsets.only(left: 10.0),
-                                    child:
-                                    Text("Road 15a, Jheel Road, Bank plot"),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(left: 10.0),
-                                    child: Text("Kolkata - 700075"),
-                                  ),
+                                  SizedBox(height: 8.0),
+                                  Text("Road 15a, Jheel Road, Bank plot"),
+                                  Text("Kolkata - 700075"),
                                 ],
                               ),
                             ),
@@ -174,7 +195,7 @@ class DriverUpcomingOrder extends StatelessWidget {
                                 height: 1,
                                 thickness: 1,
                               ),
-                              top: 380.0,
+                              top: 350.0,
                               left: 0,
                               right: 0,
                             ),
@@ -189,7 +210,7 @@ class DriverUpcomingOrder extends StatelessWidget {
                                 height: 60.0,
                                 width: 30.0,
                               ),
-                              top: 350.0,
+                              top: 320.0,
                               left: -10,
                             ),
                             Positioned(
@@ -203,8 +224,49 @@ class DriverUpcomingOrder extends StatelessWidget {
                                 height: 60.0,
                                 width: 30.0,
                               ),
-                              top: 350.0,
+                              top: 320.0,
                               right: -10,
+                            ),
+                            Positioned(
+                              child: Opacity(
+                                child: Image.asset(
+                                  "assets/images/barCode.png",
+                                  height: 45.0,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.6,
+                                  fit: BoxFit.fill,
+                                ),
+                                opacity: 0.6,
+                              ),
+                              left: 40.0,
+                              right: 40.0,
+                              top: 375,
+                            ),
+                            Positioned(
+                              child: FlatButton(
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.file_upload,
+                                      color: Colors.black.withOpacity(0.7),
+                                    ),
+                                    SizedBox(
+                                      width: 15.0,
+                                    ),
+                                    Text(
+                                      "Share",
+                                      style: TextStyle(
+                                          color: Colors.black.withOpacity(0.7)),
+                                    )
+                                  ],
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                ),
+                                onPressed: () {},
+                              ),
+                              left: 100.0,
+                              right: 100.0,
+                              top: 430,
                             ),
                           ],
                         );
@@ -223,7 +285,9 @@ class DriverUpcomingOrder extends StatelessWidget {
                     aspectRatio: 16 / 9,
                   ),
                 ),
-                SizedBox(height: 100.0,),
+                SizedBox(
+                  height: 100.0,
+                ),
               ],
             ),
           ),
@@ -242,8 +306,8 @@ class DriverUpcomingOrder extends StatelessWidget {
                           topLeft: Radius.circular(30.0),
                           topRight: Radius.circular(30.0)),
                     ),
-                    child:
-                        AccountBottomSheetLoggedIn(scrollController: scrollController)),
+                    child: AccountBottomSheetLoggedIn(
+                        scrollController: scrollController)),
               );
             },
           ),
