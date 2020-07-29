@@ -1,3 +1,54 @@
+class UserOwner {
+  bool success;
+  String oId;
+  String oName;
+  String oEmail;
+  String oPhoneCode;
+  String oPhone;
+  String oAddress;
+  String oCity;
+  String oOperatingRoute;
+  String oPermitStates;
+  String oPan;
+  String oBank;
+  String oIfsc;
+  String oRegistered;
+
+  UserOwner(
+      {this.success,
+        this.oId,
+        this.oName,
+        this.oEmail,
+        this.oPhoneCode,
+        this.oPhone,
+        this.oAddress,
+        this.oCity,
+        this.oOperatingRoute,
+        this.oPermitStates,
+        this.oPan,
+        this.oBank,
+        this.oIfsc,
+        this.oRegistered});
+
+  factory UserOwner.fromJson(Map<String, dynamic> parsedJson) {
+    return UserOwner(
+        success: parsedJson['success'] == '1' ? true : false,
+        oId: parsedJson['id'],
+        oName: parsedJson['name'],
+        oEmail: parsedJson['email'],
+        oPhoneCode: parsedJson['phone_con_code'],
+        oPhone: parsedJson['phone'],
+        oAddress: parsedJson['address'],
+        oCity: parsedJson['city'],
+        oOperatingRoute: parsedJson['operating routes'],
+        oPermitStates: parsedJson['permit states'],
+        oPan: parsedJson['pan'],
+        oBank: parsedJson['bank'],
+        oIfsc: parsedJson['ifsc'],
+        oRegistered: parsedJson['registered on']);
+  }
+}
+
 class UserDriver {
   bool success;
   String dId;

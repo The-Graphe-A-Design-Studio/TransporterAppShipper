@@ -5,7 +5,7 @@ const String splashPage = "/";
 const String introLoginOptionPage = "/introLoginPage";
 const String driverOptionPage = "/driverOptionPage";
 const String transporterOptionPage = "/transporterOptionPage";
-
+const String ownerOptionPage = "/ownerOptionPage";
 
 //Pages which don't need LoggedIn User
 const String emiCalculatorPage = "/emiCalculatorPage";

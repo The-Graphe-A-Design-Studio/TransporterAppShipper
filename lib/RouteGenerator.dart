@@ -9,6 +9,7 @@ import 'package:transportationapp/IntroPageLoginOptions.dart';
 import 'package:transportationapp/MyConstants.dart';
 import 'package:transportationapp/NewTransportingOrder.dart';
 import 'package:transportationapp/OrderSummaryScreen.dart';
+import 'package:transportationapp/OwnerOptionsPage.dart';
 import 'package:transportationapp/RequestTransport.dart';
 import 'package:transportationapp/SplashScreen.dart';
 import 'package:transportationapp/TollCalculator.dart';
@@ -24,6 +25,8 @@ class RouteGenerator {
         return FadeRoute(page: SplashScreen());
       case introLoginOptionPage:
           return FadeRoute(page: IntroPageLoginOptions());
+      case ownerOptionPage:
+        return FadeRoute(page: OwnerOptionsPage());
       case driverOptionPage:
         return FadeRoute(page: DriverOptionsPage());
       case transporterOptionPage:
