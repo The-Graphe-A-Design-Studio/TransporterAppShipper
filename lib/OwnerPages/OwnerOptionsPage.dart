@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:transportationapp/DialogFailed.dart';
-import 'package:transportationapp/DialogProcessing.dart';
-import 'package:transportationapp/DialogSuccess.dart';
+import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/DialogScreens/DialogFailed.dart';
+import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/DialogScreens/DialogProcessing.dart';
+import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/DialogScreens/DialogSuccess.dart';
 import 'package:transportationapp/HttpHandler.dart';
+import 'package:transportationapp/Models/User.dart';
 import 'package:transportationapp/MyConstants.dart';
 import 'package:transportationapp/PostMethodResult.dart';
-import 'package:transportationapp/User.dart';
 
 class OwnerOptionsPage extends StatefulWidget {
   OwnerOptionsPage({Key key, this.title}) : super(key: key);
@@ -142,14 +142,14 @@ class _OwnerOptionsPageState extends State<OwnerOptionsPage> {
         await Future.delayed(Duration(seconds: 3), () {});
         Navigator.pop(context);
       }
-    })/*.catchError((error) async {
+    }).catchError((error) async {
       print(error);
       Navigator.pop(context);
       DialogFailed()
           .showCustomDialog(context, title: "Sign Up", text: "Network Error");
       await Future.delayed(Duration(seconds: 3), () {});
       Navigator.pop(context);
-    })*/;
+    });
   }
 
   void postOtpVerificationRequest(BuildContext _context) {
@@ -202,7 +202,7 @@ class _OwnerOptionsPageState extends State<OwnerOptionsPage> {
         DialogSuccess().showCustomDialog(context, title: "Sign In");
         await Future.delayed(Duration(seconds: 1), () {});
         Navigator.pop(context);
-        Navigator.pushNamedAndRemoveUntil(_context, homePage, (route) => false,
+        Navigator.pushNamedAndRemoveUntil(_context, homePageOwner, (route) => false,
             arguments: userOwner);
       } else {
         PostResultOne postResultOne = value[1];

@@ -1,10 +1,9 @@
 import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:transportationapp/Models/User.dart';
 import 'package:transportationapp/MyConstants.dart';
-import 'package:transportationapp/User.dart';
 
 class SplashScreen extends StatefulWidget {
   SplashScreen({Key key}) : super(key: key);
@@ -15,13 +14,22 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   UserDriver userDriver;
+  UserOwner userOwner;
+  String userType;
 
   Future<bool> doSomeAction() async {
     await Future.delayed(Duration(seconds: 2), () {});
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool rememberMe = prefs.getBool("rememberMe");
-    if (rememberMe==true) {
-      userDriver = UserDriver.fromJson(json.decode(prefs.getString("userDriver")));
+    userType = prefs.getString("userType");
+    if (rememberMe == true) {
+      if (userType == truckOwnerUser) {
+        userOwner =
+            UserOwner.fromJson(json.decode(prefs.getString("userData")));
+      } else if (userType == driverUser) {
+        userDriver =
+            UserDriver.fromJson(json.decode(prefs.getString("userData")));
+      }
     }
     return Future.value(rememberMe);
   }
@@ -31,7 +39,13 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     doSomeAction().then((value) {
       if (value == true) {
-        Navigator.pushReplacementNamed(context, homePage, arguments: userDriver);
+        if (userType == truckOwnerUser) {
+          Navigator.pushReplacementNamed(context, homePageOwner,
+              arguments: userOwner);
+        } else if (userType == driverUser) {
+          Navigator.pushReplacementNamed(context, homePageDriver,
+              arguments: userDriver);
+        }
       } else {
         Navigator.pushReplacementNamed(context, introLoginOptionPage);
       }

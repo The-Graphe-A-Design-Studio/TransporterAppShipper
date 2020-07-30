@@ -1,6 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:transportationapp/AccountBottomSheetLoggedIn.dart';
+import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/BottomSheets/AccountBottomSheetLoggedIn.dart';
 
 class OrderSummaryScreen extends StatefulWidget {
   OrderSummaryScreen({Key key}) : super(key: key);

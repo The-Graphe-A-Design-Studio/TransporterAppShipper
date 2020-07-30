@@ -1,18 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:transportationapp/AccountBottomSheetLoggedIn.dart';
+import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/BottomSheets/AccountBottomSheetLoggedIn.dart';
 import 'package:transportationapp/HttpHandler.dart';
-import 'package:transportationapp/User.dart';
+import 'package:transportationapp/Models/User.dart';
 
-class HomePage extends StatefulWidget {
+class HomePageDriver extends StatefulWidget {
   final UserDriver userDriver;
-  HomePage({Key key, this.userDriver}) : super(key: key);
+  HomePageDriver({Key key, this.userDriver}) : super(key: key);
 
   @override
-  _HomePageState createState() => _HomePageState();
+  _HomePageDriverState createState() => _HomePageDriverState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageDriverState extends State<HomePageDriver> {
 
   @override
   void initState() {

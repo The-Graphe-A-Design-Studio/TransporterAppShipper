@@ -2,11 +2,12 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:transportationapp/DialogProcessing.dart';
-import 'package:transportationapp/DialogSuccess.dart';
+import 'package:transportationapp/Models/User.dart';
+import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/DialogScreens/DialogProcessing.dart';
+import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/DialogScreens/DialogSuccess.dart';
 import 'package:transportationapp/MyConstants.dart';
 import 'package:transportationapp/PostMethodResult.dart';
-import 'package:transportationapp/User.dart';
+import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/Models/TruckCategory.dart';
 
 class HTTPHandler {
   String baseURLDriver =
@@ -31,22 +32,22 @@ class HTTPHandler {
   /*-------------------------- Owner API's ---------------------------*/
   Future<PostResultOne> registerOwner(List data) async {
     /*try {*/
-      var result = await http.post("$baseURLOwner/register", body: {
-        'to_name': data[0],
-        'to_phone_code': data[1],
-        'to_phone': data[2],
-        'to_email': data[3],
-        'to_address': data[4],
-        'to_city': data[5],
-        'to_password': data[6],
-        'to_cnf_password': data[7],
-        'to_operating_routes': data[8],
-        'to_state_permits': data[9],
-        'to_pan': data[10],
-        'to_bank': data[11],
-        'to_ifsc': data[12]
-      });
-      return PostResultOne.fromJson(json.decode(result.body));
+    var result = await http.post("$baseURLOwner/register", body: {
+      'to_name': data[0],
+      'to_phone_code': data[1],
+      'to_phone': data[2],
+      'to_email': data[3],
+      'to_address': data[4],
+      'to_city': data[5],
+      'to_password': data[6],
+      'to_cnf_password': data[7],
+      'to_operating_routes': data[8],
+      'to_state_permits': data[9],
+      'to_pan': data[10],
+      'to_bank': data[11],
+      'to_ifsc': data[12]
+    });
+    return PostResultOne.fromJson(json.decode(result.body));
     /*} catch (error) {
       throw error;
     }*/
@@ -81,8 +82,9 @@ class HTTPHandler {
       if (jsonResult['success'] == '1') {
         UserOwner userOwner = UserOwner.fromJson(jsonResult);
         SharedPreferences prefs = await SharedPreferences.getInstance();
-        prefs.setBool('rememberMe', data[2]);
-        prefs.setString('userDriver', result.body);
+        prefs.setBool('rememberMe', data[3]);
+        prefs.setString('userType', truckOwnerUser);
+        prefs.setString('userData', result.body);
         return [true, userOwner];
       } else {
         PostResultOne postResultOne = PostResultOne.fromJson(jsonResult);
@@ -93,6 +95,49 @@ class HTTPHandler {
     } catch (error) {
       throw error;
     }
+  }
+
+  Future<List<TruckCategory>> getTruckCategory() async {
+    try {
+      var result = await http.get("$baseURLOwner/truck_categories");
+      var ret = json.decode(result.body);
+      List<TruckCategory> list = [];
+      for (var i in ret) {
+        list.add(TruckCategory.fromJson(i));
+      }
+      return list;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<PostResultOne> addTrucksOwner(List data) async {
+    /*try {*/
+      var url = "$baseURLOwner/trucks";
+      var request = http.MultipartRequest('POST', Uri.parse(url));
+
+      request.fields['trk_owner'] = data[0];
+      request.fields['trk_cat'] = data[1];
+      request.fields['trk_num'] = data[2];
+      request.fields['trk_load'] = data[3];
+      request.fields['trk_dr_name'] = data[4];
+      request.fields['trk_dr_phone_code'] = data[5];
+      request.fields['trk_dr_phone'] = data[6];
+      request.files.add(await http.MultipartFile.fromPath('trk_rc', data[7]));
+      request.files
+          .add(await http.MultipartFile.fromPath('trk_dr_license', data[8]));
+      request.files
+          .add(await http.MultipartFile.fromPath('trk_insurance', data[9]));
+      request.files
+          .add(await http.MultipartFile.fromPath('trk_road_tax', data[10]));
+      request.files.add(await http.MultipartFile.fromPath('trk_rto', data[11]));
+
+      var result = await request.send();
+      var finalResult = await http.Response.fromStream(result);
+      return PostResultOne.fromJson(json.decode(finalResult.body));
+    /*} catch (error) {
+      throw error;
+    }*/
   }
 
   /*-------------------------- Driver API's ---------------------------*/
@@ -158,7 +203,8 @@ class HTTPHandler {
         UserDriver userDriver = UserDriver.fromJson(jsonResult);
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setBool('rememberMe', data[2]);
-        prefs.setString('userDriver', result.body);
+        prefs.setString('userType', driverUser);
+        prefs.setString('userData', result.body);
         return [true, userDriver];
       } else {
         PostResultOne postResultOne = PostResultOne.fromJson(jsonResult);

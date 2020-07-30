@@ -1,22 +1,24 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:transportationapp/AccountBottomSheetDummy.dart';
+import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/BottomSheets/AccountBottomSheetDummy.dart';
 
-class FreightCalculator extends StatefulWidget {
-  FreightCalculator({Key key, this.title}) : super(key: key);
+class TripPlanner extends StatefulWidget {
+  TripPlanner({Key key, this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _FreightCalculatorState createState() => _FreightCalculatorState();
+  _TripPlannerState createState() => _TripPlannerState();
 }
 
-class _FreightCalculatorState extends State<FreightCalculator> {
-  final GlobalKey<FormState> _formFreightCalculator = GlobalKey<FormState>();
+class _TripPlannerState extends State<TripPlanner> {
+  final GlobalKey<FormState> _formTripPlanner = GlobalKey<FormState>();
 
   final fromController = TextEditingController();
   final toController = TextEditingController();
-  String truckTypeSelected = "Select Truck Type";
+  String brandSelected = "Select Brand";
+  String modelSelected = "Select Model";
+  String fuelSelected = "Select Fuel Type";
 
   final FocusNode _from = FocusNode();
   final FocusNode _to = FocusNode();
@@ -51,24 +53,60 @@ class _FreightCalculatorState extends State<FreightCalculator> {
                         height: 60.0,
                       ),
                       Text(
-                        "Freight",
+                        "Trip",
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                             fontSize: 40.0),
                       ),
                       Text(
-                        "Calculator",
+                        "Planner",
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                             fontSize: 40.0),
                       ),
                       SizedBox(
-                        height: 40.0,
+                        height: 20.0,
+                      ),
+                      Container(
+                          width: 120,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: Colors.black,
+                            borderRadius: BorderRadius.circular(20.0),
+                          ),
+                          child: Row(
+                            children: <Widget>[
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    top: 4, bottom: 4, left: 1.0),
+                                child: CircleAvatar(
+                                  child: Icon(
+                                    Icons.arrow_forward,
+                                    color: Color(0xff252427),
+                                    size: 20.0,
+                                  ),
+                                  backgroundColor: Colors.white,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 11.5,
+                              ),
+                              Text(
+                                "One Way",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Spacer(),
+                            ],
+                          )),
+                      SizedBox(
+                        height: 30.0,
                       ),
                       Form(
-                        key: _formFreightCalculator,
+                        key: _formTripPlanner,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
@@ -136,7 +174,7 @@ class _FreightCalculatorState extends State<FreightCalculator> {
                               height: 16.0,
                             ),
                             DropdownButton<String>(
-                              value: truckTypeSelected,
+                              value: brandSelected,
                               icon: Icon(Icons.arrow_drop_down),
                               iconSize: 40,
                               elevation: 30,
@@ -149,11 +187,77 @@ class _FreightCalculatorState extends State<FreightCalculator> {
                               ),
                               onChanged: (String newValue) {
                                 setState(() {
-                                  truckTypeSelected = newValue;
+                                  brandSelected = newValue;
                                 });
                               },
                               items: <String>[
-                                'Select Truck Type',
+                                'Select Brand',
+                                'One',
+                                'Two',
+                                'Free',
+                                'Four'
+                              ].map<DropdownMenuItem<String>>((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                            ),
+                            SizedBox(
+                              height: 16.0,
+                            ),
+                            DropdownButton<String>(
+                              value: modelSelected,
+                              icon: Icon(Icons.arrow_drop_down),
+                              iconSize: 40,
+                              elevation: 30,
+                              isExpanded: true,
+                              dropdownColor: Color(0xff252427),
+                              style: TextStyle(color: Colors.white),
+                              underline: Container(
+                                height: 2,
+                                color: Colors.white,
+                              ),
+                              onChanged: (String newValue) {
+                                setState(() {
+                                  modelSelected = newValue;
+                                });
+                              },
+                              items: <String>[
+                                'Select Model',
+                                'One',
+                                'Two',
+                                'Free',
+                                'Four'
+                              ].map<DropdownMenuItem<String>>((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                            ),
+                            SizedBox(
+                              height: 16.0,
+                            ),
+                            DropdownButton<String>(
+                              value: fuelSelected,
+                              icon: Icon(Icons.arrow_drop_down),
+                              iconSize: 40,
+                              elevation: 30,
+                              isExpanded: true,
+                              dropdownColor: Color(0xff252427),
+                              style: TextStyle(color: Colors.white),
+                              underline: Container(
+                                height: 2,
+                                color: Colors.white,
+                              ),
+                              onChanged: (String newValue) {
+                                setState(() {
+                                  fuelSelected = newValue;
+                                });
+                              },
+                              items: <String>[
+                                'Select Fuel Type',
                                 'One',
                                 'Two',
                                 'Free',
@@ -173,7 +277,7 @@ class _FreightCalculatorState extends State<FreightCalculator> {
                               child: InkWell(
                                 splashColor: Colors.transparent,
                                 onTap: () {
-                                  if (_formFreightCalculator.currentState
+                                  if (_formTripPlanner.currentState
                                       .validate()) {
                                     final snackBar = SnackBar(
                                       content: Text('Request Sent'),

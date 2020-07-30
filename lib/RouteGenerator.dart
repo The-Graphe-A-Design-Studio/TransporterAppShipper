@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:transportationapp/DriverOptionsPage.dart';
-import 'package:transportationapp/DriverUpcomingOrder.dart';
-import 'package:transportationapp/EmiCalculator.dart';
-import 'package:transportationapp/FadeTransition.dart';
-import 'package:transportationapp/FreightCalculator.dart';
-import 'package:transportationapp/HomePage.dart';
-import 'package:transportationapp/IntroPageLoginOptions.dart';
+import 'package:transportationapp/DriverPages/DriverUpcomingOrder.dart';
+import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/DriverPages/DriverOptionsPage.dart';
+import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/CommonPages/EmiCalculator.dart';
+import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/CommonPages/FadeTransition.dart';
+import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/CommonPages/FreightCalculator.dart';
+import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/DriverPages/HomePageDriver.dart';
+import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/OwnerPages/HomePageOwner.dart';
+import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/CommonPages/IntroPageLoginOptions.dart';
 import 'package:transportationapp/MyConstants.dart';
-import 'package:transportationapp/NewTransportingOrder.dart';
-import 'package:transportationapp/OrderSummaryScreen.dart';
-import 'package:transportationapp/OwnerOptionsPage.dart';
-import 'package:transportationapp/RequestTransport.dart';
+import 'package:transportationapp/OwnerPages/AddTruckFromOwner.dart';
+import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/TransporterPages/NewTransportingOrder.dart';
+import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/TransporterPages/OrderSummaryScreen.dart';
+import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/OwnerPages/OwnerOptionsPage.dart';
+import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/TransporterPages/RequestTransport.dart';
 import 'package:transportationapp/SplashScreen.dart';
-import 'package:transportationapp/TollCalculator.dart';
-import 'package:transportationapp/TransporterOptionsPage.dart';
-import 'package:transportationapp/TripPlanner.dart';
+import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/CommonPages/TollCalculator.dart';
+import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/TransporterPages/TransporterOptionsPage.dart';
+import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/CommonPages/TripPlanner.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -39,8 +41,12 @@ class RouteGenerator {
         return FadeRoute(page: TollCalculator());
       case tripPlannerPage:
         return FadeRoute(page: TripPlanner());
-      case homePage:
-        return FadeRoute(page: HomePage(userDriver: args,));
+      case homePageDriver:
+        return FadeRoute(page: HomePageDriver(userDriver: args));
+      case homePageOwner:
+        return FadeRoute(page: HomePageOwner(userOwner: args));
+      case addTruckOwner:
+        return FadeRoute(page: AddTruckOwner(userOwner: args));
       case driverUpcomingOrderPage:
         return FadeRoute(page: DriverUpcomingOrder());
       case newTransportingOrderPage:

@@ -1,14 +1,12 @@
-import 'dart:io';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:transportationapp/DialogFailed.dart';
-import 'package:transportationapp/DialogProcessing.dart';
-import 'package:transportationapp/DialogSuccess.dart';
+import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/DialogScreens/DialogFailed.dart';
+import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/DialogScreens/DialogProcessing.dart';
+import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/DialogScreens/DialogSuccess.dart';
 import 'package:transportationapp/HttpHandler.dart';
+import 'package:transportationapp/Models/User.dart';
 import 'package:transportationapp/MyConstants.dart';
 import 'package:transportationapp/PostMethodResult.dart';
-import 'package:transportationapp/User.dart';
 
 class DriverOptionsPage extends StatefulWidget {
   DriverOptionsPage({Key key, this.title}) : super(key: key);
@@ -57,7 +55,7 @@ class _DriverOptionsPageState extends State<DriverOptionsPage> {
         DialogSuccess().showCustomDialog(context, title: "Sign In");
         await Future.delayed(Duration(seconds: 1), () {});
         Navigator.pop(context);
-        Navigator.pushNamedAndRemoveUntil(_context, homePage, (route) => false,
+        Navigator.pushNamedAndRemoveUntil(_context, homePageDriver, (route) => false,
             arguments: userDriver);
       } else {
         PostResultOne postResultOne = value[1];

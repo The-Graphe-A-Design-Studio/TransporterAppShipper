@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:transportationapp/AccountBottomSheetLoggedOut.dart';
+import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/BottomSheets/AccountBottomSheetLoggedOut.dart';
 import 'package:transportationapp/MyConstants.dart';
 
 class IntroPageLoginOptions extends StatefulWidget {

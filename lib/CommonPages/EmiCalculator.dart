@@ -1,36 +1,25 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:transportationapp/AccountBottomSheetDummy.dart';
+import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/BottomSheets/AccountBottomSheetDummy.dart';
 
-class TollCalculator extends StatefulWidget {
-  TollCalculator({Key key, this.title}) : super(key: key);
+class EmiCalculator extends StatefulWidget {
+  EmiCalculator({Key key, this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _TollCalculatorState createState() => _TollCalculatorState();
+  _EmiCalculatorState createState() => _EmiCalculatorState();
 }
 
-class _TollCalculatorState extends State<TollCalculator> {
-  final GlobalKey<FormState> _formTollCalculator = GlobalKey<FormState>();
+class _EmiCalculatorState extends State<EmiCalculator> {
+  final GlobalKey<FormState> _formEmiCalculator = GlobalKey<FormState>();
 
-  final fromController = TextEditingController();
-  final toController = TextEditingController();
-  String vehicleTypeSelected = "Select Vehicle Type";
-
-  final FocusNode _from = FocusNode();
-  final FocusNode _to = FocusNode();
+  String brandSelected = "Select Brand";
+  String modelSelected = "Select Model";
 
   @override
   void initState() {
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    fromController.dispose();
-    toController.dispose();
-    super.dispose();
   }
 
   @override
@@ -51,7 +40,7 @@ class _TollCalculatorState extends State<TollCalculator> {
                         height: 60.0,
                       ),
                       Text(
-                        "Toll",
+                        "EMI",
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
@@ -68,75 +57,12 @@ class _TollCalculatorState extends State<TollCalculator> {
                         height: 40.0,
                       ),
                       Form(
-                        key: _formTollCalculator,
+                        key: _formEmiCalculator,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            TextFormField(
-                              controller: fromController,
-                              keyboardType: TextInputType.text,
-                              textCapitalization: TextCapitalization.words,
-                              textInputAction: TextInputAction.next,
-                              focusNode: _from,
-                              onFieldSubmitted: (term) {
-                                _from.unfocus();
-                                FocusScope.of(context).requestFocus(_to);
-                              },
-                              decoration: InputDecoration(
-                                fillColor: Colors.white,
-                                filled: true,
-                                errorStyle: TextStyle(color: Colors.white),
-                                prefixIcon: Icon(Icons.flight_takeoff),
-                                hintText: "From",
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(5.0),
-                                  borderSide: BorderSide(
-                                    color: Colors.amber,
-                                    style: BorderStyle.solid,
-                                  ),
-                                ),
-                              ),
-                              validator: (value) {
-                                if (value.isEmpty) {
-                                  return "This Field is Required";
-                                }
-                                return null;
-                              },
-                            ),
-                            SizedBox(
-                              height: 16.0,
-                            ),
-                            TextFormField(
-                              controller: toController,
-                              keyboardType: TextInputType.number,
-                              textInputAction: TextInputAction.done,
-                              focusNode: _to,
-                              decoration: InputDecoration(
-                                fillColor: Colors.white,
-                                filled: true,
-                                errorStyle: TextStyle(color: Colors.white),
-                                prefixIcon: Icon(Icons.flight_land),
-                                hintText: "To",
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(5.0),
-                                  borderSide: BorderSide(
-                                    color: Colors.amber,
-                                    style: BorderStyle.solid,
-                                  ),
-                                ),
-                              ),
-                              validator: (value) {
-                                if (value.isEmpty) {
-                                  return "This Field is Required";
-                                }
-                                return null;
-                              },
-                            ),
-                            SizedBox(
-                              height: 16.0,
-                            ),
                             DropdownButton<String>(
-                              value: vehicleTypeSelected,
+                              value: brandSelected,
                               icon: Icon(Icons.arrow_drop_down),
                               iconSize: 40,
                               elevation: 30,
@@ -149,11 +75,44 @@ class _TollCalculatorState extends State<TollCalculator> {
                               ),
                               onChanged: (String newValue) {
                                 setState(() {
-                                  vehicleTypeSelected = newValue;
+                                  brandSelected = newValue;
                                 });
                               },
                               items: <String>[
-                                'Select Vehicle Type',
+                                'Select Brand',
+                                'One',
+                                'Two',
+                                'Free',
+                                'Four'
+                              ].map<DropdownMenuItem<String>>((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                            ),
+                            SizedBox(
+                              height: 16.0,
+                            ),
+                            DropdownButton<String>(
+                              value: modelSelected,
+                              icon: Icon(Icons.arrow_drop_down),
+                              iconSize: 40,
+                              elevation: 30,
+                              isExpanded: true,
+                              dropdownColor: Color(0xff252427),
+                              style: TextStyle(color: Colors.white),
+                              underline: Container(
+                                height: 2,
+                                color: Colors.white,
+                              ),
+                              onChanged: (String newValue) {
+                                setState(() {
+                                  modelSelected = newValue;
+                                });
+                              },
+                              items: <String>[
+                                'Select Model',
                                 'One',
                                 'Two',
                                 'Free',
@@ -173,7 +132,7 @@ class _TollCalculatorState extends State<TollCalculator> {
                               child: InkWell(
                                 splashColor: Colors.transparent,
                                 onTap: () {
-                                  if (_formTollCalculator.currentState
+                                  if (_formEmiCalculator.currentState
                                       .validate()) {
                                     final snackBar = SnackBar(
                                       content: Text('Request Sent'),

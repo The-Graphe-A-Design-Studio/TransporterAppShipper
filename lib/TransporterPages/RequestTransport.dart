@@ -1,27 +1,30 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:transportationapp/AccountBottomSheetDummy.dart';
+import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/BottomSheets/AccountBottomSheetLoggedIn.dart';
 
-class TripPlanner extends StatefulWidget {
-  TripPlanner({Key key, this.title}) : super(key: key);
+class RequestTransport extends StatefulWidget {
+  RequestTransport({Key key, this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _TripPlannerState createState() => _TripPlannerState();
+  _RequestTransportState createState() => _RequestTransportState();
 }
 
-class _TripPlannerState extends State<TripPlanner> {
-  final GlobalKey<FormState> _formTripPlanner = GlobalKey<FormState>();
+class _RequestTransportState extends State<RequestTransport> {
+  final GlobalKey<FormState> _formRequestTransport = GlobalKey<FormState>();
 
   final fromController = TextEditingController();
   final toController = TextEditingController();
-  String brandSelected = "Select Brand";
-  String modelSelected = "Select Model";
-  String fuelSelected = "Select Fuel Type";
+  final departureController = TextEditingController();
+  final weightController = TextEditingController();
+  final remarkController = TextEditingController();
 
   final FocusNode _from = FocusNode();
   final FocusNode _to = FocusNode();
+  final FocusNode _departure = FocusNode();
+  final FocusNode _weight = FocusNode();
+  final FocusNode _remark = FocusNode();
 
   @override
   void initState() {
@@ -32,6 +35,9 @@ class _TripPlannerState extends State<TripPlanner> {
   void dispose() {
     fromController.dispose();
     toController.dispose();
+    departureController.dispose();
+    weightController.dispose();
+    remarkController.dispose();
     super.dispose();
   }
 
@@ -53,14 +59,14 @@ class _TripPlannerState extends State<TripPlanner> {
                         height: 60.0,
                       ),
                       Text(
-                        "Trip",
+                        "Request",
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                             fontSize: 40.0),
                       ),
                       Text(
-                        "Planner",
+                        "Transport",
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
@@ -106,7 +112,7 @@ class _TripPlannerState extends State<TripPlanner> {
                         height: 30.0,
                       ),
                       Form(
-                        key: _formTripPlanner,
+                        key: _formRequestTransport,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
@@ -147,8 +153,12 @@ class _TripPlannerState extends State<TripPlanner> {
                             TextFormField(
                               controller: toController,
                               keyboardType: TextInputType.number,
-                              textInputAction: TextInputAction.done,
+                              textInputAction: TextInputAction.next,
                               focusNode: _to,
+                              onFieldSubmitted: (term) {
+                                _to.unfocus();
+                                FocusScope.of(context).requestFocus(_departure);
+                              },
                               decoration: InputDecoration(
                                 fillColor: Colors.white,
                                 filled: true,
@@ -173,102 +183,111 @@ class _TripPlannerState extends State<TripPlanner> {
                             SizedBox(
                               height: 16.0,
                             ),
-                            DropdownButton<String>(
-                              value: brandSelected,
-                              icon: Icon(Icons.arrow_drop_down),
-                              iconSize: 40,
-                              elevation: 30,
-                              isExpanded: true,
-                              dropdownColor: Color(0xff252427),
-                              style: TextStyle(color: Colors.white),
-                              underline: Container(
-                                height: 2,
-                                color: Colors.white,
-                              ),
-                              onChanged: (String newValue) {
-                                setState(() {
-                                  brandSelected = newValue;
-                                });
-                              },
-                              items: <String>[
-                                'Select Brand',
-                                'One',
-                                'Two',
-                                'Free',
-                                'Four'
-                              ].map<DropdownMenuItem<String>>((String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(value),
-                                );
-                              }).toList(),
+                            Row(
+                              children: <Widget>[
+                                Flexible(
+                                  child: TextFormField(
+                                    controller: departureController,
+                                    keyboardType: TextInputType.emailAddress,
+                                    textInputAction: TextInputAction.next,
+                                    focusNode: _departure,
+                                    onFieldSubmitted: (term) {
+                                      _departure.unfocus();
+                                      FocusScope.of(context)
+                                          .requestFocus(_weight);
+                                    },
+                                    decoration: InputDecoration(
+                                      fillColor: Colors.white,
+                                      filled: true,
+                                      errorStyle:
+                                          TextStyle(color: Colors.white),
+                                      prefixIcon: Icon(Icons.calendar_today),
+                                      hintText: "Departure Date",
+                                      border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(5.0),
+                                        borderSide: BorderSide(
+                                          color: Colors.amber,
+                                          style: BorderStyle.solid,
+                                        ),
+                                      ),
+                                    ),
+                                    validator: (value) {
+                                      if (value.isEmpty) {
+                                        return "This Field is Required";
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 20.0,
+                                ),
+                                Flexible(
+                                  child: TextFormField(
+                                    controller: weightController,
+                                    keyboardType: TextInputType.emailAddress,
+                                    textInputAction: TextInputAction.next,
+                                    focusNode: _weight,
+                                    onFieldSubmitted: (term) {
+                                      _weight.unfocus();
+                                      FocusScope.of(context)
+                                          .requestFocus(_remark);
+                                    },
+                                    decoration: InputDecoration(
+                                      fillColor: Colors.white,
+                                      filled: true,
+                                      errorStyle:
+                                          TextStyle(color: Colors.white),
+                                      prefixIcon: Icon(Icons.event_seat),
+                                      hintText: "Weight",
+                                      border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(5.0),
+                                        borderSide: BorderSide(
+                                          color: Colors.amber,
+                                          style: BorderStyle.solid,
+                                        ),
+                                      ),
+                                    ),
+                                    validator: (value) {
+                                      if (value.isEmpty) {
+                                        return "This Field is Required";
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                ),
+                              ],
                             ),
                             SizedBox(
                               height: 16.0,
                             ),
-                            DropdownButton<String>(
-                              value: modelSelected,
-                              icon: Icon(Icons.arrow_drop_down),
-                              iconSize: 40,
-                              elevation: 30,
-                              isExpanded: true,
-                              dropdownColor: Color(0xff252427),
-                              style: TextStyle(color: Colors.white),
-                              underline: Container(
-                                height: 2,
-                                color: Colors.white,
-                              ),
-                              onChanged: (String newValue) {
-                                setState(() {
-                                  modelSelected = newValue;
-                                });
-                              },
-                              items: <String>[
-                                'Select Model',
-                                'One',
-                                'Two',
-                                'Free',
-                                'Four'
-                              ].map<DropdownMenuItem<String>>((String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(value),
-                                );
-                              }).toList(),
-                            ),
-                            SizedBox(
-                              height: 16.0,
-                            ),
-                            DropdownButton<String>(
-                              value: fuelSelected,
-                              icon: Icon(Icons.arrow_drop_down),
-                              iconSize: 40,
-                              elevation: 30,
-                              isExpanded: true,
-                              dropdownColor: Color(0xff252427),
-                              style: TextStyle(color: Colors.white),
-                              underline: Container(
-                                height: 2,
-                                color: Colors.white,
-                              ),
-                              onChanged: (String newValue) {
-                                setState(() {
-                                  fuelSelected = newValue;
-                                });
-                              },
-                              items: <String>[
-                                'Select Fuel Type',
-                                'One',
-                                'Two',
-                                'Free',
-                                'Four'
-                              ].map<DropdownMenuItem<String>>((String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(value),
-                                );
-                              }).toList(),
-                            ),
+                            TextFormField(
+                                controller: remarkController,
+                                keyboardType: TextInputType.visiblePassword,
+                                textInputAction: TextInputAction.done,
+                                focusNode: _remark,
+                                decoration: InputDecoration(
+                                  fillColor: Colors.white,
+                                  filled: true,
+                                  errorStyle: TextStyle(color: Colors.white),
+                                  prefixIcon: Icon(Icons.text_fields),
+                                  hintText: "Remark",
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5.0),
+                                    borderSide: BorderSide(
+                                      color: Colors.white,
+                                      style: BorderStyle.solid,
+                                    ),
+                                  ),
+                                ),
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return "This Field is Required";
+                                  }
+                                  return null;
+                                }),
                             SizedBox(
                               height: 50.0,
                             ),
@@ -277,7 +296,7 @@ class _TripPlannerState extends State<TripPlanner> {
                               child: InkWell(
                                 splashColor: Colors.transparent,
                                 onTap: () {
-                                  if (_formTripPlanner.currentState
+                                  if (_formRequestTransport.currentState
                                       .validate()) {
                                     final snackBar = SnackBar(
                                       content: Text('Request Sent'),
@@ -323,15 +342,15 @@ class _TripPlannerState extends State<TripPlanner> {
               return Hero(
                 tag: 'AnimeBottom',
                 child: Container(
-                  margin: EdgeInsets.only(bottom: 0),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(30.0),
-                        topRight: Radius.circular(30.0)),
-                  ),
-                  child: AccountBottomSheetDummy(),
-                ),
+                    margin: EdgeInsets.only(bottom: 0),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(30.0),
+                          topRight: Radius.circular(30.0)),
+                    ),
+                    child:
+                        AccountBottomSheetLoggedIn(scrollController: scrollController)),
               );
             },
           ),
