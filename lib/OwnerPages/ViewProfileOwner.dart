@@ -5,8 +5,6 @@ import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/DialogScreens/Dialog
 import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/DialogScreens/DialogSuccess.dart';
 import 'package:transportationapp/HttpHandler.dart';
 import 'package:transportationapp/Models/User.dart';
-import 'package:transportationapp/MyConstants.dart';
-import 'package:transportationapp/PostMethodResult.dart';
 
 class ViewProfileOwner extends StatefulWidget {
   final UserOwner userOwner;
@@ -25,7 +23,6 @@ enum WidgetMarker {
 
 class _ViewProfileOwnerState extends State<ViewProfileOwner> {
   WidgetMarker selectedWidgetMarker = WidgetMarker.viewProfile;
-  UserOwner userOwner;
 
   final GlobalKey<FormState> _formKeyProfile = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKeyChangePassword = GlobalKey<FormState>();
@@ -66,6 +63,16 @@ class _ViewProfileOwnerState extends State<ViewProfileOwner> {
   @override
   void initState() {
     super.initState();
+    nameController.text = widget.userOwner.oName;
+    mobileNumberController.text = widget.userOwner.oPhone;
+    emailController.text = widget.userOwner.oEmail;
+    addressController.text = widget.userOwner.oAddress;
+    cityController.text = widget.userOwner.oCity;
+    operatingRoutesController.text = widget.userOwner.oOperatingRoute;
+    permitStatesController.text = widget.userOwner.oPermitStates;
+    panCardNumberController.text = widget.userOwner.oPan;
+    bankAccountNumberController.text = widget.userOwner.oBank;
+    ifscCodeController.text = widget.userOwner.oIfsc;
   }
 
   @override
@@ -111,9 +118,23 @@ class _ViewProfileOwnerState extends State<ViewProfileOwner> {
       if (value.success) {
         DialogSuccess().showCustomDialog(context, title: "Update Profile");
         await Future.delayed(Duration(seconds: 1), () {});
-        setState(() {
-          selectedWidgetMarker = WidgetMarker.verifyOTP;
-        });
+        if (widget.userOwner.oPhone != mobileNumberController.text.toString()) {
+          setState(() {
+            selectedWidgetMarker = WidgetMarker.verifyOTP;
+          });
+        } else {
+          widget.userOwner.oName = nameController.text.toString();
+          widget.userOwner.oPhone = mobileNumberController.text;
+          widget.userOwner.oEmail = emailController.text;
+          widget.userOwner.oAddress = addressController.text;
+          widget.userOwner.oCity = cityController.text;
+          widget.userOwner.oOperatingRoute = operatingRoutesController.text;
+          widget.userOwner.oPermitStates = permitStatesController.text;
+          widget.userOwner.oPan = panCardNumberController.text;
+          widget.userOwner.oBank = bankAccountNumberController.text;
+          widget.userOwner.oIfsc = ifscCodeController.text;
+          HTTPHandler().saveLocalChangesOwner(widget.userOwner);
+        }
         Navigator.pop(context);
         Scaffold.of(_context).showSnackBar(SnackBar(
           backgroundColor: Colors.black,
@@ -123,16 +144,16 @@ class _ViewProfileOwnerState extends State<ViewProfileOwner> {
           ),
         ));
       } else {
-        DialogFailed()
-            .showCustomDialog(context, title: "Update Profile", text: value.message);
+        DialogFailed().showCustomDialog(context,
+            title: "Update Profile", text: value.message);
         await Future.delayed(Duration(seconds: 3), () {});
         Navigator.pop(context);
       }
     }).catchError((error) async {
       print(error);
       Navigator.pop(context);
-      DialogFailed()
-          .showCustomDialog(context, title: "Update Profile", text: "Network Error");
+      DialogFailed().showCustomDialog(context,
+          title: "Update Profile", text: "Network Error");
       await Future.delayed(Duration(seconds: 3), () {});
       Navigator.pop(context);
     });
@@ -141,11 +162,15 @@ class _ViewProfileOwnerState extends State<ViewProfileOwner> {
   void postOtpVerificationRequest(BuildContext _context) {
     DialogProcessing().showCustomDialog(context,
         title: "OTP Verification", text: "Processing, Please Wait!");
-    HTTPHandler().editOwnerInfoVerifyOTP(
-        [widget.userOwner.oId.toString(), mobileNumberController.text, otpController.text]).then((value) async {
+    HTTPHandler().editOwnerInfoVerifyOTP([
+      widget.userOwner.oId.toString(),
+      mobileNumberController.text,
+      otpController.text
+    ]).then((value) async {
       Navigator.pop(context);
       if (value.success) {
-        DialogSuccess().showCustomDialog(context, title: "OTP Verification", text: value.message);
+        DialogSuccess().showCustomDialog(context,
+            title: "OTP Verification", text: value.message);
         await Future.delayed(Duration(seconds: 1), () {});
         Navigator.pop(context);
         Navigator.pop(context);
@@ -599,9 +624,7 @@ class _ViewProfileOwnerState extends State<ViewProfileOwner> {
                   splashColor: Colors.transparent,
                   onTap: () {
                     if (_formKeyProfile.currentState.validate()) {
-                      setState(() {
-                        selectedWidgetMarker = WidgetMarker.verifyOTP;
-                      });
+                      postUpdateRequest(context);
                     }
                   },
                   child: Container(

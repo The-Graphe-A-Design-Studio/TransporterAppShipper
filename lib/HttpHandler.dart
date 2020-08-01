@@ -30,6 +30,11 @@ class HTTPHandler {
         context, introLoginOptionPage, (route) => false);
   }
 
+  void saveLocalChangesOwner(UserOwner userOwner) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('userData', json.encode(userOwner.toJson()));
+  }
+
   /*-------------------------- Owner API's ---------------------------*/
   Future<PostResultOne> registerOwner(List data) async {
     try {

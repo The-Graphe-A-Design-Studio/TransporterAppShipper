@@ -5,16 +5,14 @@ class DialogSuccess {
   static DialogSuccess _instance = new DialogSuccess.internal();
   BuildContext context;
   String title;
-  String text;
 
   DialogSuccess.internal();
 
   factory DialogSuccess() => _instance;
 
-  void showCustomDialog(BuildContext context, {String title, String text}) {
+  void showCustomDialog(BuildContext context, {String title, String text=""}) {
     this.context = context;
     this.title = title;
-    this.text = text;
     showDialog(
         barrierDismissible: false,
         context: context,

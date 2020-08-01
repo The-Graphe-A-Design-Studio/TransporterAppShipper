@@ -16,19 +16,19 @@ class UserOwner {
 
   UserOwner(
       {this.success,
-        this.oId,
-        this.oName,
-        this.oEmail,
-        this.oPhoneCode,
-        this.oPhone,
-        this.oAddress,
-        this.oCity,
-        this.oOperatingRoute,
-        this.oPermitStates,
-        this.oPan,
-        this.oBank,
-        this.oIfsc,
-        this.oRegistered});
+      this.oId,
+      this.oName,
+      this.oEmail,
+      this.oPhoneCode,
+      this.oPhone,
+      this.oAddress,
+      this.oCity,
+      this.oOperatingRoute,
+      this.oPermitStates,
+      this.oPan,
+      this.oBank,
+      this.oIfsc,
+      this.oRegistered});
 
   factory UserOwner.fromJson(Map<String, dynamic> parsedJson) {
     return UserOwner(
@@ -47,6 +47,23 @@ class UserOwner {
         oIfsc: parsedJson['ifsc'],
         oRegistered: parsedJson['registered on']);
   }
+
+  Map<String, dynamic> toJson() => {
+        'success': "1",
+        'id': this.oId,
+        'name': this.oName,
+        'email': this.oEmail,
+        'phone_con_code': this.oPhoneCode,
+        'phone': this.oPhone,
+        'address': this.oAddress,
+        'city': this.oCity,
+        'operating routes': this.oOperatingRoute,
+        'permit states': this.oPermitStates,
+        'pan': this.oPan,
+        'bank': this.oBank,
+        'ifsc': this.oIfsc,
+        'registered on': this.oRegistered,
+      };
 }
 
 class UserDriver {
@@ -71,23 +88,23 @@ class UserDriver {
 
   UserDriver(
       {this.success,
-        this.dId,
-        this.dName,
-        this.dEmail,
-        this.dPhoneCode,
-        this.dPhone,
-        this.dPassword,
-        this.dAddress,
-        this.dRc,
-        this.dLicense,
-        this.dInsurance,
-        this.dRoadTax,
-        this.dRto,
-        this.dPan,
-        this.dBank,
-        this.dIfsc,
-        this.dVerified,
-        this.dRegistered});
+      this.dId,
+      this.dName,
+      this.dEmail,
+      this.dPhoneCode,
+      this.dPhone,
+      this.dPassword,
+      this.dAddress,
+      this.dRc,
+      this.dLicense,
+      this.dInsurance,
+      this.dRoadTax,
+      this.dRto,
+      this.dPan,
+      this.dBank,
+      this.dIfsc,
+      this.dVerified,
+      this.dRegistered});
 
   factory UserDriver.fromJson(Map<String, dynamic> parsedJson) {
     return UserDriver(
