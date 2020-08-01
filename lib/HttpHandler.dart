@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:transportationapp/Models/Truck.dart';
 import 'package:transportationapp/Models/User.dart';
 import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/DialogScreens/DialogProcessing.dart';
 import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/DialogScreens/DialogSuccess.dart';
@@ -31,26 +32,26 @@ class HTTPHandler {
 
   /*-------------------------- Owner API's ---------------------------*/
   Future<PostResultOne> registerOwner(List data) async {
-    /*try {*/
-    var result = await http.post("$baseURLOwner/register", body: {
-      'to_name': data[0],
-      'to_phone_code': data[1],
-      'to_phone': data[2],
-      'to_email': data[3],
-      'to_address': data[4],
-      'to_city': data[5],
-      'to_password': data[6],
-      'to_cnf_password': data[7],
-      'to_operating_routes': data[8],
-      'to_state_permits': data[9],
-      'to_pan': data[10],
-      'to_bank': data[11],
-      'to_ifsc': data[12]
-    });
-    return PostResultOne.fromJson(json.decode(result.body));
-    /*} catch (error) {
+    try {
+      var result = await http.post("$baseURLOwner/register", body: {
+        'to_name': data[0],
+        'to_phone_code': data[1],
+        'to_phone': data[2],
+        'to_email': data[3],
+        'to_address': data[4],
+        'to_city': data[5],
+        'to_password': data[6],
+        'to_cnf_password': data[7],
+        'to_operating_routes': data[8],
+        'to_state_permits': data[9],
+        'to_pan': data[10],
+        'to_bank': data[11],
+        'to_ifsc': data[12]
+      });
+      return PostResultOne.fromJson(json.decode(result.body));
+    } catch (error) {
       throw error;
-    }*/
+    }
   }
 
   Future<PostResultOne> registerVerifyOtpOwner(List data) async {
@@ -97,6 +98,67 @@ class HTTPHandler {
     }
   }
 
+  Future<PostResultOne> editOwnerInfo(List data) async {
+    try {
+      var result = await http.post("$baseURLOwner/profile", body: {
+        'to_id': data[0],
+        'to_name': data[1],
+        'to_phone_code': data[2],
+        'to_phone': data[3],
+        'to_email': data[4],
+        'to_address': data[5],
+        'to_city': data[6],
+        'to_operating_routes': data[7],
+        'to_state_permits': data[8],
+        'to_pan': data[9],
+        'to_bank': data[10],
+        'to_ifsc': data[11]
+      });
+      return PostResultOne.fromJson(json.decode(result.body));
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<PostResultOne> editOwnerInfoVerifyOTP(List data) async {
+    try {
+      var result = await http.post("$baseURLOwner/profile", body: {
+        'to_id': data[0],
+        'phone_number': data[1],
+        'otp': data[2],
+      });
+      return PostResultOne.fromJson(json.decode(result.body));
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<PostResultOne> editOwnerInfoResendOTP(List data) async {
+    try {
+      var result = await http.post("$baseURLOwner/profile", body: {
+        'resend_otp': data[0],
+      });
+      return PostResultOne.fromJson(json.decode(result.body));
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<PostResultOne> editOwnerInfoChangePassword(List data) async {
+    try {
+      var result = await http.post("$baseURLOwner/profile", body: {
+        'to_id': data[0],
+        'curr_password': data[1],
+        'new_password': data[2],
+        'cnf_new_password': data[3],
+      });
+      return PostResultOne.fromJson(json.decode(result.body));
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  /*-------------------------- Truck API's ---------------------------*/
   Future<List<TruckCategory>> getTruckCategory() async {
     try {
       var result = await http.get("$baseURLOwner/truck_categories");
@@ -112,7 +174,7 @@ class HTTPHandler {
   }
 
   Future<PostResultOne> addTrucksOwner(List data) async {
-    /*try {*/
+    try {
       var url = "$baseURLOwner/trucks";
       var request = http.MultipartRequest('POST', Uri.parse(url));
 
@@ -135,9 +197,141 @@ class HTTPHandler {
       var result = await request.send();
       var finalResult = await http.Response.fromStream(result);
       return PostResultOne.fromJson(json.decode(finalResult.body));
-    /*} catch (error) {
+    } catch (error) {
       throw error;
-    }*/
+    }
+  }
+
+  Future<PostResultOne> editTruckInfo(List data) async {
+    try {
+      var result = await http.post("$baseURLOwner/trucks", body: {
+        'trk_id': data[0],
+        'trk_cat_edit': data[1],
+        'trk_num_edit': data[2],
+        'trk_load_edit': data[3],
+        'trk_dr_name_edit': data[4],
+        'trk_dr_phone_code_edit': data[5],
+        'trk_dr_phone_edit': data[6]
+      });
+      return PostResultOne.fromJson(json.decode(result.body));
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<List<Truck>> viewAllTrucks(List data) async {
+    try {
+      var result = await http
+          .post("$baseURLOwner/trucks", body: {'truck_owner_id': data[0]});
+      var ret = json.decode(result.body);
+      List<Truck> list = [];
+      for (var i in ret) {
+        list.add(Truck.fromJson(i));
+      }
+      return list;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<PostResultOne> deleteTrucks(List data) async {
+    try {
+      var result = await http
+          .post("$baseURLOwner/trucks", body: {'del_truck_id': data[0]});
+      return PostResultOne.fromJson(json.decode(result.body));
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<PostResultOne> changeTruckStatus(List data) async {
+    try {
+      var result = await http.post("$baseURLOwner/trucks",
+          body: {'truck_id': data[0], 'truck_status': data[1]});
+      return PostResultOne.fromJson(json.decode(result.body));
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<PostResultOne> editTruckRTO(List data) async {
+    try {
+      var url = "$baseURLOwner/trucks";
+      var request = http.MultipartRequest('POST', Uri.parse(url));
+
+      request.fields['trk_id'] = data[0];
+      request.files
+          .add(await http.MultipartFile.fromPath('trk_rto_edit', data[1]));
+      var result = await request.send();
+      var finalResult = await http.Response.fromStream(result);
+      return PostResultOne.fromJson(json.decode(finalResult.body));
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<PostResultOne> editTruckRoadTax(List data) async {
+    try {
+      var url = "$baseURLOwner/trucks";
+      var request = http.MultipartRequest('POST', Uri.parse(url));
+
+      request.fields['trk_id'] = data[0];
+      request.files
+          .add(await http.MultipartFile.fromPath('trk_road_tax_edit', data[1]));
+      var result = await request.send();
+      var finalResult = await http.Response.fromStream(result);
+      return PostResultOne.fromJson(json.decode(finalResult.body));
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<PostResultOne> editTruckInsurance(List data) async {
+    try {
+      var url = "$baseURLOwner/trucks";
+      var request = http.MultipartRequest('POST', Uri.parse(url));
+
+      request.fields['trk_id'] = data[0];
+      request.files.add(
+          await http.MultipartFile.fromPath('trk_insurance_edit', data[1]));
+      var result = await request.send();
+      var finalResult = await http.Response.fromStream(result);
+      return PostResultOne.fromJson(json.decode(finalResult.body));
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<PostResultOne> editTruckRc(List data) async {
+    try {
+      var url = "$baseURLOwner/trucks";
+      var request = http.MultipartRequest('POST', Uri.parse(url));
+
+      request.fields['trk_id'] = data[0];
+      request.files
+          .add(await http.MultipartFile.fromPath('trk_rc_edit', data[1]));
+      var result = await request.send();
+      var finalResult = await http.Response.fromStream(result);
+      return PostResultOne.fromJson(json.decode(finalResult.body));
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<PostResultOne> editTruckDriverLicense(List data) async {
+    try {
+      var url = "$baseURLOwner/trucks";
+      var request = http.MultipartRequest('POST', Uri.parse(url));
+
+      request.fields['trk_id'] = data[0];
+      request.files.add(
+          await http.MultipartFile.fromPath('trk_dr_license_edit', data[1]));
+      var result = await request.send();
+      var finalResult = await http.Response.fromStream(result);
+      return PostResultOne.fromJson(json.decode(finalResult.body));
+    } catch (error) {
+      throw error;
+    }
   }
 
   /*-------------------------- Driver API's ---------------------------*/
