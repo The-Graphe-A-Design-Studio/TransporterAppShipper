@@ -29,3 +29,5 @@ const String requestTransportPage = "/requestTransportPage";
 //Pages once the user is LoggedIn - Owner
 const String homePageOwner = "/homePageOwner";
 const String addTruckOwner = "/addTruckOwner";
+const String viewTrucksOwner = "/viewTrucksOwner";
+const String viewProfileOwner = "/viewProfileOwner";

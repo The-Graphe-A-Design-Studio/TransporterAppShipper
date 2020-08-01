@@ -9,6 +9,8 @@ import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/OwnerPages/HomePageO
 import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/CommonPages/IntroPageLoginOptions.dart';
 import 'package:transportationapp/MyConstants.dart';
 import 'package:transportationapp/OwnerPages/AddTruckFromOwner.dart';
+import 'package:transportationapp/OwnerPages/ViewProfileOwner.dart';
+import 'package:transportationapp/OwnerPages/ViewTrucksOwner.dart';
 import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/TransporterPages/NewTransportingOrder.dart';
 import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/TransporterPages/OrderSummaryScreen.dart';
 import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/OwnerPages/OwnerOptionsPage.dart';
@@ -49,6 +51,10 @@ class RouteGenerator {
         return FadeRoute(page: AddTruckOwner(userOwner: args));
       case driverUpcomingOrderPage:
         return FadeRoute(page: DriverUpcomingOrder());
+      case viewTrucksOwner:
+        return FadeRoute(page: ViewTrucksOwner(userOwner: args,));
+      case viewProfileOwner:
+        return FadeRoute(page: ViewProfileOwner(userOwner: args,));
       case newTransportingOrderPage:
         return FadeRoute(page: NewTransportingOrder());
       case orderSummaryPage:

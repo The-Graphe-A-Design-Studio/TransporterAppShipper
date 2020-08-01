@@ -64,19 +64,37 @@ class _HomePageOwnerState extends State<HomePageOwner> {
                         SizedBox(
                           height: 40.0,
                         ),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.pushNamed(context, addTruckOwner, arguments: widget.userOwner);
+                        FlatButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context, viewTrucksOwner,
+                                arguments: widget.userOwner);
                           },
-                          child: CircleAvatar(
-                            radius: 40.0,
-                            backgroundColor: Colors.white,
-                            child: Icon(
-                              Icons.add,
-                              color: Color(0xff252427),
-                              size: 35.0,
-                            ),
+                          child: Text(
+                            "View My Trucks",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20.0),
                           ),
+                        ),
+                        SizedBox(
+                          height: 25.0,
+                        ),
+                        FlatButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context, viewProfileOwner,
+                                arguments: widget.userOwner);
+                          },
+                          child: Text(
+                            "View My Profile",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20.0),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 100,
                         ),
                       ],
                     ),

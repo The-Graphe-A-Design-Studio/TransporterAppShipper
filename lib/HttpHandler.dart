@@ -14,7 +14,7 @@ class HTTPHandler {
   String baseURLDriver =
       'https://developers.thegraphe.com/transport/api/drivers';
   String baseURLOwner =
-      'https://developers.thegraphe.com/transport/api/truck_owner';
+      'https://truckwale.co.in/api/truck_owner';
 
   void signOut(BuildContext context) async {
     DialogProcessing().showCustomDialog(context,
