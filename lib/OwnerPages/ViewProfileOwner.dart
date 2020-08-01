@@ -159,6 +159,37 @@ class _ViewProfileOwnerState extends State<ViewProfileOwner> {
     });
   }
 
+  void postChangePasswordRequest(BuildContext _context) {
+    DialogProcessing().showCustomDialog(context,
+        title: "Change Password", text: "Processing, Please Wait!");
+    HTTPHandler().editOwnerInfoChangePassword([
+      widget.userOwner.oId.toString(),
+      currPasswordController.text.toString(),
+      newPasswordController.text.toString(),
+      confirmPasswordController.text.toString()
+    ]).then((value) async {
+      Navigator.pop(context);
+      if (value.success) {
+        DialogSuccess().showCustomDialog(context,
+            title: "Change Password", text: value.message);
+        await Future.delayed(Duration(seconds: 1), () {});
+        Navigator.pop(context);
+        HTTPHandler().signOut(context);
+      } else {
+        DialogFailed().showCustomDialog(context,
+            title: "Change Password", text: value.message);
+        await Future.delayed(Duration(seconds: 3), () {});
+        Navigator.pop(context);
+      }
+    }).catchError((error) async {
+      Navigator.pop(context);
+      DialogFailed().showCustomDialog(context,
+          title: "Change Password", text: "Network Error");
+      await Future.delayed(Duration(seconds: 3), () {});
+      Navigator.pop(context);
+    });
+  }
+
   void postOtpVerificationRequest(BuildContext _context) {
     DialogProcessing().showCustomDialog(context,
         title: "OTP Verification", text: "Processing, Please Wait!");
@@ -727,7 +758,7 @@ class _ViewProfileOwnerState extends State<ViewProfileOwner> {
                 },
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.vpn_key),
-                  labelText: "Confirm Password",
+                  labelText: "Current Password",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5.0),
                     borderSide: BorderSide(
@@ -757,7 +788,7 @@ class _ViewProfileOwnerState extends State<ViewProfileOwner> {
                   },
                   decoration: InputDecoration(
                     prefixIcon: Icon(Icons.vpn_key),
-                    labelText: "Password",
+                    labelText: "New Password",
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5.0),
                       borderSide: BorderSide(
@@ -782,7 +813,7 @@ class _ViewProfileOwnerState extends State<ViewProfileOwner> {
                 focusNode: _confirmPassword,
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.vpn_key),
-                  labelText: "Confirm Password",
+                  labelText: "Confirm New Password",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5.0),
                     borderSide: BorderSide(
@@ -810,7 +841,7 @@ class _ViewProfileOwnerState extends State<ViewProfileOwner> {
                   splashColor: Colors.transparent,
                   onTap: () {
                     if (_formKeyChangePassword.currentState.validate()) {
-                      postUpdateRequest(context);
+                      postChangePasswordRequest(context);
                     }
                   },
                   child: Container(
@@ -818,7 +849,7 @@ class _ViewProfileOwnerState extends State<ViewProfileOwner> {
                     height: 50.0,
                     child: Center(
                       child: Text(
-                        "Sign Up",
+                        "Change Password",
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 24.0,

@@ -5,6 +5,7 @@ class DialogSuccess {
   static DialogSuccess _instance = new DialogSuccess.internal();
   BuildContext context;
   String title;
+  String textt;
 
   DialogSuccess.internal();
 
@@ -13,6 +14,8 @@ class DialogSuccess {
   void showCustomDialog(BuildContext context, {String title, String text=""}) {
     this.context = context;
     this.title = title;
+    this.textt = " ";
+    if (text!=null) this.textt = text;
     showDialog(
         barrierDismissible: false,
         context: context,
@@ -60,7 +63,7 @@ class DialogSuccess {
                           height: 16.0,
                         ),
                         Text(
-                          text,
+                          textt,
                           style: TextStyle(fontSize: 13.0),
                         )
                       ],
