@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:transportationapp/CommonPages/LoadingBody.dart';
 import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/DialogScreens/DialogFailed.dart';
 import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/DialogScreens/DialogProcessing.dart';
 import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/DialogScreens/DialogSuccess.dart';
@@ -24,8 +25,9 @@ class _EditTruckOwnerState extends State<EditTruckOwner> {
   final truckDriverNameController = TextEditingController();
   final truckDriverMobileNumberController = TextEditingController();
   TruckCategory selectedTruckCategory;
-  List<TruckCategory> listOfCat = [];
+  List<TruckCategory> listOfCat;
   bool loadCat = true;
+  bool firstTime = true;
 
   final FocusNode _truckNumber = FocusNode();
   final FocusNode _truckLoad = FocusNode();
@@ -83,6 +85,14 @@ class _EditTruckOwnerState extends State<EditTruckOwner> {
 
   Widget getEditsBottomSheetWidget(
       context, ScrollController scrollController) {
+    if (firstTime) {
+      firstTime = false;
+      selectedTruckCategory = listOfCat[int.parse(widget.truck.truckCat)-1];
+      truckNumberController.text = widget.truck.truckNumber;
+      truckLoadController.text = widget.truck.truckLoad;
+      truckDriverNameController.text = widget.truck.truckDriverName;
+      truckDriverMobileNumberController.text = widget.truck.truckDriverPhone;
+    }
     return ListView(controller: scrollController, children: <Widget>[
       SingleChildScrollView(
         child: Form(
@@ -139,7 +149,7 @@ class _EditTruckOwnerState extends State<EditTruckOwner> {
               ),
               DropdownButton(
                 isExpanded: true,
-                hint: Text("Select Truck Category"),
+                hint: Text(selectedTruckCategory.truckCatName),
                 value: selectedTruckCategory,
                 onChanged: (TruckCategory value) {
                   setState(() {
@@ -322,7 +332,7 @@ class _EditTruckOwnerState extends State<EditTruckOwner> {
                     height: 50.0,
                     child: Center(
                       child: Text(
-                        "Next",
+                        "Update Truck Info",
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 24.0,
@@ -372,7 +382,11 @@ class _EditTruckOwnerState extends State<EditTruckOwner> {
   }
 
   void getCategories() async {
-    listOfCat = await HTTPHandler().getTruckCategory();
+    HTTPHandler().getTruckCategory().then((value) {
+      setState(() {
+        listOfCat = value;
+      });
+    });
   }
 
   @override
@@ -383,7 +397,7 @@ class _EditTruckOwnerState extends State<EditTruckOwner> {
     }
     return Scaffold(
       backgroundColor: Color(0xff252427),
-      body: Stack(children: <Widget>[
+      body: listOfCat==null ? LoadingBody() : Stack(children: <Widget>[
         getEditsWidget(context),
         DraggableScrollableSheet(
           initialChildSize: 0.65,
