@@ -1,34 +1,23 @@
-import 'dart:io';
-
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/DialogScreens/DialogFailed.dart';
 import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/DialogScreens/DialogProcessing.dart';
 import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/DialogScreens/DialogSuccess.dart';
 import 'package:transportationapp/HttpHandler.dart';
+import 'package:transportationapp/Models/Truck.dart';
 import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/Models/TruckCategory.dart';
-import 'package:transportationapp/Models/User.dart';
 
-class AddTruckOwner extends StatefulWidget {
-  final UserOwner userOwner;
+class EditTruckOwner extends StatefulWidget {
+  final Truck truck;
 
-  AddTruckOwner({Key key, this.userOwner}) : super(key: key);
+  EditTruckOwner({Key key, this.truck}) : super(key: key);
 
   @override
-  _AddTruckOwnerState createState() => _AddTruckOwnerState();
+  _EditTruckOwnerState createState() => _EditTruckOwnerState();
 }
 
-enum WidgetMarker {
-  credentials,
-  documents,
-}
-
-class _AddTruckOwnerState extends State<AddTruckOwner> {
-  WidgetMarker selectedWidgetMarker = WidgetMarker.credentials;
-
+class _EditTruckOwnerState extends State<EditTruckOwner> {
   final GlobalKey<FormState> _formKeyCredentials = GlobalKey<FormState>();
-  final GlobalKey<FormState> _formKeyDocuments = GlobalKey<FormState>();
 
   final truckNumberController = TextEditingController();
   final truckLoadController = TextEditingController();
@@ -38,9 +27,6 @@ class _AddTruckOwnerState extends State<AddTruckOwner> {
   List<TruckCategory> listOfCat = [];
   bool loadCat = true;
 
-  File rcFile, licenceFile, insuranceFile, roadTaxFile, rtoPassingFile;
-  bool rcDone, licenceDone, insuranceDone, roadTaxDone, rtoPassingDone;
-
   final FocusNode _truckNumber = FocusNode();
   final FocusNode _truckLoad = FocusNode();
   final FocusNode _truckDriverName = FocusNode();
@@ -49,12 +35,6 @@ class _AddTruckOwnerState extends State<AddTruckOwner> {
   @override
   void initState() {
     super.initState();
-    selectedWidgetMarker = WidgetMarker.credentials;
-    rcDone = false;
-    licenceDone = false;
-    insuranceDone = false;
-    roadTaxDone = false;
-    rtoPassingDone = false;
   }
 
   @override
@@ -67,45 +47,27 @@ class _AddTruckOwnerState extends State<AddTruckOwner> {
     super.dispose();
   }
 
-  void clearControllers() {
-    truckNumberController.clear();
-    truckLoadController.clear();
-    truckDriverNameController.clear();
-    truckDriverMobileNumberController.clear();
-
-    rcDone = false;
-    licenceDone = false;
-    insuranceDone = false;
-    roadTaxDone = false;
-    rtoPassingDone = false;
-  }
-
-  void postAddTruckRequest(BuildContext _context) {
+  void postEditTruckRequest(BuildContext _context) {
     DialogProcessing().showCustomDialog(context,
-        title: "Adding Truck", text: "Processing, Please Wait!");
-    HTTPHandler().addTrucksOwner([
-      widget.userOwner.oId.toString(),
+        title: "Edit Truck Info", text: "Processing, Please Wait!");
+    HTTPHandler().editTruckInfo([
+      widget.truck.truckId,
       selectedTruckCategory.truckCatID.toString(),
       truckNumberController.text.toString(),
       truckLoadController.text.toString(),
       truckDriverNameController.text.toString(),
       '91',
       truckDriverMobileNumberController.text.toString(),
-      rcFile.path.toString(),
-      licenceFile.path.toString(),
-      insuranceFile.path.toString(),
-      roadTaxFile.path.toString(),
-      rtoPassingFile.path.toString()
     ]).then((value) async {
       Navigator.pop(context);
       if (value.success) {
-        DialogSuccess().showCustomDialog(context, title: "Adding Truck");
+        DialogSuccess().showCustomDialog(context, title: "Edit Truck Info");
         await Future.delayed(Duration(seconds: 1), () {});
         Navigator.pop(context);
         Navigator.pop(context);
       } else {
         DialogFailed().showCustomDialog(context,
-            title: "Adding Truck", text: value.message);
+            title: "Edit Truck Info", text: value.message);
         await Future.delayed(Duration(seconds: 3), () {});
         Navigator.pop(context);
       }
@@ -113,13 +75,13 @@ class _AddTruckOwnerState extends State<AddTruckOwner> {
       print(error);
       Navigator.pop(context);
       DialogFailed().showCustomDialog(context,
-          title: "Adding Truck", text: "Network Error");
+          title: "Edit Truck Info", text: "Network Error");
       await Future.delayed(Duration(seconds: 3), () {});
       Navigator.pop(context);
     });
   }
 
-  Widget getCredentialsBottomSheetWidget(
+  Widget getEditsBottomSheetWidget(
       context, ScrollController scrollController) {
     return ListView(controller: scrollController, children: <Widget>[
       SingleChildScrollView(
@@ -343,9 +305,7 @@ class _AddTruckOwnerState extends State<AddTruckOwner> {
                   onTap: () {
                     if (selectedTruckCategory != null) {
                       if (_formKeyCredentials.currentState.validate()) {
-                        setState(() {
-                          selectedWidgetMarker = WidgetMarker.documents;
-                        });
+                        postEditTruckRequest(context);
                       }
                     } else {
                       Scaffold.of(context).showSnackBar(SnackBar(
@@ -384,238 +344,7 @@ class _AddTruckOwnerState extends State<AddTruckOwner> {
     ]);
   }
 
-  Future<void> getRcFile() async {
-    rcFile = await FilePicker.getFile();
-    if (rcFile.existsSync()) {
-      setState(() {
-        rcDone = true;
-      });
-    }
-  }
-
-  Future<void> getLicenceFile() async {
-    licenceFile = await FilePicker.getFile();
-    if (licenceFile.existsSync()) {
-      setState(() {
-        licenceDone = true;
-      });
-    }
-  }
-
-  Future<void> getInsuranceFile() async {
-    insuranceFile = await FilePicker.getFile();
-    if (insuranceFile.existsSync()) {
-      setState(() {
-        insuranceDone = true;
-      });
-    }
-  }
-
-  Future<void> getRoadTaxFile() async {
-    roadTaxFile = await FilePicker.getFile();
-    if (roadTaxFile.existsSync()) {
-      setState(() {
-        roadTaxDone = true;
-      });
-    }
-  }
-
-  Future<void> getRtoPassingFile() async {
-    rtoPassingFile = await FilePicker.getFile();
-    if (rtoPassingFile.existsSync()) {
-      setState(() {
-        rtoPassingDone = true;
-      });
-    }
-  }
-
-  Widget getDocumentsBottomSheetWidget(
-      context, ScrollController scrollController) {
-    return ListView(controller: scrollController, children: <Widget>[
-      SingleChildScrollView(
-        child: Form(
-          key: _formKeyDocuments,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        onTap: () {
-                          setState(() {
-                            selectedWidgetMarker = WidgetMarker.credentials;
-                          });
-                        },
-                        child: CircleAvatar(
-                          backgroundColor: Colors.transparent,
-                          child: Icon(
-                            Icons.arrow_back_ios,
-                            color: Color(0xff252427),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Spacer(),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        onTap: () {
-                          setState(() {
-                            clearControllers();
-                            Navigator.pop(context);
-                          });
-                        },
-                        child: Text(
-                          "Skip",
-                          style: TextStyle(
-                              color: Colors.black12,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 26.0),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 10.0,
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              TextFormField(
-                readOnly: true,
-                onTap: () => getRcFile(),
-                decoration: InputDecoration(
-                  suffixIcon: Icon(
-                    rcDone ? Icons.check_box : Icons.add_box,
-                    size: 35.0,
-                    color: rcDone ? Colors.green : Color(0xff252427),
-                  ),
-                  border: InputBorder.none,
-                  hintText: "Upload RC Book",
-                ),
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              TextFormField(
-                readOnly: true,
-                onTap: () => getLicenceFile(),
-                decoration: InputDecoration(
-                  suffixIcon: Icon(
-                    licenceDone ? Icons.check_box : Icons.add_box,
-                    size: 35.0,
-                    color: licenceDone ? Colors.green : Color(0xff252427),
-                  ),
-                  border: InputBorder.none,
-                  hintText: "Upload Driver's License",
-                ),
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              TextFormField(
-                readOnly: true,
-                onTap: () => getInsuranceFile(),
-                decoration: InputDecoration(
-                  suffixIcon: Icon(
-                    insuranceDone ? Icons.check_box : Icons.add_box,
-                    size: 35.0,
-                    color: insuranceDone ? Colors.green : Color(0xff252427),
-                  ),
-                  border: InputBorder.none,
-                  hintText: "Upload Insurance",
-                ),
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              TextFormField(
-                readOnly: true,
-                onTap: () => getRoadTaxFile(),
-                decoration: InputDecoration(
-                  suffixIcon: Icon(
-                    roadTaxDone ? Icons.check_box : Icons.add_box,
-                    size: 35.0,
-                    color: roadTaxDone ? Colors.green : Color(0xff252427),
-                  ),
-                  border: InputBorder.none,
-                  hintText: "Upload Road Tax Certificate",
-                ),
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              TextFormField(
-                readOnly: true,
-                onTap: () => getRtoPassingFile(),
-                decoration: InputDecoration(
-                  suffixIcon: Icon(
-                    rtoPassingDone ? Icons.check_box : Icons.add_box,
-                    size: 35.0,
-                    color: rtoPassingDone ? Colors.green : Color(0xff252427),
-                  ),
-                  border: InputBorder.none,
-                  hintText: "Upload RTO Passing",
-                ),
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  splashColor: Colors.transparent,
-                  onTap: () {
-                    if (rcDone &&
-                        licenceDone &&
-                        insuranceDone &&
-                        roadTaxDone &&
-                        rtoPassingDone) {
-                      postAddTruckRequest(context);
-                    } else {
-                      final snackBar = SnackBar(
-                        content: Text('Please Upload All the Documents'),
-                      );
-                      Scaffold.of(context).showSnackBar(snackBar);
-                    }
-                  },
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 50.0,
-                    child: Center(
-                      child: Text(
-                        "Next",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 24.0,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    decoration: BoxDecoration(
-                      color: Color(0xff252427),
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(width: 2.0, color: Color(0xff252427)),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    ]);
-  }
-
-  Widget getCredentialsWidget(context) {
+  Widget getEditsWidget(context) {
     return Center(
       child: Column(
         children: <Widget>[
@@ -623,14 +352,14 @@ class _AddTruckOwnerState extends State<AddTruckOwner> {
             height: MediaQuery.of(context).size.width * 0.3 - 20,
           ),
           Text(
-            "Enter",
+            "Edit",
             style: TextStyle(
                 color: Colors.white,
                 fontSize: 40.0,
                 fontWeight: FontWeight.bold),
           ),
           Text(
-            "Credentials",
+            "Truck Info",
             style: TextStyle(
                 color: Colors.white,
                 fontSize: 40.0,
@@ -640,67 +369,6 @@ class _AddTruckOwnerState extends State<AddTruckOwner> {
         ],
       ),
     );
-  }
-
-  Widget getDocumentsWidget(context) {
-    return Center(
-      child: Column(
-        children: <Widget>[
-          SizedBox(
-            height: MediaQuery.of(context).size.width * 0.3 - 20,
-          ),
-          Text(
-            "Upload",
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 40.0,
-                fontWeight: FontWeight.bold),
-          ),
-          Text(
-            "Documents",
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 40.0,
-                fontWeight: FontWeight.bold),
-          ),
-          Spacer(),
-        ],
-      ),
-    );
-  }
-
-  Widget getCustomWidget(context) {
-    switch (selectedWidgetMarker) {
-      case WidgetMarker.credentials:
-        return getCredentialsWidget(context);
-      case WidgetMarker.documents:
-        return getDocumentsWidget(context);
-    }
-    return getCredentialsWidget(context);
-  }
-
-  Widget getCustomBottomSheetWidget(
-      context, ScrollController scrollController) {
-    switch (selectedWidgetMarker) {
-      case WidgetMarker.credentials:
-        return getCredentialsBottomSheetWidget(context, scrollController);
-      case WidgetMarker.documents:
-        return getDocumentsBottomSheetWidget(context, scrollController);
-    }
-    return getCredentialsBottomSheetWidget(context, scrollController);
-  }
-
-  Future<bool> onBackPressed() {
-    switch (selectedWidgetMarker) {
-      case WidgetMarker.credentials:
-        return Future.value(true);
-      case WidgetMarker.documents:
-        setState(() {
-          selectedWidgetMarker = WidgetMarker.credentials;
-        });
-        return Future.value(false);
-    }
-    return Future.value(true);
   }
 
   void getCategories() async {
@@ -713,35 +381,32 @@ class _AddTruckOwnerState extends State<AddTruckOwner> {
       loadCat = false;
       getCategories();
     }
-    return WillPopScope(
-      onWillPop: onBackPressed,
-      child: Scaffold(
-        backgroundColor: Color(0xff252427),
-        body: Stack(children: <Widget>[
-          getCustomWidget(context),
-          DraggableScrollableSheet(
-            initialChildSize: 0.65,
-            minChildSize: 0.4,
-            maxChildSize: 0.9,
-            builder: (BuildContext context, ScrollController scrollController) {
-              return Hero(
-                  tag: 'AnimeBottom',
-                  child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(30.0),
-                            topRight: Radius.circular(30.0)),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.all(16.0),
-                        child: getCustomBottomSheetWidget(
-                            context, scrollController),
-                      )));
-            },
-          ),
-        ]),
-      ),
+    return Scaffold(
+      backgroundColor: Color(0xff252427),
+      body: Stack(children: <Widget>[
+        getEditsWidget(context),
+        DraggableScrollableSheet(
+          initialChildSize: 0.65,
+          minChildSize: 0.4,
+          maxChildSize: 0.9,
+          builder: (BuildContext context, ScrollController scrollController) {
+            return Hero(
+                tag: 'AnimeBottom',
+                child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(30.0),
+                          topRight: Radius.circular(30.0)),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child:
+                          getEditsBottomSheetWidget(context, scrollController),
+                    )));
+          },
+        ),
+      ]),
     );
   }
 }

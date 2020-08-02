@@ -35,7 +35,7 @@ class Truck {
       truckInsurance: parsedJson['trk_insurance'],
       truckRoadTax: parsedJson['trk_road_tax'],
       truckRTO: parsedJson['trk_rto'],
-      truckActive: parsedJson['trk_active'],
+      truckActive: parsedJson['trk_active']=="1" ? true : false,
     );
   }
 }

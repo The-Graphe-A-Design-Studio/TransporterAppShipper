@@ -30,4 +30,5 @@ const String requestTransportPage = "/requestTransportPage";
 const String homePageOwner = "/homePageOwner";
 const String addTruckOwner = "/addTruckOwner";
 const String viewTrucksOwner = "/viewTrucksOwner";
+const String editTrucksOwner = "/editTrucksOwner";
 const String viewProfileOwner = "/viewProfileOwner";
