@@ -399,83 +399,45 @@ class _ViewTrucksOwnerState extends State<ViewTrucksOwner> {
                                                 ),
                                               ],
                                             ),
-                                          ],
-                                        ),
-                                      ),
-                                      Positioned(
-                                        child: const Divider(
-                                          color: Colors.black12,
-                                          height: 1,
-                                          thickness: 1,
-                                        ),
-                                        top: 420.0,
-                                        left: 0,
-                                        right: 0,
-                                      ),
-                                      Positioned(
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.only(
-                                                topRight:
-                                                    Radius.circular(100.0),
-                                                bottomRight:
-                                                    Radius.circular(100.0)),
-                                            color: Color(0xff252427),
-                                          ),
-                                          height: 60.0,
-                                          width: 30.0,
-                                        ),
-                                        top: 390.0,
-                                        left: -10,
-                                      ),
-                                      Positioned(
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(100.0),
-                                                bottomLeft:
-                                                    Radius.circular(100.0)),
-                                            color: Color(0xff252427),
-                                          ),
-                                          height: 60.0,
-                                          width: 30.0,
-                                        ),
-                                        top: 390.0,
-                                        right: -10,
-                                      ),
-                                      Positioned(
-                                        child: Row(
-                                          children: [
-                                            FlatButton(
-                                              child: Row(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                children: [
-                                                  Icon(
-                                                    Icons.file_upload,
-                                                    color: Colors.black
-                                                        .withOpacity(0.7),
-                                                  ),
-                                                  SizedBox(
-                                                    width: 15.0,
-                                                  ),
-                                                  Text(
-                                                    "Call +91 " + truck.truckDriverPhone,
-                                                    style: TextStyle(
+                                            Spacer(),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                              children: [
+                                                FlatButton(
+                                                  child: Row(
+                                                    children: [
+                                                      Icon(
+                                                        Icons.file_upload,
                                                         color: Colors.black
-                                                            .withOpacity(0.7)),
-                                                  )
-                                                ],
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceAround,
-                                              ),
-                                              onPressed: () {},
+                                                            .withOpacity(0.7),
+                                                      ),
+                                                      SizedBox(
+                                                        width: 15.0,
+                                                      ),
+                                                      Text(
+                                                        "Call +91 " + truck.truckDriverPhone,
+                                                        style: TextStyle(
+                                                            color: Colors.black
+                                                                .withOpacity(0.7)),
+                                                      )
+                                                    ],
+                                                  ),
+                                                  onPressed: () {},
+                                                ),
+                                                GestureDetector(
+                                                  onTap: () async {
+                                                    HTTPHandler().deleteTrucks([truck.truckId]).then((value) {
+                                                      setState(() {
+                                                        truckList.removeAt(truckList.indexOf(truck));
+                                                      });
+                                                    });
+                                                  },
+                                                  child: Icon(Icons.delete, color: Colors.red.withOpacity(0.6),),
+                                                ),
+                                              ],
                                             ),
                                           ],
                                         ),
-                                        left: 55,
-                                        top: 440,
                                       ),
                                     ],
                                   );
