@@ -259,7 +259,23 @@ class HTTPHandler {
     }
   }
 
-  Future<PostResultOne> editTruckRTO(List data) async {
+  Future<PostResultOne> editTruckImage(List data) async {
+    try {
+      var url = "$baseURLOwner/trucks";
+      var request = http.MultipartRequest('POST', Uri.parse(url));
+
+      request.fields['trk_id'] = data[0];
+      request.files
+          .add(await http.MultipartFile.fromPath('${data[1]}', data[2]));
+      var result = await request.send();
+      var finalResult = await http.Response.fromStream(result);
+      return PostResultOne.fromJson(json.decode(finalResult.body));
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  /*Future<PostResultOne> editTruckRTO(List data) async {
     try {
       var url = "$baseURLOwner/trucks";
       var request = http.MultipartRequest('POST', Uri.parse(url));
@@ -337,7 +353,7 @@ class HTTPHandler {
     } catch (error) {
       throw error;
     }
-  }
+  }*/
 
   /*-------------------------- Driver API's ---------------------------*/
   Future<PostResultOne> registerDriver(List data) async {
