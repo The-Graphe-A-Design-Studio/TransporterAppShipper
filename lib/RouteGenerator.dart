@@ -55,7 +55,7 @@ class RouteGenerator {
       case viewTrucksOwner:
         return FadeRoute(page: ViewTrucksOwner(userOwner: args,));
       case editTrucksOwner:
-        return FadeRoute(page: EditTruckOwner(truck: args,));
+        return FadeRoute(page: EditTruckOwner(truck: (args as Map)["truck"], viewTrucksOwnerState :(args as Map)["state"]));
       case viewProfileOwner:
         return FadeRoute(page: ViewProfileOwner(userOwner: args,));
       case newTransportingOrderPage:

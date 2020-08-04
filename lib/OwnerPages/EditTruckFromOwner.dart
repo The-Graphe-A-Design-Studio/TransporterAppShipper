@@ -10,8 +10,10 @@ import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/Models/TruckCategory
 
 class EditTruckOwner extends StatefulWidget {
   final Truck truck;
+  final viewTrucksOwnerState;
 
-  EditTruckOwner({Key key, this.truck}) : super(key: key);
+  EditTruckOwner({Key key, this.truck, this.viewTrucksOwnerState})
+      : super(key: key);
 
   @override
   _EditTruckOwnerState createState() => _EditTruckOwnerState();
@@ -65,6 +67,10 @@ class _EditTruckOwnerState extends State<EditTruckOwner> {
       if (value.success) {
         DialogSuccess().showCustomDialog(context, title: "Edit Truck Info");
         await Future.delayed(Duration(seconds: 1), () {});
+        widget.viewTrucksOwnerState.setState(() {
+          widget.viewTrucksOwnerState.temp = false;
+        });
+
         Navigator.pop(context);
         Navigator.pop(context);
       } else {
@@ -83,11 +89,10 @@ class _EditTruckOwnerState extends State<EditTruckOwner> {
     });
   }
 
-  Widget getEditsBottomSheetWidget(
-      context, ScrollController scrollController) {
+  Widget getEditsBottomSheetWidget(context, ScrollController scrollController) {
     if (firstTime) {
       firstTime = false;
-      selectedTruckCategory = listOfCat[int.parse(widget.truck.truckCat)-1];
+      selectedTruckCategory = listOfCat[int.parse(widget.truck.truckCat) - 1];
       truckNumberController.text = widget.truck.truckNumber;
       truckLoadController.text = widget.truck.truckLoad;
       truckDriverNameController.text = widget.truck.truckDriverName;
@@ -397,30 +402,33 @@ class _EditTruckOwnerState extends State<EditTruckOwner> {
     }
     return Scaffold(
       backgroundColor: Color(0xff252427),
-      body: listOfCat==null ? LoadingBody() : Stack(children: <Widget>[
-        getEditsWidget(context),
-        DraggableScrollableSheet(
-          initialChildSize: 0.65,
-          minChildSize: 0.4,
-          maxChildSize: 0.9,
-          builder: (BuildContext context, ScrollController scrollController) {
-            return Hero(
-                tag: 'AnimeBottom',
-                child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(30.0),
-                          topRight: Radius.circular(30.0)),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.all(16.0),
-                      child:
-                          getEditsBottomSheetWidget(context, scrollController),
-                    )));
-          },
-        ),
-      ]),
+      body: listOfCat == null
+          ? LoadingBody()
+          : Stack(children: <Widget>[
+              getEditsWidget(context),
+              DraggableScrollableSheet(
+                initialChildSize: 0.65,
+                minChildSize: 0.4,
+                maxChildSize: 0.9,
+                builder:
+                    (BuildContext context, ScrollController scrollController) {
+                  return Hero(
+                      tag: 'AnimeBottom',
+                      child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(30.0),
+                                topRight: Radius.circular(30.0)),
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.all(16.0),
+                            child: getEditsBottomSheetWidget(
+                                context, scrollController),
+                          )));
+                },
+              ),
+            ]),
     );
   }
 }

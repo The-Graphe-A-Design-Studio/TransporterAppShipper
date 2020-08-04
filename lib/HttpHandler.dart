@@ -251,8 +251,9 @@ class HTTPHandler {
 
   Future<PostResultOne> changeTruckStatus(List data) async {
     try {
+      print(data);
       var result = await http.post("$baseURLOwner/trucks",
-          body: {'truck_id': data[0], 'truck_status': data[1]});
+          body: {'trk_id': data[0], 'trk_status': data[1]});
       return PostResultOne.fromJson(json.decode(result.body));
     } catch (error) {
       throw error;

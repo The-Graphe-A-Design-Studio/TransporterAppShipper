@@ -14,10 +14,10 @@ class ViewTrucksOwner extends StatefulWidget {
   ViewTrucksOwner({Key key, this.userOwner}) : super(key: key);
 
   @override
-  _ViewTrucksOwnerState createState() => new _ViewTrucksOwnerState();
+  ViewTrucksOwnerState createState() => new ViewTrucksOwnerState();
 }
 
-class _ViewTrucksOwnerState extends State<ViewTrucksOwner> {
+class ViewTrucksOwnerState extends State<ViewTrucksOwner> {
   var temp = false;
   List<Truck> truckList;
 
@@ -181,9 +181,10 @@ class _ViewTrucksOwnerState extends State<ViewTrucksOwner> {
                                       Switch(
                                         value: truck.truckActive,
                                         onChanged: (value) {
+                                          print(value);
                                           postChangeTruckStatusRequest(
                                               context, truckList.indexOf(truck),
-                                              value ? "1" : "0");
+                                              value==true ? "1" : "0");
                                         },
                                         inactiveTrackColor: Colors.red
                                             .withOpacity(0.6),
@@ -213,7 +214,7 @@ class _ViewTrucksOwnerState extends State<ViewTrucksOwner> {
                                           Navigator.pushNamed(context,
                                               editTrucksOwner,
                                               arguments:
-                                              truck);
+                                              {"truck" : truck, "state" : this});
                                         },
                                         child: Container(
                                           child: Padding(
@@ -462,8 +463,7 @@ class _ViewTrucksOwnerState extends State<ViewTrucksOwner> {
                                           HTTPHandler().deleteTrucks(
                                               [truck.truckId]).then((value) {
                                             setState(() {
-                                              truckList.removeAt(
-                                                  truckList.indexOf(truck));
+                                              temp = false;
                                             });
                                           });
                                         },

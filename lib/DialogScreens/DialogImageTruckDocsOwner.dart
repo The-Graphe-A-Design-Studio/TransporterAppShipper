@@ -21,11 +21,8 @@ class DialogImageTruckDocs {
   void postUpdateImageRequest() async {
     DialogProcessing().showCustomDialog(context,
         title: "Updating Docs", text: "Processing, Please Wait!");
-    HTTPHandler().editTruckImage([
-      truckId,
-      fileName,
-      imageFile.path.toString()
-    ]).then((value) async {
+    HTTPHandler().editTruckImage(
+        [truckId, fileName, imageFile.path.toString()]).then((value) async {
       Navigator.pop(context);
       if (value.success) {
         DialogSuccess().showCustomDialog(context, title: "Updating Docs");
@@ -33,16 +30,16 @@ class DialogImageTruckDocs {
         Navigator.pop(context);
         Navigator.pop(context);
       } else {
-        DialogFailed()
-            .showCustomDialog(context, title: "Updating Docs", text: value.message);
+        DialogFailed().showCustomDialog(context,
+            title: "Updating Docs", text: value.message);
         await Future.delayed(Duration(seconds: 3), () {});
         Navigator.pop(context);
       }
     }).catchError((error) async {
       print(error);
       Navigator.pop(context);
-      DialogFailed()
-          .showCustomDialog(context, title: "Updating Docs", text: "Network Error");
+      DialogFailed().showCustomDialog(context,
+          title: "Updating Docs", text: "Network Error");
       await Future.delayed(Duration(seconds: 3), () {});
       Navigator.pop(context);
     });
@@ -68,75 +65,66 @@ class DialogImageTruckDocs {
     this.srcURL = srcURL;
 
     showDialog(
-        barrierDismissible: true,
-        context: context,
-        builder: (_) {
-          return AlertDialog(
-            elevation: 0,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16.0)),
-            backgroundColor: Colors.transparent,
-            content: Stack(
-              children: [
-                Container(
-                    width: double.infinity,
-                    padding: EdgeInsets.only(
-                        top: 16.0, bottom: 16.0, left: 16.0, right: 16.0),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.rectangle,
-                      borderRadius: BorderRadius.circular(16.0),
+      barrierDismissible: true,
+      context: context,
+      builder: (_) {
+        return AlertDialog(
+          elevation: 0,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
+          backgroundColor: Colors.white,
+          content: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                this.title,
+                style: TextStyle(fontSize: 30.0),
+              ),
+              Container(
+                child: Image.network(
+                  srcURL,
+                  fit: BoxFit.fill,
+                  height: 400.0,
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      getNewFile();
+                    },
+                    child: CircleAvatar(
+                      backgroundColor: Colors.grey.withOpacity(0.6),
+                      radius: 30.0,
+                      child: Icon(
+                        Icons.edit,
+                        color: Colors.black,
+                        size: 30.0,
+                      ),
                     ),
-                    child: Column(
-                      children: [
-                        Text(
-                          this.title,
-                          style: TextStyle(fontSize: 30.0),
-                        ),
-                        Container(
-                          child: Image.network(
-                            srcURL,
-                            fit: BoxFit.fill,
-                          ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                getNewFile();
-                              },
-                              child: CircleAvatar(
-                                backgroundColor: Colors.grey.withOpacity(0.6),
-                                radius: 30.0,
-                                child: Icon(
-                                  Icons.edit,
-                                  color: Colors.black,
-                                  size: 30.0,
-                                ),
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                postUpdateImageRequest();
-                              },
-                              child: CircleAvatar(
-                                backgroundColor: Colors.grey.withOpacity(0.6),
-                                radius: 30.0,
-                                child: Icon(
-                                  Icons.save,
-                                  color: Colors.black,
-                                  size: 30.0,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    )),
-              ],
-            ),
-          );
-        });
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      postUpdateImageRequest();
+                    },
+                    child: CircleAvatar(
+                      backgroundColor: Colors.grey.withOpacity(0.6),
+                      radius: 30.0,
+                      child: Icon(
+                        Icons.save,
+                        color: Colors.black,
+                        size: 30.0,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 }
