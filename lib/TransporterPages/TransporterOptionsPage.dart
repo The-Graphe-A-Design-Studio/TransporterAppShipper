@@ -3,7 +3,12 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:transportationapp/DialogScreens/DialogFailed.dart';
+import 'package:transportationapp/DialogScreens/DialogProcessing.dart';
+import 'package:transportationapp/DialogScreens/DialogSuccess.dart';
+import 'package:transportationapp/HttpHandler.dart';
 import 'package:transportationapp/MyConstants.dart';
+import 'package:transportationapp/PostMethodResult.dart';
 
 class TransporterOptionsPage extends StatefulWidget {
   TransporterOptionsPage({Key key}) : super(key: key);
@@ -14,75 +19,121 @@ class TransporterOptionsPage extends StatefulWidget {
 
 enum WidgetMarker {
   options,
-  credentials,
-  documents,
+  signUpOption,
+  individualCredentials,
+  companyCredentials1,
+  companyCredentials2,
   otpVerification,
   signIn,
-  ownerDetails
 }
 
 class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
   WidgetMarker selectedWidgetMarker;
 
-  final GlobalKey<FormState> _formKeyCredentials = GlobalKey<FormState>();
-  final GlobalKey<FormState> _formKeyDocuments = GlobalKey<FormState>();
-  final GlobalKey<FormState> _formKeyOwnerDetails = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKeyIndividualCredentials =
+      GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKeyCompanyCredentials1 =
+      GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKeyCompanyCredentials2 =
+      GlobalKey<FormState>();
   final GlobalKey<FormState> _formKeyOtp = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKeySignIn = GlobalKey<FormState>();
 
-  final nameController = TextEditingController();
-  final mobileNumberController = TextEditingController();
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  final confirmPasswordController = TextEditingController();
+  final inNameController = TextEditingController();
+  final inMobileNumberController = TextEditingController();
+  final inEmailController = TextEditingController();
+  final inCityController = TextEditingController();
+  final inAddressController = TextEditingController();
+  final inPinController = TextEditingController();
+  final inPanController = TextEditingController();
+  final inPasswordController = TextEditingController();
+  final inConfirmPasswordController = TextEditingController();
 
-  final panCardNumberController = TextEditingController();
-  final bankAccountNumberController = TextEditingController();
-  final ifscCodeController = TextEditingController();
+  final coCustomerNameController = TextEditingController();
+  final coMobileNumberController = TextEditingController();
+  final coEmailController = TextEditingController();
+  final coCityController = TextEditingController();
+  final coAddressController = TextEditingController();
+  final coPinController = TextEditingController();
+  final coCustomerPanController = TextEditingController();
+  final coPasswordController = TextEditingController();
+  final coConfirmPasswordController = TextEditingController();
+
+  final coNameController = TextEditingController();
+  final coTypeController = TextEditingController();
+  final coTaxController = TextEditingController();
+  final coPanController = TextEditingController();
+  final coWebsiteController = TextEditingController();
 
   final otpController = TextEditingController();
 
   final passwordControllerSignIn = TextEditingController();
   final mobileNumberControllerSignIn = TextEditingController();
 
-  File rcFile, licenceFile, insuranceFile, roadTaxFile, rtoPassingFile;
-  bool rcDone, licenceDone, insuranceDone, roadTaxDone, rtoPassingDone;
+  final FocusNode _inName = FocusNode();
+  final FocusNode _inMobileNumber = FocusNode();
+  final FocusNode _inEmail = FocusNode();
+  final FocusNode _inPassword = FocusNode();
+  final FocusNode _inConfirmPassword = FocusNode();
+  final FocusNode _inCity = FocusNode();
+  final FocusNode _inAddress = FocusNode();
+  final FocusNode _inPin = FocusNode();
+  final FocusNode _inPan = FocusNode();
 
-  final FocusNode _name = FocusNode();
-  final FocusNode _mobileNumber = FocusNode();
-  final FocusNode _email = FocusNode();
-  final FocusNode _password = FocusNode();
-  final FocusNode _confirmPassword = FocusNode();
+  final FocusNode _coCustomerName = FocusNode();
+  final FocusNode _coMobileNumber = FocusNode();
+  final FocusNode _coEmail = FocusNode();
+  final FocusNode _coPassword = FocusNode();
+  final FocusNode _coConfirmPassword = FocusNode();
+  final FocusNode _coCity = FocusNode();
+  final FocusNode _coAddress = FocusNode();
+  final FocusNode _coPin = FocusNode();
+  final FocusNode _coCustomerPan = FocusNode();
+  final FocusNode _coName = FocusNode();
+  final FocusNode _coType = FocusNode();
+  final FocusNode _coTax = FocusNode();
+  final FocusNode _coPan = FocusNode();
+  final FocusNode _coWebsite = FocusNode();
 
   final FocusNode _mobileNumberSignIn = FocusNode();
   final FocusNode _passwordSignIn = FocusNode();
 
-  final FocusNode _panCardNumber = FocusNode();
-  final FocusNode _bankAccountNumber = FocusNode();
-  final FocusNode _ifscCode = FocusNode();
+  int regType = 0;
+  bool rememberMe = true;
 
   @override
   void initState() {
     super.initState();
-    selectedWidgetMarker = WidgetMarker.options;
-    rcDone = false;
-    licenceDone = false;
-    insuranceDone = false;
-    roadTaxDone = false;
-    rtoPassingDone = false;
+    selectedWidgetMarker = WidgetMarker.signUpOption;
   }
 
   @override
   void dispose() {
-    nameController.dispose();
-    mobileNumberController.dispose();
-    emailController.dispose();
-    passwordController.dispose();
-    confirmPasswordController.dispose();
+    inNameController.dispose();
+    inMobileNumberController.dispose();
+    inEmailController.dispose();
+    inCityController.dispose();
+    inAddressController.dispose();
+    inPinController.dispose();
+    inPanController.dispose();
+    inPasswordController.dispose();
+    inConfirmPasswordController.dispose();
 
-    panCardNumberController.dispose();
-    bankAccountNumberController.dispose();
-    ifscCodeController.dispose();
+    coCustomerNameController.dispose();
+    coMobileNumberController.dispose();
+    coEmailController.dispose();
+    coCityController.dispose();
+    coAddressController.dispose();
+    coPinController.dispose();
+    coCustomerPanController.dispose();
+    coPasswordController.dispose();
+    coConfirmPasswordController.dispose();
+
+    coNameController.dispose();
+    coTypeController.dispose();
+    coTaxController.dispose();
+    coPanController.dispose();
+    coWebsiteController.dispose();
 
     otpController.dispose();
 
@@ -93,26 +144,352 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
   }
 
   void clearControllers() {
-    nameController.clear();
-    mobileNumberController.clear();
-    emailController.clear();
-    passwordController.clear();
-    confirmPasswordController.clear();
+    inNameController.clear();
+    inMobileNumberController.clear();
+    inEmailController.clear();
+    inCityController.clear();
+    inAddressController.clear();
+    inPinController.clear();
+    inPanController.clear();
+    inPasswordController.clear();
+    inConfirmPasswordController.clear();
 
-    panCardNumberController.clear();
-    bankAccountNumberController.clear();
-    ifscCodeController.clear();
+    coCustomerNameController.clear();
+    coMobileNumberController.clear();
+    coEmailController.clear();
+    coCityController.clear();
+    coAddressController.clear();
+    coPinController.clear();
+    coCustomerPanController.clear();
+    coPasswordController.clear();
+    coConfirmPasswordController.clear();
+
+    coNameController.clear();
+    coTypeController.clear();
+    coTaxController.clear();
+    coPanController.clear();
+    coWebsiteController.clear();
 
     otpController.clear();
 
     mobileNumberControllerSignIn.clear();
     passwordControllerSignIn.clear();
+  }
 
-    rcDone = false;
-    licenceDone = false;
-    insuranceDone = false;
-    roadTaxDone = false;
-    rtoPassingDone = false;
+  void postSignUpRequestIndividual(BuildContext _context) {
+    DialogProcessing().showCustomDialog(context,
+        title: "Sign Up Request", text: "Processing, Please Wait!");
+    HTTPHandler().registerCustomerIndividual([
+      inNameController.text.toString(),
+      '91',
+      inMobileNumberController.text.toString(),
+      inEmailController.text.toString(),
+      inAddressController.text.toString(),
+      inCityController.text.toString(),
+      inPasswordController.text.toString(),
+      inConfirmPasswordController.text.toString(),
+      inPanController.text.toString(),
+      inPinController.text.toString()
+    ]).then((value) async {
+      Navigator.pop(context);
+      if (value.success) {
+        DialogSuccess().showCustomDialog(context, title: "Sign Up");
+        await Future.delayed(Duration(seconds: 1), () {});
+        setState(() {
+          selectedWidgetMarker = WidgetMarker.otpVerification;
+        });
+        Navigator.pop(context);
+        Scaffold.of(_context).showSnackBar(SnackBar(
+          backgroundColor: Colors.black,
+          content: Text(
+            value.message,
+            style: TextStyle(color: Colors.white),
+          ),
+        ));
+      } else {
+        DialogFailed()
+            .showCustomDialog(context, title: "Sign Up", text: value.message);
+        await Future.delayed(Duration(seconds: 3), () {});
+        Navigator.pop(context);
+      }
+    }).catchError((error) async {
+      print(error);
+      Navigator.pop(context);
+      DialogFailed()
+          .showCustomDialog(context, title: "Sign Up", text: "Network Error");
+      await Future.delayed(Duration(seconds: 3), () {});
+      Navigator.pop(context);
+    });
+  }
+
+  void postSignUpRequestCompany(BuildContext _context) {
+    DialogProcessing().showCustomDialog(context,
+        title: "Sign Up Request", text: "Processing, Please Wait!");
+    HTTPHandler().registerCustomerIndividual([
+      coCustomerNameController.text.toString(),
+      '91',
+      coMobileNumberController.text.toString(),
+      coEmailController.text.toString(),
+      coAddressController.text.toString(),
+      coCityController.text.toString(),
+      coPasswordController.text.toString(),
+      coConfirmPasswordController.text.toString(),
+      coCustomerPanController.text.toString(),
+      coPinController.text.toString(),
+      coNameController.text.toString(),
+      coTypeController.text.toString(),
+      coTaxController.text.toString(),
+      coPanController.text.toString(),
+      coWebsiteController.text.toString()
+    ]).then((value) async {
+      Navigator.pop(context);
+      if (value.success) {
+        DialogSuccess().showCustomDialog(context, title: "Sign Up");
+        await Future.delayed(Duration(seconds: 1), () {});
+        setState(() {
+          selectedWidgetMarker = WidgetMarker.otpVerification;
+        });
+        Navigator.pop(context);
+        Scaffold.of(_context).showSnackBar(SnackBar(
+          backgroundColor: Colors.black,
+          content: Text(
+            value.message,
+            style: TextStyle(color: Colors.white),
+          ),
+        ));
+      } else {
+        DialogFailed()
+            .showCustomDialog(context, title: "Sign Up", text: value.message);
+        await Future.delayed(Duration(seconds: 3), () {});
+        Navigator.pop(context);
+      }
+    }).catchError((error) async {
+      print(error);
+      Navigator.pop(context);
+      DialogFailed()
+          .showCustomDialog(context, title: "Sign Up", text: "Network Error");
+      await Future.delayed(Duration(seconds: 3), () {});
+      Navigator.pop(context);
+    });
+  }
+
+  void postOtpVerificationRequest(
+      BuildContext _context, String phNumber, String otpNumber) {
+    DialogProcessing().showCustomDialog(context,
+        title: "OTP Verification", text: "Processing, Please Wait!");
+    HTTPHandler()
+        .registerVerifyOtpOwner([phNumber, otpNumber]).then((value) async {
+      Navigator.pop(context);
+      if (value.success) {
+        DialogSuccess().showCustomDialog(context, title: "OTP Verification");
+        await Future.delayed(Duration(seconds: 1), () {});
+        setState(() {
+          selectedWidgetMarker = WidgetMarker.signIn;
+        });
+        Navigator.pop(context);
+        Scaffold.of(_context).showSnackBar(SnackBar(
+          backgroundColor: Colors.black,
+          content: Text(
+            "You may now Sign In to your Account.",
+            style: TextStyle(color: Colors.white),
+          ),
+        ));
+      } else {
+        DialogFailed().showCustomDialog(context,
+            title: "OTP Verification", text: value.message);
+        await Future.delayed(Duration(seconds: 3), () {});
+        Navigator.pop(context);
+      }
+    }).catchError((error) async {
+      Navigator.pop(context);
+      DialogFailed().showCustomDialog(context,
+          title: "OTP Verification", text: "Network Error");
+      await Future.delayed(Duration(seconds: 3), () {});
+      Navigator.pop(context);
+    });
+  }
+
+  void postSignInRequest(BuildContext _context) {
+    DialogProcessing().showCustomDialog(context,
+        title: "Sign In", text: "Processing, Please Wait!");
+    HTTPHandler().loginCustomer([
+      regType.toString(),
+      '91',
+      mobileNumberControllerSignIn.text,
+      passwordControllerSignIn.text,
+      rememberMe
+    ]).then((value) async {
+      if (value[0]) {
+        /*userOwner = value[1];*/
+        Navigator.pop(context);
+        DialogSuccess().showCustomDialog(context, title: "Sign In");
+        await Future.delayed(Duration(seconds: 1), () {});
+        Navigator.pop(context);
+        Navigator.pushNamedAndRemoveUntil(
+            _context, newTransportingOrderPage, (route) => false);
+      } else {
+        PostResultOne postResultOne = value[1];
+        Navigator.pop(context);
+        DialogFailed().showCustomDialog(context,
+            title: "Sign In", text: postResultOne.message);
+        await Future.delayed(Duration(seconds: 3), () {});
+        Navigator.pop(context);
+      }
+    }).catchError((error) async {
+      Navigator.pop(context);
+      DialogFailed()
+          .showCustomDialog(context, title: "Sign In", text: "Network Error");
+      await Future.delayed(Duration(seconds: 3), () {});
+      Navigator.pop(context);
+    });
+  }
+
+  void postResendOtpRequest(BuildContext _context, String phNumber) {
+    DialogProcessing().showCustomDialog(context,
+        title: "Resend OTP", text: "Processing, Please Wait!");
+    HTTPHandler().registerResendOtpCustomer([phNumber]).then(
+        (value) async {
+      Navigator.pop(context);
+      if (value.success) {
+        DialogSuccess().showCustomDialog(context, title: "Resend OTP");
+        await Future.delayed(Duration(seconds: 1), () {});
+        Navigator.pop(context);
+        Scaffold.of(_context).showSnackBar(SnackBar(
+          backgroundColor: Colors.black,
+          content: Text(
+            value.message,
+            style: TextStyle(color: Colors.white),
+          ),
+        ));
+      } else {
+        DialogFailed().showCustomDialog(context,
+            title: "Resend OTP", text: value.message);
+        await Future.delayed(Duration(seconds: 3), () {});
+        Navigator.pop(context);
+      }
+    }).catchError((error) async {
+      Navigator.pop(context);
+      DialogFailed().showCustomDialog(context,
+          title: "Resend OTP", text: "Network Error");
+      await Future.delayed(Duration(seconds: 3), () {});
+      Navigator.pop(context);
+    });
+  }
+
+  Widget getSignUpOptionsBottomSheetWidget(
+      context, ScrollController scrollController) {
+    return ListView(
+      controller: scrollController,
+      children: <Widget>[
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: CircleAvatar(
+                backgroundColor: Colors.transparent,
+                child: Icon(
+                  Icons.arrow_back_ios,
+                  color: Color(0xff252427),
+                ),
+              ),
+            ),
+          ),
+        ),
+        Align(
+          alignment: Alignment.center,
+          child: Image(
+            image: AssetImage('assets/images/logo_black.png'),
+            height: 145.0,
+            width: 145.0,
+          ),
+        ),
+        Align(
+          alignment: Alignment.center,
+          child: Material(
+            child: Text("Welcome to Some App."),
+          ),
+        ),
+        Align(
+          alignment: Alignment.center,
+          child: Material(
+            child: Text("Intro Content Intro Content"),
+          ),
+        ),
+        Align(
+          alignment: Alignment.center,
+          child: Material(
+            child: Text("Intro Content"),
+          ),
+        ),
+        SizedBox(height: 40.0),
+        Material(
+          color: Colors.transparent,
+          child: InkWell(
+            splashColor: Colors.transparent,
+            onTap: () {
+              setState(() {
+                regType = 1;
+                selectedWidgetMarker = WidgetMarker.options;
+              });
+            },
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.7,
+              height: 50.0,
+              child: Center(
+                child: Text(
+                  "Individual",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24.0,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+              decoration: BoxDecoration(
+                color: Color(0xff252427),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(width: 2.0, color: Color(0xff252427)),
+              ),
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 30.0,
+        ),
+        Material(
+          color: Colors.transparent,
+          child: InkWell(
+            splashColor: Colors.transparent,
+            onTap: () {
+              setState(() {
+                regType = 2;
+                selectedWidgetMarker = WidgetMarker.options;
+              });
+            },
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.7,
+              height: 50.0,
+              child: Center(
+                child: Text(
+                  "Company",
+                  style: TextStyle(
+                      color: Color(0xff252427),
+                      fontSize: 24.0,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(width: 2.0, color: Color(0xff252427)),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
   }
 
   Widget getOptionsBottomSheetWidget(
@@ -171,7 +548,11 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
             splashColor: Colors.transparent,
             onTap: () {
               setState(() {
-                selectedWidgetMarker = WidgetMarker.credentials;
+                if (regType == 1) {
+                  selectedWidgetMarker = WidgetMarker.individualCredentials;
+                } else if (regType == 2) {
+                  selectedWidgetMarker = WidgetMarker.companyCredentials1;
+                }
               });
             },
             child: Container(
@@ -229,12 +610,12 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
     );
   }
 
-  Widget getCredentialsBottomSheetWidget(
+  Widget getIndividualCredentialsBottomSheetWidget(
       context, ScrollController scrollController) {
     return ListView(controller: scrollController, children: <Widget>[
       SingleChildScrollView(
         child: Form(
-          key: _formKeyCredentials,
+          key: _formKeyIndividualCredentials,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -270,7 +651,8 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                         onTap: () {
                           setState(() {
                             clearControllers();
-                            selectedWidgetMarker = WidgetMarker.options;
+                            regType = 0;
+                            selectedWidgetMarker = WidgetMarker.signUpOption;
                           });
                         },
                         child: Text(
@@ -292,14 +674,14 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                 height: 16.0,
               ),
               TextFormField(
-                controller: nameController,
+                controller: inNameController,
                 keyboardType: TextInputType.text,
                 textCapitalization: TextCapitalization.words,
                 textInputAction: TextInputAction.next,
-                focusNode: _name,
+                focusNode: _inName,
                 onFieldSubmitted: (term) {
-                  _name.unfocus();
-                  FocusScope.of(context).requestFocus(_mobileNumber);
+                  _inName.unfocus();
+                  FocusScope.of(context).requestFocus(_inMobileNumber);
                 },
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.person),
@@ -344,13 +726,13 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                   SizedBox(width: 16.0),
                   Flexible(
                     child: TextFormField(
-                      controller: mobileNumberController,
+                      controller: inMobileNumberController,
                       keyboardType: TextInputType.number,
                       textInputAction: TextInputAction.next,
-                      focusNode: _mobileNumber,
+                      focusNode: _inMobileNumber,
                       onFieldSubmitted: (term) {
-                        _mobileNumber.unfocus();
-                        FocusScope.of(context).requestFocus(_email);
+                        _inMobileNumber.unfocus();
+                        FocusScope.of(context).requestFocus(_inEmail);
                       },
                       decoration: InputDecoration(
                         labelText: "Mobile Number",
@@ -378,13 +760,13 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                 height: 16.0,
               ),
               TextFormField(
-                controller: emailController,
+                controller: inEmailController,
                 keyboardType: TextInputType.emailAddress,
                 textInputAction: TextInputAction.next,
-                focusNode: _email,
+                focusNode: _inEmail,
                 onFieldSubmitted: (term) {
-                  _email.unfocus();
-                  FocusScope.of(context).requestFocus(_password);
+                  _inEmail.unfocus();
+                  FocusScope.of(context).requestFocus(_inPassword);
                 },
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.mail),
@@ -408,13 +790,133 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                 height: 16.0,
               ),
               TextFormField(
-                  controller: passwordController,
+                controller: inPanController,
+                keyboardType: TextInputType.text,
+                textInputAction: TextInputAction.next,
+                focusNode: _inPan,
+                onFieldSubmitted: (term) {
+                  _inPan.unfocus();
+                  FocusScope.of(context).requestFocus(_inAddress);
+                },
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.location_on),
+                  labelText: "Address",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                    borderSide: BorderSide(
+                      color: Colors.amber,
+                      style: BorderStyle.solid,
+                    ),
+                  ),
+                ),
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return "This Field is Required";
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(
+                height: 16.0,
+              ),
+              TextFormField(
+                controller: inAddressController,
+                keyboardType: TextInputType.text,
+                textInputAction: TextInputAction.next,
+                focusNode: _inAddress,
+                onFieldSubmitted: (term) {
+                  _inAddress.unfocus();
+                  FocusScope.of(context).requestFocus(_inCity);
+                },
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.mail),
+                  labelText: "Address",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                    borderSide: BorderSide(
+                      color: Colors.amber,
+                      style: BorderStyle.solid,
+                    ),
+                  ),
+                ),
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return "This Field is Required";
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(
+                height: 16.0,
+              ),
+              TextFormField(
+                controller: inCityController,
+                keyboardType: TextInputType.text,
+                textInputAction: TextInputAction.next,
+                focusNode: _inCity,
+                onFieldSubmitted: (term) {
+                  _inCity.unfocus();
+                  FocusScope.of(context).requestFocus(_inPin);
+                },
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.mail),
+                  labelText: "City",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                    borderSide: BorderSide(
+                      color: Colors.amber,
+                      style: BorderStyle.solid,
+                    ),
+                  ),
+                ),
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return "This Field is Required";
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(
+                height: 16.0,
+              ),
+              TextFormField(
+                controller: inPinController,
+                keyboardType: TextInputType.number,
+                textInputAction: TextInputAction.next,
+                focusNode: _inPin,
+                onFieldSubmitted: (term) {
+                  _inPin.unfocus();
+                  FocusScope.of(context).requestFocus(_inPassword);
+                },
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.mail),
+                  labelText: "PIN",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                    borderSide: BorderSide(
+                      color: Colors.amber,
+                      style: BorderStyle.solid,
+                    ),
+                  ),
+                ),
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return "This Field is Required";
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(
+                height: 16.0,
+              ),
+              TextFormField(
+                  controller: inPasswordController,
                   keyboardType: TextInputType.visiblePassword,
                   textInputAction: TextInputAction.next,
-                  focusNode: _password,
+                  focusNode: _inPassword,
                   onFieldSubmitted: (term) {
-                    _password.unfocus();
-                    FocusScope.of(context).requestFocus(_confirmPassword);
+                    _inPassword.unfocus();
+                    FocusScope.of(context).requestFocus(_inConfirmPassword);
                   },
                   decoration: InputDecoration(
                     prefixIcon: Icon(Icons.vpn_key),
@@ -437,10 +939,10 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                 height: 16.0,
               ),
               TextFormField(
-                controller: confirmPasswordController,
+                controller: inConfirmPasswordController,
                 keyboardType: TextInputType.visiblePassword,
                 textInputAction: TextInputAction.done,
-                focusNode: _confirmPassword,
+                focusNode: _inConfirmPassword,
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.vpn_key),
                   labelText: "Confirm Password",
@@ -456,7 +958,7 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                   if (value.isEmpty) {
                     return "This Field is Required";
                   } else if (value.toString() !=
-                      passwordController.text.toString()) {
+                      inPasswordController.text.toString()) {
                     return "Passwords Don't Match";
                   }
                   return null;
@@ -470,427 +972,7 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                 child: InkWell(
                   splashColor: Colors.transparent,
                   onTap: () {
-                    if (_formKeyCredentials.currentState.validate()) {
-                      setState(() {
-                        selectedWidgetMarker = WidgetMarker.documents;
-                      });
-                    }
-                  },
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 50.0,
-                    child: Center(
-                      child: Text(
-                        "Next",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 24.0,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    decoration: BoxDecoration(
-                      color: Color(0xff252427),
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(width: 2.0, color: Color(0xff252427)),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    ]);
-  }
-
-  Future<void> getRcFile() async {
-    rcFile = await FilePicker.getFile();
-    if (rcFile.existsSync()) {
-      setState(() {
-        rcDone = true;
-      });
-    }
-  }
-
-  Future<void> getLicenceFile() async {
-    licenceFile = await FilePicker.getFile();
-    if (licenceFile.existsSync()) {
-      setState(() {
-        licenceDone = true;
-      });
-    }
-  }
-
-  Future<void> getInsuranceFile() async {
-    insuranceFile = await FilePicker.getFile();
-    if (insuranceFile.existsSync()) {
-      setState(() {
-        insuranceDone = true;
-      });
-    }
-  }
-
-  Future<void> getRoadTaxFile() async {
-    roadTaxFile = await FilePicker.getFile();
-    if (roadTaxFile.existsSync()) {
-      setState(() {
-        roadTaxDone = true;
-      });
-    }
-  }
-
-  Future<void> getRtoPassingFile() async {
-    rtoPassingFile = await FilePicker.getFile();
-    if (rtoPassingFile.existsSync()) {
-      setState(() {
-        rtoPassingDone = true;
-      });
-    }
-  }
-
-  Widget getDocumentsBottomSheetWidget(
-      context, ScrollController scrollController) {
-    return ListView(controller: scrollController, children: <Widget>[
-      SingleChildScrollView(
-        child: Form(
-          key: _formKeyDocuments,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        onTap: () {
-                          setState(() {
-                            selectedWidgetMarker = WidgetMarker.credentials;
-                          });
-                        },
-                        child: CircleAvatar(
-                          backgroundColor: Colors.transparent,
-                          child: Icon(
-                            Icons.arrow_back_ios,
-                            color: Color(0xff252427),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Spacer(),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        onTap: () {
-                          setState(() {
-                            clearControllers();
-                            selectedWidgetMarker = WidgetMarker.options;
-                          });
-                        },
-                        child: Text(
-                          "Skip",
-                          style: TextStyle(
-                              color: Colors.black12,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 26.0),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 10.0,
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              TextFormField(
-                readOnly: true,
-                onTap: () => getRcFile(),
-                decoration: InputDecoration(
-                  suffixIcon: Icon(
-                    rcDone ? Icons.check_box : Icons.add_box,
-                    size: 35.0,
-                    color: rcDone ? Colors.green : Color(0xff252427),
-                  ),
-                  border: InputBorder.none,
-                  hintText: "Upload RC Book",
-                ),
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              TextFormField(
-                readOnly: true,
-                onTap: () => getLicenceFile(),
-                decoration: InputDecoration(
-                  suffixIcon: Icon(
-                    licenceDone ? Icons.check_box : Icons.add_box,
-                    size: 35.0,
-                    color: licenceDone ? Colors.green : Color(0xff252427),
-                  ),
-                  border: InputBorder.none,
-                  hintText: "Upload Driver's License",
-                ),
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              TextFormField(
-                readOnly: true,
-                onTap: () => getInsuranceFile(),
-                decoration: InputDecoration(
-                  suffixIcon: Icon(
-                    insuranceDone ? Icons.check_box : Icons.add_box,
-                    size: 35.0,
-                    color: insuranceDone ? Colors.green : Color(0xff252427),
-                  ),
-                  border: InputBorder.none,
-                  hintText: "Upload Insurance",
-                ),
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              TextFormField(
-                readOnly: true,
-                onTap: () => getRoadTaxFile(),
-                decoration: InputDecoration(
-                  suffixIcon: Icon(
-                    roadTaxDone ? Icons.check_box : Icons.add_box,
-                    size: 35.0,
-                    color: roadTaxDone ? Colors.green : Color(0xff252427),
-                  ),
-                  border: InputBorder.none,
-                  hintText: "Upload Road Tax Certificate",
-                ),
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              TextFormField(
-                readOnly: true,
-                onTap: () => getRtoPassingFile(),
-                decoration: InputDecoration(
-                  suffixIcon: Icon(
-                    rtoPassingDone ? Icons.check_box : Icons.add_box,
-                    size: 35.0,
-                    color: rtoPassingDone ? Colors.green : Color(0xff252427),
-                  ),
-                  border: InputBorder.none,
-                  hintText: "Upload RTO Passing",
-                ),
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  splashColor: Colors.transparent,
-                  onTap: () {
-                    if (rcDone &&
-                        licenceDone &&
-                        insuranceDone &&
-                        roadTaxDone &&
-                        rtoPassingDone) {
-                      setState(() {
-                        selectedWidgetMarker = WidgetMarker.ownerDetails;
-                      });
-                    } else {
-                      final snackBar = SnackBar(
-                        content: Text('Please Upload All the Documents'),
-                      );
-                      Scaffold.of(context).showSnackBar(snackBar);
-                    }
-                  },
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 50.0,
-                    child: Center(
-                      child: Text(
-                        "Next",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 24.0,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    decoration: BoxDecoration(
-                      color: Color(0xff252427),
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(width: 2.0, color: Color(0xff252427)),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    ]);
-  }
-
-  Widget getOwnerDetailsBottomSheetWidget(
-      context, ScrollController scrollController) {
-    return ListView(controller: scrollController, children: <Widget>[
-      SingleChildScrollView(
-        child: Form(
-          key: _formKeyOwnerDetails,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        onTap: () {
-                          setState(() {
-                            selectedWidgetMarker = WidgetMarker.documents;
-                          });
-                        },
-                        child: CircleAvatar(
-                          backgroundColor: Colors.transparent,
-                          child: Icon(
-                            Icons.arrow_back_ios,
-                            color: Color(0xff252427),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Spacer(),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        onTap: () {
-                          setState(() {
-                            clearControllers();
-                            selectedWidgetMarker = WidgetMarker.options;
-                          });
-                        },
-                        child: Text(
-                          "Skip",
-                          style: TextStyle(
-                              color: Colors.black12,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 26.0),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 10.0,
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              TextFormField(
-                controller: panCardNumberController,
-                keyboardType: TextInputType.text,
-                textCapitalization: TextCapitalization.characters,
-                textInputAction: TextInputAction.next,
-                focusNode: _panCardNumber,
-                onFieldSubmitted: (term) {
-                  _panCardNumber.unfocus();
-                  FocusScope.of(context).requestFocus(_bankAccountNumber);
-                },
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.dialpad),
-                  labelText: "PAN Card Number",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: BorderSide(
-                      color: Colors.amber,
-                      style: BorderStyle.solid,
-                    ),
-                  ),
-                ),
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return "This Field is Required";
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              TextFormField(
-                controller: bankAccountNumberController,
-                keyboardType: TextInputType.number,
-                textInputAction: TextInputAction.next,
-                focusNode: _bankAccountNumber,
-                onFieldSubmitted: (term) {
-                  _bankAccountNumber.unfocus();
-                  FocusScope.of(context).requestFocus(_ifscCode);
-                },
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.credit_card),
-                  labelText: "Bank Account Number",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: BorderSide(
-                      color: Colors.amber,
-                      style: BorderStyle.solid,
-                    ),
-                  ),
-                ),
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return "This Field is Required";
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              TextFormField(
-                controller: ifscCodeController,
-                keyboardType: TextInputType.text,
-                textCapitalization: TextCapitalization.characters,
-                textInputAction: TextInputAction.done,
-                focusNode: _ifscCode,
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.code),
-                  labelText: "IFSC Code",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: BorderSide(
-                      color: Colors.amber,
-                      style: BorderStyle.solid,
-                    ),
-                  ),
-                ),
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return "This Field is Required";
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  splashColor: Colors.transparent,
-                  onTap: () {
-                    if (_formKeyOwnerDetails.currentState.validate()) {
+                    if (_formKeyIndividualCredentials.currentState.validate()) {
                       setState(() {
                         selectedWidgetMarker = WidgetMarker.otpVerification;
                       });
@@ -901,7 +983,732 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                     height: 50.0,
                     child: Center(
                       child: Text(
+                        "Sign Up",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 24.0,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    decoration: BoxDecoration(
+                      color: Color(0xff252427),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(width: 2.0, color: Color(0xff252427)),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ]);
+  }
+
+  Widget getCompanyCredentials1BottomSheetWidget(
+      context, ScrollController scrollController) {
+    return ListView(controller: scrollController, children: <Widget>[
+      SingleChildScrollView(
+        child: Form(
+          key: _formKeyCompanyCredentials1,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            clearControllers();
+                            selectedWidgetMarker = WidgetMarker.options;
+                          });
+                        },
+                        child: CircleAvatar(
+                          backgroundColor: Colors.transparent,
+                          child: Icon(
+                            Icons.arrow_back_ios,
+                            color: Color(0xff252427),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Spacer(),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            clearControllers();
+                            regType = 0;
+                            selectedWidgetMarker = WidgetMarker.signUpOption;
+                          });
+                        },
+                        child: Text(
+                          "Skip",
+                          style: TextStyle(
+                              color: Colors.black12,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 26.0),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 10.0,
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 16.0,
+              ),
+              TextFormField(
+                controller: coNameController,
+                keyboardType: TextInputType.text,
+                textCapitalization: TextCapitalization.words,
+                textInputAction: TextInputAction.next,
+                focusNode: _coCustomerName,
+                onFieldSubmitted: (term) {
+                  _coCustomerName.unfocus();
+                  FocusScope.of(context).requestFocus(_coMobileNumber);
+                },
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.person),
+                  labelText: "Full Name",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                    borderSide: BorderSide(
+                      color: Colors.amber,
+                      style: BorderStyle.solid,
+                    ),
+                  ),
+                ),
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return "This Field is Required";
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(
+                height: 16.0,
+              ),
+              Row(
+                children: [
+                  SizedBox(
+                    child: TextFormField(
+                      readOnly: true,
+                      decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.dialpad),
+                        hintText: "+91",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5.0),
+                          borderSide: BorderSide(
+                            color: Colors.amber,
+                            style: BorderStyle.solid,
+                          ),
+                        ),
+                      ),
+                    ),
+                    width: 97.0,
+                  ),
+                  SizedBox(width: 16.0),
+                  Flexible(
+                    child: TextFormField(
+                      controller: coMobileNumberController,
+                      keyboardType: TextInputType.number,
+                      textInputAction: TextInputAction.next,
+                      focusNode: _coMobileNumber,
+                      onFieldSubmitted: (term) {
+                        _coMobileNumber.unfocus();
+                        FocusScope.of(context).requestFocus(_coEmail);
+                      },
+                      decoration: InputDecoration(
+                        labelText: "Mobile Number",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5.0),
+                          borderSide: BorderSide(
+                            color: Colors.amber,
+                            style: BorderStyle.solid,
+                          ),
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return "This Field is Required";
+                        } else if (value.length < 10) {
+                          return "Enter Valid Mobile Number";
+                        }
+                        return null;
+                      },
+                    ),
+                  )
+                ],
+              ),
+              SizedBox(
+                height: 16.0,
+              ),
+              TextFormField(
+                controller: coEmailController,
+                keyboardType: TextInputType.emailAddress,
+                textInputAction: TextInputAction.next,
+                focusNode: _coEmail,
+                onFieldSubmitted: (term) {
+                  _coEmail.unfocus();
+                  FocusScope.of(context).requestFocus(_coPassword);
+                },
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.mail),
+                  labelText: "Email",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                    borderSide: BorderSide(
+                      color: Colors.amber,
+                      style: BorderStyle.solid,
+                    ),
+                  ),
+                ),
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return "This Field is Required";
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(
+                height: 16.0,
+              ),
+              TextFormField(
+                controller: coCustomerPanController,
+                keyboardType: TextInputType.text,
+                textInputAction: TextInputAction.next,
+                focusNode: _coCustomerPan,
+                onFieldSubmitted: (term) {
+                  _coCustomerPan.unfocus();
+                  FocusScope.of(context).requestFocus(_coAddress);
+                },
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.location_on),
+                  labelText: "Address",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                    borderSide: BorderSide(
+                      color: Colors.amber,
+                      style: BorderStyle.solid,
+                    ),
+                  ),
+                ),
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return "This Field is Required";
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(
+                height: 16.0,
+              ),
+              TextFormField(
+                controller: coAddressController,
+                keyboardType: TextInputType.text,
+                textInputAction: TextInputAction.next,
+                focusNode: _coAddress,
+                onFieldSubmitted: (term) {
+                  _coAddress.unfocus();
+                  FocusScope.of(context).requestFocus(_coCity);
+                },
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.mail),
+                  labelText: "Address",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                    borderSide: BorderSide(
+                      color: Colors.amber,
+                      style: BorderStyle.solid,
+                    ),
+                  ),
+                ),
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return "This Field is Required";
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(
+                height: 16.0,
+              ),
+              TextFormField(
+                controller: coCityController,
+                keyboardType: TextInputType.text,
+                textInputAction: TextInputAction.next,
+                focusNode: _coCity,
+                onFieldSubmitted: (term) {
+                  _coCity.unfocus();
+                  FocusScope.of(context).requestFocus(_coPin);
+                },
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.mail),
+                  labelText: "City",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                    borderSide: BorderSide(
+                      color: Colors.amber,
+                      style: BorderStyle.solid,
+                    ),
+                  ),
+                ),
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return "This Field is Required";
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(
+                height: 16.0,
+              ),
+              TextFormField(
+                controller: coPinController,
+                keyboardType: TextInputType.number,
+                textInputAction: TextInputAction.next,
+                focusNode: _coPin,
+                onFieldSubmitted: (term) {
+                  _coPin.unfocus();
+                  FocusScope.of(context).requestFocus(_coPassword);
+                },
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.mail),
+                  labelText: "PIN",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                    borderSide: BorderSide(
+                      color: Colors.amber,
+                      style: BorderStyle.solid,
+                    ),
+                  ),
+                ),
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return "This Field is Required";
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(
+                height: 16.0,
+              ),
+              TextFormField(
+                  controller: coPasswordController,
+                  keyboardType: TextInputType.visiblePassword,
+                  textInputAction: TextInputAction.next,
+                  focusNode: _coPassword,
+                  onFieldSubmitted: (term) {
+                    _coPassword.unfocus();
+                    FocusScope.of(context).requestFocus(_coConfirmPassword);
+                  },
+                  decoration: InputDecoration(
+                    prefixIcon: Icon(Icons.vpn_key),
+                    labelText: "Password",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                      borderSide: BorderSide(
+                        color: Colors.amber,
+                        style: BorderStyle.solid,
+                      ),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return "This Field is Required";
+                    }
+                    return null;
+                  }),
+              SizedBox(
+                height: 16.0,
+              ),
+              TextFormField(
+                controller: coConfirmPasswordController,
+                keyboardType: TextInputType.visiblePassword,
+                textInputAction: TextInputAction.done,
+                focusNode: _coConfirmPassword,
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.vpn_key),
+                  labelText: "Confirm Password",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                    borderSide: BorderSide(
+                      color: Colors.amber,
+                      style: BorderStyle.solid,
+                    ),
+                  ),
+                ),
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return "This Field is Required";
+                  } else if (value.toString() !=
+                      inPasswordController.text.toString()) {
+                    return "Passwords Don't Match";
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(
+                height: 16.0,
+              ),
+              Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  splashColor: Colors.transparent,
+                  onTap: () {
+                    if (_formKeyCompanyCredentials1.currentState.validate()) {
+                      setState(() {
+                        selectedWidgetMarker = WidgetMarker.companyCredentials2;
+                      });
+                    }
+                  },
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: 50.0,
+                    child: Center(
+                      child: Text(
                         "Next",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 24.0,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    decoration: BoxDecoration(
+                      color: Color(0xff252427),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(width: 2.0, color: Color(0xff252427)),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ]);
+  }
+
+  Widget getCompanyCredentials2BottomSheetWidget(
+      context, ScrollController scrollController) {
+    return ListView(controller: scrollController, children: <Widget>[
+      SingleChildScrollView(
+        child: Form(
+          key: _formKeyCompanyCredentials2,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            selectedWidgetMarker =
+                                WidgetMarker.companyCredentials1;
+                          });
+                        },
+                        child: CircleAvatar(
+                          backgroundColor: Colors.transparent,
+                          child: Icon(
+                            Icons.arrow_back_ios,
+                            color: Color(0xff252427),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Spacer(),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            clearControllers();
+                            regType = 0;
+                            selectedWidgetMarker = WidgetMarker.signUpOption;
+                          });
+                        },
+                        child: Text(
+                          "Skip",
+                          style: TextStyle(
+                              color: Colors.black12,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 26.0),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 10.0,
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 16.0,
+              ),
+              TextFormField(
+                controller: coNameController,
+                keyboardType: TextInputType.text,
+                textCapitalization: TextCapitalization.words,
+                textInputAction: TextInputAction.next,
+                focusNode: _coName,
+                onFieldSubmitted: (term) {
+                  _coName.unfocus();
+                  FocusScope.of(context).requestFocus(_coType);
+                },
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.person),
+                  labelText: "Company Name",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                    borderSide: BorderSide(
+                      color: Colors.amber,
+                      style: BorderStyle.solid,
+                    ),
+                  ),
+                ),
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return "This Field is Required";
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(
+                height: 16.0,
+              ),
+              TextFormField(
+                controller: coTypeController,
+                keyboardType: TextInputType.emailAddress,
+                textInputAction: TextInputAction.next,
+                focusNode: _coType,
+                onFieldSubmitted: (term) {
+                  _coType.unfocus();
+                  FocusScope.of(context).requestFocus(_coTax);
+                },
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.mail),
+                  labelText: "Type",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                    borderSide: BorderSide(
+                      color: Colors.amber,
+                      style: BorderStyle.solid,
+                    ),
+                  ),
+                ),
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return "This Field is Required";
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(
+                height: 16.0,
+              ),
+              TextFormField(
+                controller: coTaxController,
+                keyboardType: TextInputType.text,
+                textInputAction: TextInputAction.next,
+                focusNode: _coTax,
+                onFieldSubmitted: (term) {
+                  _coTax.unfocus();
+                  FocusScope.of(context).requestFocus(_coPan);
+                },
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.location_on),
+                  labelText: "Service Tax",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                    borderSide: BorderSide(
+                      color: Colors.amber,
+                      style: BorderStyle.solid,
+                    ),
+                  ),
+                ),
+                validator: (value) {
+                  return null;
+                },
+              ),
+              SizedBox(
+                height: 16.0,
+              ),
+              TextFormField(
+                controller: coPanController,
+                keyboardType: TextInputType.number,
+                textInputAction: TextInputAction.next,
+                focusNode: _coPan,
+                onFieldSubmitted: (term) {
+                  _coPan.unfocus();
+                  FocusScope.of(context).requestFocus(_coWebsite);
+                },
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.mail),
+                  labelText: "Pan",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                    borderSide: BorderSide(
+                      color: Colors.amber,
+                      style: BorderStyle.solid,
+                    ),
+                  ),
+                ),
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return "This Field is Required";
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(
+                height: 16.0,
+              ),
+              TextFormField(
+                controller: coWebsiteController,
+                keyboardType: TextInputType.text,
+                textInputAction: TextInputAction.done,
+                focusNode: _coWebsite,
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.mail),
+                  labelText: "Website",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                    borderSide: BorderSide(
+                      color: Colors.amber,
+                      style: BorderStyle.solid,
+                    ),
+                  ),
+                ),
+                validator: (value) {
+                  return null;
+                },
+              ),
+              SizedBox(
+                height: 16.0,
+              ),
+              TextFormField(
+                controller: inPinController,
+                keyboardType: TextInputType.number,
+                textInputAction: TextInputAction.next,
+                focusNode: _inPin,
+                onFieldSubmitted: (term) {
+                  _inPin.unfocus();
+                  FocusScope.of(context).requestFocus(_inPassword);
+                },
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.mail),
+                  labelText: "PIN",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                    borderSide: BorderSide(
+                      color: Colors.amber,
+                      style: BorderStyle.solid,
+                    ),
+                  ),
+                ),
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return "This Field is Required";
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(
+                height: 16.0,
+              ),
+              TextFormField(
+                  controller: inPasswordController,
+                  keyboardType: TextInputType.visiblePassword,
+                  textInputAction: TextInputAction.next,
+                  focusNode: _inPassword,
+                  onFieldSubmitted: (term) {
+                    _inPassword.unfocus();
+                    FocusScope.of(context).requestFocus(_inConfirmPassword);
+                  },
+                  decoration: InputDecoration(
+                    prefixIcon: Icon(Icons.vpn_key),
+                    labelText: "Password",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                      borderSide: BorderSide(
+                        color: Colors.amber,
+                        style: BorderStyle.solid,
+                      ),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return "This Field is Required";
+                    }
+                    return null;
+                  }),
+              SizedBox(
+                height: 16.0,
+              ),
+              TextFormField(
+                controller: inConfirmPasswordController,
+                keyboardType: TextInputType.visiblePassword,
+                textInputAction: TextInputAction.done,
+                focusNode: _inConfirmPassword,
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.vpn_key),
+                  labelText: "Confirm Password",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                    borderSide: BorderSide(
+                      color: Colors.amber,
+                      style: BorderStyle.solid,
+                    ),
+                  ),
+                ),
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return "This Field is Required";
+                  } else if (value.toString() !=
+                      inPasswordController.text.toString()) {
+                    return "Passwords Don't Match";
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(
+                height: 16.0,
+              ),
+              Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  splashColor: Colors.transparent,
+                  onTap: () {
+                    if (_formKeyIndividualCredentials.currentState.validate()) {
+                      setState(() {
+                        selectedWidgetMarker = WidgetMarker.otpVerification;
+                      });
+                    }
+                  },
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: 50.0,
+                    child: Center(
+                      child: Text(
+                        "Sign Up",
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 24.0,
@@ -941,7 +1748,17 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                       child: InkWell(
                         onTap: () {
                           setState(() {
-                            selectedWidgetMarker = WidgetMarker.documents;
+                            if (regType == 1) {
+                              selectedWidgetMarker =
+                                  WidgetMarker.individualCredentials;
+                            } else if (regType == 2) {
+                              selectedWidgetMarker =
+                                  WidgetMarker.companyCredentials2;
+                            } else {
+                              clearControllers();
+                              regType = 0;
+                              selectedWidgetMarker = WidgetMarker.signUpOption;
+                            }
                           });
                         },
                         child: CircleAvatar(
@@ -963,7 +1780,8 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                         onTap: () {
                           setState(() {
                             clearControllers();
-                            selectedWidgetMarker = WidgetMarker.options;
+                            regType = 0;
+                            selectedWidgetMarker = WidgetMarker.signUpOption;
                           });
                         },
                         child: Text(
@@ -996,12 +1814,7 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                 controller: otpController,
                 keyboardType: TextInputType.phone,
                 textCapitalization: TextCapitalization.words,
-                textInputAction: TextInputAction.next,
-                focusNode: _name,
-                onFieldSubmitted: (term) {
-                  _name.unfocus();
-                  FocusScope.of(context).requestFocus(_mobileNumber);
-                },
+                textInputAction: TextInputAction.done,
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.dialpad),
                   labelText: "Enter OTP",
@@ -1096,7 +1909,8 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                         onTap: () {
                           setState(() {
                             clearControllers();
-                            selectedWidgetMarker = WidgetMarker.options;
+                            regType = 0;
+                            selectedWidgetMarker = WidgetMarker.signUpOption;
                           });
                         },
                         child: Text(
@@ -1206,6 +2020,36 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
               SizedBox(
                 height: 16.0,
               ),
+              Row(
+                children: [
+                  Checkbox(
+                    value: rememberMe,
+                    checkColor: Colors.white,
+                    activeColor: Color(0xff252427),
+                    onChanged: (bool value) {
+                      setState(() {
+                        rememberMe = value;
+                      });
+                    },
+                  ),
+                  SizedBox(
+                    width: 0.0,
+                  ),
+                  Text("Remember Me"),
+                  Spacer(),
+                  GestureDetector(
+                    onTap: () {
+                      print("Forgot Password");
+                    },
+                    child: Container(
+                      child: Text("Forgot Password?"),
+                    ),
+                  )
+                ],
+              ),
+              SizedBox(
+                height: 30.0,
+              ),
               Material(
                 color: Colors.transparent,
                 child: InkWell(
@@ -1213,7 +2057,8 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                   onTap: () {
                     if (_formKeySignIn.currentState.validate()) {
                       setState(() {
-                        Navigator.pushReplacementNamed(context, newTransportingOrderPage);
+                        Navigator.pushReplacementNamed(
+                            context, newTransportingOrderPage);
                       });
                     }
                   },
@@ -1243,6 +2088,33 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
     ]);
   }
 
+  Widget getSignUpOptionsWidget(context) {
+    return Center(
+      child: Column(
+        children: <Widget>[
+          SizedBox(
+            height: MediaQuery.of(context).size.width * 0.3 - 20,
+          ),
+          Text(
+            "User",
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: 40.0,
+                fontWeight: FontWeight.bold),
+          ),
+          Text(
+            "Type",
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: 40.0,
+                fontWeight: FontWeight.bold),
+          ),
+          Spacer(),
+        ],
+      ),
+    );
+  }
+
   Widget getOptionsWidget(context) {
     return Center(
       child: Column(
@@ -1262,7 +2134,7 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
     );
   }
 
-  Widget getCredentialsWidget(context) {
+  Widget getIndividualCredentialsWidget(context) {
     return Center(
       child: Column(
         children: <Widget>[
@@ -1289,7 +2161,7 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
     );
   }
 
-  Widget getDocumentsWidget(context) {
+  Widget getCompanyCredentials1Widget(context) {
     return Center(
       child: Column(
         children: <Widget>[
@@ -1297,14 +2169,14 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
             height: MediaQuery.of(context).size.width * 0.3 - 20,
           ),
           Text(
-            "Upload",
+            "Enter",
             style: TextStyle(
                 color: Colors.white,
                 fontSize: 40.0,
                 fontWeight: FontWeight.bold),
           ),
           Text(
-            "Documents",
+            "Credentials",
             style: TextStyle(
                 color: Colors.white,
                 fontSize: 40.0,
@@ -1316,7 +2188,7 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
     );
   }
 
-  Widget getOwnerDetailsWidget(context) {
+  Widget getCompanyCredentials2Widget(context) {
     return Center(
       child: Column(
         children: <Widget>[
@@ -1324,14 +2196,14 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
             height: MediaQuery.of(context).size.width * 0.3 - 20,
           ),
           Text(
-            "Owner",
+            "Enter",
             style: TextStyle(
                 color: Colors.white,
                 fontSize: 40.0,
                 fontWeight: FontWeight.bold),
           ),
           Text(
-            "Details",
+            "Company Data",
             style: TextStyle(
                 color: Colors.white,
                 fontSize: 40.0,
@@ -1392,64 +2264,86 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
 
   Widget getCustomWidget(context) {
     switch (selectedWidgetMarker) {
+      case WidgetMarker.signUpOption:
+        return getSignUpOptionsWidget(context);
       case WidgetMarker.options:
         return getOptionsWidget(context);
-      case WidgetMarker.credentials:
-        return getCredentialsWidget(context);
-      case WidgetMarker.documents:
-        return getDocumentsWidget(context);
-      case WidgetMarker.ownerDetails:
-        return getOwnerDetailsWidget(context);
+      case WidgetMarker.individualCredentials:
+        return getIndividualCredentialsWidget(context);
+      case WidgetMarker.companyCredentials1:
+        return getCompanyCredentials1Widget(context);
+      case WidgetMarker.companyCredentials2:
+        return getCompanyCredentials2Widget(context);
       case WidgetMarker.otpVerification:
         return getOtpVerificationWidget(context);
       case WidgetMarker.signIn:
         return getSignInWidget(context);
     }
-    return getOptionsWidget(context);
+    return getSignUpOptionsWidget(context);
   }
 
   Widget getCustomBottomSheetWidget(
       context, ScrollController scrollController) {
     switch (selectedWidgetMarker) {
+      case WidgetMarker.signUpOption:
+        return getSignUpOptionsBottomSheetWidget(context, scrollController);
       case WidgetMarker.options:
         return getOptionsBottomSheetWidget(context, scrollController);
-      case WidgetMarker.credentials:
-        return getCredentialsBottomSheetWidget(context, scrollController);
-      case WidgetMarker.documents:
-        return getDocumentsBottomSheetWidget(context, scrollController);
-      case WidgetMarker.ownerDetails:
-        return getOwnerDetailsBottomSheetWidget(context, scrollController);
+      case WidgetMarker.individualCredentials:
+        return getIndividualCredentialsBottomSheetWidget(
+            context, scrollController);
+      case WidgetMarker.companyCredentials1:
+        return getCompanyCredentials1BottomSheetWidget(
+            context, scrollController);
+      case WidgetMarker.companyCredentials2:
+        return getCompanyCredentials2BottomSheetWidget(
+            context, scrollController);
       case WidgetMarker.otpVerification:
         return getOtpVerificationBottomSheetWidget(context, scrollController);
       case WidgetMarker.signIn:
         return getSignInBottomSheetWidget(context, scrollController);
     }
-    return getOptionsBottomSheetWidget(context, scrollController);
+    return getSignUpOptionsBottomSheetWidget(context, scrollController);
   }
 
   Future<bool> onBackPressed() {
     switch (selectedWidgetMarker) {
-      case WidgetMarker.options:
+      case WidgetMarker.signUpOption:
         return Future.value(true);
-      case WidgetMarker.credentials:
+      case WidgetMarker.options:
+        setState(() {
+          clearControllers();
+          regType = 0;
+          selectedWidgetMarker = WidgetMarker.signUpOption;
+        });
+        return Future.value(false);
+      case WidgetMarker.individualCredentials:
         setState(() {
           clearControllers();
           selectedWidgetMarker = WidgetMarker.options;
         });
         return Future.value(false);
-      case WidgetMarker.documents:
+      case WidgetMarker.companyCredentials1:
         setState(() {
-          selectedWidgetMarker = WidgetMarker.credentials;
+          clearControllers();
+          selectedWidgetMarker = WidgetMarker.options;
         });
         return Future.value(false);
-      case WidgetMarker.ownerDetails:
+      case WidgetMarker.companyCredentials2:
         setState(() {
-          selectedWidgetMarker = WidgetMarker.documents;
+          selectedWidgetMarker = WidgetMarker.companyCredentials1;
         });
         return Future.value(false);
       case WidgetMarker.otpVerification:
         setState(() {
-          selectedWidgetMarker = WidgetMarker.ownerDetails;
+          if (regType == 1) {
+            selectedWidgetMarker = WidgetMarker.individualCredentials;
+          } else if (regType == 2) {
+            selectedWidgetMarker = WidgetMarker.companyCredentials2;
+          } else {
+            regType = 0;
+            selectedWidgetMarker = WidgetMarker.signUpOption;
+          }
         });
         return Future.value(false);
       case WidgetMarker.signIn:

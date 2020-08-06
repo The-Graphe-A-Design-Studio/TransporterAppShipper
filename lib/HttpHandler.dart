@@ -15,6 +15,8 @@ class HTTPHandler {
       'https://developers.thegraphe.com/transport/api/drivers';
   String baseURLOwner =
       'https://truckwale.co.in/api/truck_owner';
+  String baseURLCustomer =
+      'https://truckwale.co.in/api/customer';
 
   void signOut(BuildContext context) async {
     DialogProcessing().showCustomDialog(context,
@@ -355,6 +357,97 @@ class HTTPHandler {
       throw error;
     }
   }*/
+
+  /*-------------------------- Customer API's ---------------------------*/
+  Future<PostResultOne> registerCustomerIndividual(List data) async {
+    try {
+      var result = await http.post("$baseURLCustomer/individual_register", body: {
+        'in_cu_name': data[0],
+        'in_cu_phone_code': data[1],
+        'in_cu_phone': data[2],
+        'in_cu_email': data[3],
+        'in_cu_address': data[4],
+        'in_cu_city': data[5],
+        'in_cu_password': data[6],
+        'in_cu_cnf_password': data[7],
+        'in_cu_pan': data[8],
+        'in_cu_pin': data[9],
+      });
+      return PostResultOne.fromJson(json.decode(result.body));
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<PostResultOne> registerCustomerCompany(List data) async {
+    try {
+      var result = await http.post("$baseURLCustomer/company_register", body: {
+        'co_cu_name': data[0],
+        'co_cu_phone_code': data[1],
+        'co_cu_phone': data[2],
+        'co_cu_email': data[3],
+        'co_cu_address': data[4],
+        'co_cu_city': data[5],
+        'co_cu_password': data[6],
+        'co_cu_cnf_password': data[7],
+        'co_cu_pan': data[8],
+        'co_cu_pin': data[9],
+        'co_name': data[7],
+        'co_type': data[8],
+        'co_service_tax': data[9],
+        'co_pan_num': data[7],
+        'co_website': data[8],
+      });
+      return PostResultOne.fromJson(json.decode(result.body));
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<PostResultOne> registerVerifyOtpCustomer(List data) async {
+    try {
+      var result = await http.post("$baseURLCustomer/verification",
+          body: {'phone_number': data[0], 'otp': data[1]});
+      return PostResultOne.fromJson(json.decode(result.body));
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<PostResultOne> registerResendOtpCustomer(List data) async {
+    try {
+      var result = await http.post("$baseURLCustomer/verification", body: {
+        'resend_otp': data[0],
+      });
+      return PostResultOne.fromJson(json.decode(result.body));
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<List> loginCustomer(List data) async {
+    try {
+      var result = await http.post("$baseURLCustomer/login",
+          body: {'cu_type': data[0], 'phone_code': data[1], 'phone': data[2], 'password': data[3]});
+      var jsonResult = json.decode(result.body);
+      if (jsonResult['success'] == '1') {
+        UserOwner userOwner = UserOwner.fromJson(jsonResult);
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setBool('rememberMe', data[4]);
+        prefs.setString('userType', truckOwnerUser);
+        prefs.setString('userData', result.body);
+        return [true, userOwner];
+      } else {
+        PostResultOne postResultOne = PostResultOne.fromJson(jsonResult);
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setBool('rememberMe', false);
+        return [false, postResultOne];
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+
 
   /*-------------------------- Driver API's ---------------------------*/
   Future<PostResultOne> registerDriver(List data) async {
