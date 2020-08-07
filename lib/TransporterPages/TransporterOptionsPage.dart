@@ -1,6 +1,3 @@
-import 'dart:io';
-
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:transportationapp/DialogScreens/DialogFailed.dart';
@@ -31,11 +28,11 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
   WidgetMarker selectedWidgetMarker;
 
   final GlobalKey<FormState> _formKeyIndividualCredentials =
-      GlobalKey<FormState>();
+  GlobalKey<FormState>();
   final GlobalKey<FormState> _formKeyCompanyCredentials1 =
-      GlobalKey<FormState>();
+  GlobalKey<FormState>();
   final GlobalKey<FormState> _formKeyCompanyCredentials2 =
-      GlobalKey<FormState>();
+  GlobalKey<FormState>();
   final GlobalKey<FormState> _formKeyOtp = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKeySignIn = GlobalKey<FormState>();
 
@@ -273,12 +270,12 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
     });
   }
 
-  void postOtpVerificationRequest(
-      BuildContext _context, String phNumber, String otpNumber) {
+  void postOtpVerificationRequest(BuildContext _context, String phNumber,
+      String otpNumber) {
     DialogProcessing().showCustomDialog(context,
         title: "OTP Verification", text: "Processing, Please Wait!");
     HTTPHandler()
-        .registerVerifyOtpOwner([phNumber, otpNumber]).then((value) async {
+        .registerVerifyOtpCustomer([phNumber, otpNumber]).then((value) async {
       Navigator.pop(context);
       if (value.success) {
         DialogSuccess().showCustomDialog(context, title: "OTP Verification");
@@ -348,26 +345,26 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
     DialogProcessing().showCustomDialog(context,
         title: "Resend OTP", text: "Processing, Please Wait!");
     HTTPHandler().registerResendOtpCustomer([phNumber]).then(
-        (value) async {
-      Navigator.pop(context);
-      if (value.success) {
-        DialogSuccess().showCustomDialog(context, title: "Resend OTP");
-        await Future.delayed(Duration(seconds: 1), () {});
-        Navigator.pop(context);
-        Scaffold.of(_context).showSnackBar(SnackBar(
-          backgroundColor: Colors.black,
-          content: Text(
-            value.message,
-            style: TextStyle(color: Colors.white),
-          ),
-        ));
-      } else {
-        DialogFailed().showCustomDialog(context,
-            title: "Resend OTP", text: value.message);
-        await Future.delayed(Duration(seconds: 3), () {});
-        Navigator.pop(context);
-      }
-    }).catchError((error) async {
+            (value) async {
+          Navigator.pop(context);
+          if (value.success) {
+            DialogSuccess().showCustomDialog(context, title: "Resend OTP");
+            await Future.delayed(Duration(seconds: 1), () {});
+            Navigator.pop(context);
+            Scaffold.of(_context).showSnackBar(SnackBar(
+              backgroundColor: Colors.black,
+              content: Text(
+                value.message,
+                style: TextStyle(color: Colors.white),
+              ),
+            ));
+          } else {
+            DialogFailed().showCustomDialog(context,
+                title: "Resend OTP", text: value.message);
+            await Future.delayed(Duration(seconds: 3), () {});
+            Navigator.pop(context);
+          }
+        }).catchError((error) async {
       Navigator.pop(context);
       DialogFailed().showCustomDialog(context,
           title: "Resend OTP", text: "Network Error");
@@ -376,8 +373,8 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
     });
   }
 
-  Widget getSignUpOptionsBottomSheetWidget(
-      context, ScrollController scrollController) {
+  Widget getSignUpOptionsBottomSheetWidget(context,
+      ScrollController scrollController) {
     return ListView(
       controller: scrollController,
       children: <Widget>[
@@ -437,7 +434,10 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
               });
             },
             child: Container(
-              width: MediaQuery.of(context).size.width * 0.7,
+              width: MediaQuery
+                  .of(context)
+                  .size
+                  .width * 0.7,
               height: 50.0,
               child: Center(
                 child: Text(
@@ -470,7 +470,10 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
               });
             },
             child: Container(
-              width: MediaQuery.of(context).size.width * 0.7,
+              width: MediaQuery
+                  .of(context)
+                  .size
+                  .width * 0.7,
               height: 50.0,
               child: Center(
                 child: Text(
@@ -492,8 +495,8 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
     );
   }
 
-  Widget getOptionsBottomSheetWidget(
-      context, ScrollController scrollController) {
+  Widget getOptionsBottomSheetWidget(context,
+      ScrollController scrollController) {
     return ListView(
       controller: scrollController,
       children: <Widget>[
@@ -556,7 +559,10 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
               });
             },
             child: Container(
-              width: MediaQuery.of(context).size.width * 0.7,
+              width: MediaQuery
+                  .of(context)
+                  .size
+                  .width * 0.7,
               height: 50.0,
               child: Center(
                 child: Text(
@@ -588,7 +594,10 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
               });
             },
             child: Container(
-              width: MediaQuery.of(context).size.width * 0.7,
+              width: MediaQuery
+                  .of(context)
+                  .size
+                  .width * 0.7,
               height: 50.0,
               child: Center(
                 child: Text(
@@ -610,8 +619,8 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
     );
   }
 
-  Widget getIndividualCredentialsBottomSheetWidget(
-      context, ScrollController scrollController) {
+  Widget getIndividualCredentialsBottomSheetWidget(context,
+      ScrollController scrollController) {
     return ListView(controller: scrollController, children: <Widget>[
       SingleChildScrollView(
         child: Form(
@@ -766,7 +775,7 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                 focusNode: _inEmail,
                 onFieldSubmitted: (term) {
                   _inEmail.unfocus();
-                  FocusScope.of(context).requestFocus(_inPassword);
+                  FocusScope.of(context).requestFocus(_inPan);
                 },
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.mail),
@@ -799,8 +808,8 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                   FocusScope.of(context).requestFocus(_inAddress);
                 },
                 decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.location_on),
-                  labelText: "Address",
+                  prefixIcon: Icon(Icons.dialpad),
+                  labelText: "Pan Card",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5.0),
                     borderSide: BorderSide(
@@ -829,7 +838,7 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                   FocusScope.of(context).requestFocus(_inCity);
                 },
                 decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.mail),
+                  prefixIcon: Icon(Icons.location_on),
                   labelText: "Address",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5.0),
@@ -859,7 +868,7 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                   FocusScope.of(context).requestFocus(_inPin);
                 },
                 decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.mail),
+                  prefixIcon: Icon(Icons.location_city),
                   labelText: "City",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5.0),
@@ -889,7 +898,7 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                   FocusScope.of(context).requestFocus(_inPassword);
                 },
                 decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.mail),
+                  prefixIcon: Icon(Icons.dialpad),
                   labelText: "PIN",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5.0),
@@ -973,13 +982,14 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                   splashColor: Colors.transparent,
                   onTap: () {
                     if (_formKeyIndividualCredentials.currentState.validate()) {
-                      setState(() {
-                        selectedWidgetMarker = WidgetMarker.otpVerification;
-                      });
+                      postSignUpRequestIndividual(context);
                     }
                   },
                   child: Container(
-                    width: MediaQuery.of(context).size.width,
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width,
                     height: 50.0,
                     child: Center(
                       child: Text(
@@ -1005,8 +1015,8 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
     ]);
   }
 
-  Widget getCompanyCredentials1BottomSheetWidget(
-      context, ScrollController scrollController) {
+  Widget getCompanyCredentials1BottomSheetWidget(context,
+      ScrollController scrollController) {
     return ListView(controller: scrollController, children: <Widget>[
       SingleChildScrollView(
         child: Form(
@@ -1374,7 +1384,10 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                     }
                   },
                   child: Container(
-                    width: MediaQuery.of(context).size.width,
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width,
                     height: 50.0,
                     child: Center(
                       child: Text(
@@ -1400,8 +1413,8 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
     ]);
   }
 
-  Widget getCompanyCredentials2BottomSheetWidget(
-      context, ScrollController scrollController) {
+  Widget getCompanyCredentials2BottomSheetWidget(context,
+      ScrollController scrollController) {
     return ListView(controller: scrollController, children: <Widget>[
       SingleChildScrollView(
         child: Form(
@@ -1698,13 +1711,14 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                   splashColor: Colors.transparent,
                   onTap: () {
                     if (_formKeyIndividualCredentials.currentState.validate()) {
-                      setState(() {
-                        selectedWidgetMarker = WidgetMarker.otpVerification;
-                      });
+                      postSignUpRequestCompany(context);
                     }
                   },
                   child: Container(
-                    width: MediaQuery.of(context).size.width,
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width,
                     height: 50.0,
                     child: Center(
                       child: Text(
@@ -1730,8 +1744,8 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
     ]);
   }
 
-  Widget getOtpVerificationBottomSheetWidget(
-      context, ScrollController scrollController) {
+  Widget getOtpVerificationBottomSheetWidget(context,
+      ScrollController scrollController) {
     return ListView(controller: scrollController, children: <Widget>[
       SingleChildScrollView(
         child: Form(
@@ -1834,15 +1848,51 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                 },
               ),
               SizedBox(
+                height: 16.0,
+              ),
+              Align(
+                alignment: Alignment.centerRight,
+                child: InkWell(
+                  onTap: () {
+                    setState(() {
+                      otpController.clear();
+                    });
+                    if (regType == 1) {
+                      postResendOtpRequest(context, inMobileNumberController.text.toString());
+                    } else if (regType==2) {
+                      postResendOtpRequest(context, coMobileNumberController.text.toString());
+                    }
+                  },
+                  child: Text(
+                    "Resend OTP",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 16.0,
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
                 height: 40.0,
               ),
               Material(
                 color: Colors.transparent,
                 child: InkWell(
                   splashColor: Colors.transparent,
-                  onTap: () => print("OTP Verification"),
+                  onTap: () {
+                    print(regType);
+                    print(otpController.text.toString());
+                    if (regType == 1) {
+                      postOtpVerificationRequest(context, inMobileNumberController.text.toString(), otpController.text.toString());
+                    } else if (regType==2) {
+                      postOtpVerificationRequest(context, coMobileNumberController.text.toString(), otpController.text.toString());
+                    }
+                  },
                   child: Container(
-                    width: MediaQuery.of(context).size.width,
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width,
                     height: 50.0,
                     child: Center(
                       child: Text(
@@ -1868,8 +1918,8 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
     ]);
   }
 
-  Widget getSignInBottomSheetWidget(
-      context, ScrollController scrollController) {
+  Widget getSignInBottomSheetWidget(context,
+      ScrollController scrollController) {
     return ListView(controller: scrollController, children: <Widget>[
       SingleChildScrollView(
         child: Form(
@@ -2056,14 +2106,14 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                   splashColor: Colors.transparent,
                   onTap: () {
                     if (_formKeySignIn.currentState.validate()) {
-                      setState(() {
-                        Navigator.pushReplacementNamed(
-                            context, newTransportingOrderPage);
-                      });
+                      postSignInRequest(context);
                     }
                   },
                   child: Container(
-                    width: MediaQuery.of(context).size.width,
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width,
                     height: 50.0,
                     child: Center(
                       child: Text(
@@ -2093,7 +2143,10 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
       child: Column(
         children: <Widget>[
           SizedBox(
-            height: MediaQuery.of(context).size.width * 0.3 - 20,
+            height: MediaQuery
+                .of(context)
+                .size
+                .width * 0.3 - 20,
           ),
           Text(
             "User",
@@ -2120,7 +2173,10 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
       child: Column(
         children: <Widget>[
           SizedBox(
-            height: MediaQuery.of(context).size.width * 0.3,
+            height: MediaQuery
+                .of(context)
+                .size
+                .width * 0.3,
           ),
           Text(
             "Hi, User",
@@ -2139,7 +2195,10 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
       child: Column(
         children: <Widget>[
           SizedBox(
-            height: MediaQuery.of(context).size.width * 0.3 - 20,
+            height: MediaQuery
+                .of(context)
+                .size
+                .width * 0.3 - 20,
           ),
           Text(
             "Enter",
@@ -2166,7 +2225,10 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
       child: Column(
         children: <Widget>[
           SizedBox(
-            height: MediaQuery.of(context).size.width * 0.3 - 20,
+            height: MediaQuery
+                .of(context)
+                .size
+                .width * 0.3 - 20,
           ),
           Text(
             "Enter",
@@ -2193,7 +2255,10 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
       child: Column(
         children: <Widget>[
           SizedBox(
-            height: MediaQuery.of(context).size.width * 0.3 - 20,
+            height: MediaQuery
+                .of(context)
+                .size
+                .width * 0.3 - 20,
           ),
           Text(
             "Enter",
@@ -2220,7 +2285,10 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
       child: Column(
         children: <Widget>[
           SizedBox(
-            height: MediaQuery.of(context).size.width * 0.3 - 20,
+            height: MediaQuery
+                .of(context)
+                .size
+                .width * 0.3 - 20,
           ),
           Text(
             "OTP",
@@ -2247,7 +2315,10 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
       child: Column(
         children: <Widget>[
           SizedBox(
-            height: MediaQuery.of(context).size.width * 0.3,
+            height: MediaQuery
+                .of(context)
+                .size
+                .width * 0.3,
           ),
           Text(
             "Welcome Back!",
@@ -2282,8 +2353,8 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
     return getSignUpOptionsWidget(context);
   }
 
-  Widget getCustomBottomSheetWidget(
-      context, ScrollController scrollController) {
+  Widget getCustomBottomSheetWidget(context,
+      ScrollController scrollController) {
     switch (selectedWidgetMarker) {
       case WidgetMarker.signUpOption:
         return getSignUpOptionsBottomSheetWidget(context, scrollController);
