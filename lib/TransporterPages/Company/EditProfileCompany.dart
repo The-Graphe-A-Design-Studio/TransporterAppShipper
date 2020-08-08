@@ -7,11 +7,11 @@ import 'package:transportationapp/HttpHandler.dart';
 import 'package:transportationapp/MyConstants.dart';
 import 'package:transportationapp/PostMethodResult.dart';
 
-class TransporterOptionsPage extends StatefulWidget {
-  TransporterOptionsPage({Key key}) : super(key: key);
+class EditProfileCompany extends StatefulWidget {
+  EditProfileCompany({Key key}) : super(key: key);
 
   @override
-  _TransporterOptionsPageState createState() => _TransporterOptionsPageState();
+  _EditProfileCompanyState createState() => _EditProfileCompanyState();
 }
 
 enum WidgetMarker {
@@ -24,7 +24,7 @@ enum WidgetMarker {
   signIn,
 }
 
-class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
+class _EditProfileCompanyState extends State<EditProfileCompany> {
   WidgetMarker selectedWidgetMarker;
 
   final GlobalKey<FormState> _formKeyIndividualCredentials =

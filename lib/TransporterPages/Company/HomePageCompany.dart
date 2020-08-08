@@ -4,16 +4,16 @@ import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/BottomSheets/Account
 import 'package:transportationapp/Models/User.dart';
 import 'package:transportationapp/MyConstants.dart';
 
-class HomePageOwner extends StatefulWidget {
+class HomePageCompany extends StatefulWidget {
   final UserOwner userOwner;
 
-  HomePageOwner({Key key, this.userOwner}) : super(key: key);
+  HomePageCompany({Key key, this.userOwner}) : super(key: key);
 
   @override
-  _HomePageOwnerState createState() => _HomePageOwnerState();
+  _HomePageCompanyState createState() => _HomePageCompanyState();
 }
 
-class _HomePageOwnerState extends State<HomePageOwner> {
+class _HomePageCompanyState extends State<HomePageCompany> {
   @override
   void initState() {
     super.initState();
@@ -63,22 +63,6 @@ class _HomePageOwnerState extends State<HomePageOwner> {
                             )),
                         SizedBox(
                           height: 40.0,
-                        ),
-                        FlatButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, viewTrucksOwner,
-                                arguments: widget.userOwner);
-                          },
-                          child: Text(
-                            "View My Trucks",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20.0),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 25.0,
                         ),
                         FlatButton(
                           onPressed: () {
