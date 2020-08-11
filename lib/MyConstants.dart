@@ -1,7 +1,8 @@
 //Basic Pages
 const String splashPage = "/";
 const String truckOwnerUser = "TruckOwner";
-const String transporterUser = "Transporter";
+const String transporterUserCompany = "TransporterCompany";
+const String transporterUserIndividual = "TransporterIndividual";
 const String driverUser = "Driver";
 
 //Login or SignUp Pages

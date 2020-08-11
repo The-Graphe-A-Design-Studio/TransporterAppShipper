@@ -179,6 +179,7 @@ class UserCustomerCompany {
   String coAddress;
   String coCity;
   String coPin;
+  String coPan;
   String coCompanyName;
   String coCompanyType;
   String coCompanyTax;
@@ -195,6 +196,7 @@ class UserCustomerCompany {
     this.coAddress,
     this.coCity,
     this.coPin,
+    this.coPan,
     this.coCompanyName,
     this.coCompanyType,
     this.coCompanyTax,
@@ -213,6 +215,7 @@ class UserCustomerCompany {
         coAddress: parsedJson['address'],
         coCity: parsedJson['city'],
         coPin: parsedJson['pin code'],
+        coPan: parsedJson['pan number'],
         coCompanyName: parsedJson['company name'],
         coCompanyType: parsedJson['company type'],
         coCompanyTax: parsedJson['company service tax'],

@@ -13,10 +13,8 @@ import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/Models/TruckCategory
 class HTTPHandler {
   String baseURLDriver =
       'https://developers.thegraphe.com/transport/api/drivers';
-  String baseURLOwner =
-      'https://truckwale.co.in/api/truck_owner';
-  String baseURLCustomer =
-      'https://truckwale.co.in/api/customer';
+  String baseURLOwner = 'https://truckwale.co.in/api/truck_owner';
+  String baseURLCustomer = 'https://truckwale.co.in/api/customer';
 
   void signOut(BuildContext context) async {
     DialogProcessing().showCustomDialog(context,
@@ -361,7 +359,8 @@ class HTTPHandler {
   /*-------------------------- Customer API's ---------------------------*/
   Future<PostResultOne> registerCustomerIndividual(List data) async {
     try {
-      var result = await http.post("$baseURLCustomer/individual_register", body: {
+      var result =
+          await http.post("$baseURLCustomer/individual_register", body: {
         'in_cu_name': data[0],
         'in_cu_phone_code': data[1],
         'in_cu_phone': data[2],
@@ -427,19 +426,34 @@ class HTTPHandler {
 
   Future<List> loginCustomer(List data) async {
     try {
-      var result = await http.post("$baseURLCustomer/login",
-          body: {'cu_type': data[0], 'phone_code': data[1], 'phone': data[2], 'password': data[3]});
+      var result = await http.post("$baseURLCustomer/login", body: {
+        'cu_type': data[0],
+        'phone_code': data[1],
+        'phone': data[2],
+        'password': data[3]
+      });
       var jsonResult = json.decode(result.body);
+      SharedPreferences prefs = await SharedPreferences.getInstance();
       if (jsonResult['success'] == '1') {
-        UserOwner userOwner = UserOwner.fromJson(jsonResult);
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        prefs.setBool('rememberMe', data[4]);
-        prefs.setString('userType', truckOwnerUser);
-        prefs.setString('userData', result.body);
-        return [true, userOwner];
+        if (data[0] == 2) {
+          UserCustomerCompany userCustomerCompany =
+              UserCustomerCompany.fromJson(jsonResult);
+          prefs.setBool('rememberMe', data[4]);
+          prefs.setString('userType', transporterUserCompany);
+          prefs.setString('userData', result.body);
+          return [true, userCustomerCompany];
+        } else if (data[0] == 1) {
+          UserCustomerIndividual userCustomerIndividual =
+              UserCustomerIndividual.fromJson(jsonResult);
+          prefs.setBool('rememberMe', data[4]);
+          prefs.setString('userType', transporterUserIndividual);
+          prefs.setString('userData', result.body);
+          return [true, userCustomerIndividual];
+        } else {
+          throw "error";
+        }
       } else {
         PostResultOne postResultOne = PostResultOne.fromJson(jsonResult);
-        SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setBool('rememberMe', false);
         return [false, postResultOne];
       }
@@ -448,6 +462,48 @@ class HTTPHandler {
     }
   }
 
+  Future<PostResultOne> editCustomerIndividual(List data) async {
+    try {
+      var result =
+          await http.post("$baseURLCustomer/individual_profile", body: {
+        'cu_id': data[0],
+        'cu_name': data[1],
+        'cu_phone_code': data[2],
+        'cu_phone': data[3],
+        'cu_email': data[4],
+        'cu_address': data[5],
+        'cu_city': data[6],
+        'cu_pan': data[7],
+        'cu_pin': data[8],
+      });
+      return PostResultOne.fromJson(json.decode(result.body));
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<PostResultOne> editCustomerCompany(List data) async {
+    try {
+      var result = await http.post("$baseURLCustomer/company_register", body: {
+        'cu_name': data[0],
+        'cu_phone_code': data[1],
+        'cu_phone': data[2],
+        'cu_email': data[3],
+        'cu_address': data[4],
+        'cu_city': data[5],
+        'cu_pan': data[8],
+        'cu_pin': data[9],
+        'cu_co_name': data[7],
+        'cu_co_type': data[8],
+        'cu_co_service_tax': data[9],
+        'cu_co_pan_num': data[7],
+        'cu_co_website': data[8],
+      });
+      return PostResultOne.fromJson(json.decode(result.body));
+    } catch (error) {
+      throw error;
+    }
+  }
 
   /*-------------------------- Driver API's ---------------------------*/
   Future<PostResultOne> registerDriver(List data) async {

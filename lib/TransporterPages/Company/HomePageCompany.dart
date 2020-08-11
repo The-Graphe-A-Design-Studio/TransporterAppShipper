@@ -5,9 +5,9 @@ import 'package:transportationapp/Models/User.dart';
 import 'package:transportationapp/MyConstants.dart';
 
 class HomePageCompany extends StatefulWidget {
-  final UserOwner userOwner;
+  final UserCustomerCompany userCustomerCompany;
 
-  HomePageCompany({Key key, this.userOwner}) : super(key: key);
+  HomePageCompany({Key key, this.userCustomerCompany}) : super(key: key);
 
   @override
   _HomePageCompanyState createState() => _HomePageCompanyState();
@@ -41,7 +41,7 @@ class _HomePageCompanyState extends State<HomePageCompany> {
                           height: 30.0,
                         ),
                         Text(
-                          "Truck Owner - " + widget.userOwner.oName,
+                          "Truck Owner - " + widget.userCustomerCompany.coCompanyName,
                           style: TextStyle(
                             fontSize: 23.0,
                             fontWeight: FontWeight.bold,
@@ -66,8 +66,8 @@ class _HomePageCompanyState extends State<HomePageCompany> {
                         ),
                         FlatButton(
                           onPressed: () {
-                            Navigator.pushNamed(context, viewProfileOwner,
-                                arguments: widget.userOwner);
+                            Navigator.pushNamed(context, editProfileCompany,
+                                arguments: widget.userCustomerCompany);
                           },
                           child: Text(
                             "View My Profile",

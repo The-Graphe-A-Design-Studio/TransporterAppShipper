@@ -62,13 +62,13 @@ class RouteGenerator {
 
     //Pages once the user is LoggedIn - Transporter
       case homePageTransporterCompany:
-        return FadeRoute(page: HomePageCompany());
+        return FadeRoute(page: HomePageCompany(userCustomerCompany: args,));
       case homePageTransporterIndividual:
-        return FadeRoute(page: HomePageIndividual());
+        return FadeRoute(page: HomePageIndividual(userCustomerIndividual: args,));
       case editProfileCompany:
-        return FadeRoute(page: EditProfileCompany());
+        return FadeRoute(page: EditProfileCompany(userCustomerCompany: args,));
       case editProfileIndividual:
-        return FadeRoute(page: EditProfileIndividual());
+        return FadeRoute(page: EditProfileIndividual(userCustomerIndividual: args,));
       case newTransportingOrderPage:
         return FadeRoute(page: NewTransportingOrder());
       case orderSummaryPage:

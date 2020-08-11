@@ -26,7 +26,7 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
   WidgetMarker selectedWidgetMarker;
 
   final GlobalKey<FormState> _formKeyIndividualCredentials =
-      GlobalKey<FormState>();
+  GlobalKey<FormState>();
   final GlobalKey<FormState> _formKeyChangePassword = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKeyOtp = GlobalKey<FormState>();
 
@@ -63,6 +63,13 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
   void initState() {
     super.initState();
     selectedWidgetMarker = WidgetMarker.individualCredentials;
+    inNameController.text = widget.userCustomerIndividual.inName;
+    inMobileNumberController.text = widget.userCustomerIndividual.inPhone;
+    inEmailController.text = widget.userCustomerIndividual.inEmail;
+    inCityController.text = widget.userCustomerIndividual.inCity;
+    inAddressController.text = widget.userCustomerIndividual.inAddress;
+    inPinController.text = widget.userCustomerIndividual.inPin;
+    inPanController.text = widget.userCustomerIndividual.inPan;
   }
 
   @override
@@ -140,8 +147,8 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
     });
   }
 
-  void postOtpVerificationRequest(
-      BuildContext _context, String phNumber, String otpNumber) {
+  void postOtpVerificationRequest(BuildContext _context, String phNumber,
+      String otpNumber) {
     DialogProcessing().showCustomDialog(context,
         title: "OTP Verification", text: "Processing, Please Wait!");
     HTTPHandler()
@@ -231,8 +238,8 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
     });
   }
 
-  Widget getIndividualCredentialsBottomSheetWidget(
-      context, ScrollController scrollController) {
+  Widget getIndividualCredentialsBottomSheetWidget(context,
+      ScrollController scrollController) {
     return ListView(controller: scrollController, children: <Widget>[
       SingleChildScrollView(
         child: Form(
@@ -531,7 +538,10 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
                     }
                   },
                   child: Container(
-                    width: MediaQuery.of(context).size.width,
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width,
                     height: 50.0,
                     child: Center(
                       child: Text(
@@ -557,8 +567,8 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
     ]);
   }
 
-  Widget getChangePasswordBottomSheetWidget(
-      context, ScrollController scrollController) {
+  Widget getChangePasswordBottomSheetWidget(context,
+      ScrollController scrollController) {
     return ListView(controller: scrollController, children: <Widget>[
       SingleChildScrollView(
         child: Form(
@@ -719,7 +729,10 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
                     }
                   },
                   child: Container(
-                    width: MediaQuery.of(context).size.width,
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width,
                     height: 50.0,
                     child: Center(
                       child: Text(
@@ -745,8 +758,8 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
     ]);
   }
 
-  Widget getOtpVerificationBottomSheetWidget(
-      context, ScrollController scrollController) {
+  Widget getOtpVerificationBottomSheetWidget(context,
+      ScrollController scrollController) {
     return ListView(controller: scrollController, children: <Widget>[
       SingleChildScrollView(
         child: Form(
@@ -876,7 +889,10 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
                         otpController.text.toString());
                   },
                   child: Container(
-                    width: MediaQuery.of(context).size.width,
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width,
                     height: 50.0,
                     child: Center(
                       child: Text(
@@ -907,7 +923,10 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
       child: Column(
         children: <Widget>[
           SizedBox(
-            height: MediaQuery.of(context).size.width * 0.3 - 20,
+            height: MediaQuery
+                .of(context)
+                .size
+                .width * 0.3 - 20,
           ),
           Text(
             "Enter",
@@ -934,7 +953,10 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
       child: Column(
         children: <Widget>[
           SizedBox(
-            height: MediaQuery.of(context).size.width * 0.3 - 20,
+            height: MediaQuery
+                .of(context)
+                .size
+                .width * 0.3 - 20,
           ),
           Text(
             "OTP",
@@ -961,7 +983,10 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
       child: Column(
         children: <Widget>[
           SizedBox(
-            height: MediaQuery.of(context).size.width * 0.3 - 20,
+            height: MediaQuery
+                .of(context)
+                .size
+                .width * 0.3 - 20,
           ),
           Text(
             "Reset",
@@ -995,8 +1020,8 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
     return getIndividualCredentialsWidget(context);
   }
 
-  Widget getCustomBottomSheetWidget(
-      context, ScrollController scrollController) {
+  Widget getCustomBottomSheetWidget(context,
+      ScrollController scrollController) {
     switch (selectedWidgetMarker) {
       case WidgetMarker.individualCredentials:
         return getIndividualCredentialsBottomSheetWidget(

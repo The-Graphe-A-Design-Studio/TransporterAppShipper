@@ -73,6 +73,18 @@ class _EditProfileCompanyState extends State<EditProfileCompany> {
   void initState() {
     super.initState();
     selectedWidgetMarker = WidgetMarker.companyCredentials;
+    coCustomerNameController.text = widget.userCustomerCompany.coName;
+    coMobileNumberController.text = widget.userCustomerCompany.coPhone;
+    coEmailController.text = widget.userCustomerCompany.coEmail;
+    coCityController.text = widget.userCustomerCompany.coCity;
+    coAddressController.text = widget.userCustomerCompany.coAddress;
+    coPinController.text = widget.userCustomerCompany.coPin;
+    coCustomerPanController.text = widget.userCustomerCompany.coPan;
+    coNameController.text = widget.userCustomerCompany.coCompanyName;
+    coTypeController.text = widget.userCustomerCompany.coCompanyType;
+    coTaxController.text = widget.userCustomerCompany.coCompanyTax;
+    coPanController.text = widget.userCustomerCompany.coCompanyPan;
+    coWebsiteController.text = widget.userCustomerCompany.coCompanyWebsite;
   }
 
   @override
@@ -412,7 +424,7 @@ class _EditProfileCompanyState extends State<EditProfileCompany> {
                 focusNode: _coEmail,
                 onFieldSubmitted: (term) {
                   _coEmail.unfocus();
-                  FocusScope.of(context).requestFocus(_coPan);
+                  FocusScope.of(context).requestFocus(_coCustomerPan);
                 },
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.mail),
@@ -445,8 +457,8 @@ class _EditProfileCompanyState extends State<EditProfileCompany> {
                   FocusScope.of(context).requestFocus(_coAddress);
                 },
                 decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.location_on),
-                  labelText: "Address",
+                  prefixIcon: Icon(Icons.credit_card),
+                  labelText: "Pan Number",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5.0),
                     borderSide: BorderSide(
@@ -475,7 +487,7 @@ class _EditProfileCompanyState extends State<EditProfileCompany> {
                   FocusScope.of(context).requestFocus(_coCity);
                 },
                 decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.mail),
+                  prefixIcon: Icon(Icons.location_on),
                   labelText: "Address",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5.0),
@@ -505,7 +517,7 @@ class _EditProfileCompanyState extends State<EditProfileCompany> {
                   FocusScope.of(context).requestFocus(_coPin);
                 },
                 decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.mail),
+                  prefixIcon: Icon(Icons.location_city),
                   labelText: "City",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5.0),
