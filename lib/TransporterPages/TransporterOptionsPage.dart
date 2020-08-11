@@ -1171,7 +1171,7 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                 focusNode: _coEmail,
                 onFieldSubmitted: (term) {
                   _coEmail.unfocus();
-                  FocusScope.of(context).requestFocus(_coPassword);
+                  FocusScope.of(context).requestFocus(_coPan);
                 },
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.mail),
@@ -1363,7 +1363,7 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                   if (value.isEmpty) {
                     return "This Field is Required";
                   } else if (value.toString() !=
-                      inPasswordController.text.toString()) {
+                      coPasswordController.text.toString()) {
                     return "Passwords Don't Match";
                   }
                   return null;
@@ -1611,94 +1611,6 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                   ),
                 ),
                 validator: (value) {
-                  return null;
-                },
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              TextFormField(
-                controller: inPinController,
-                keyboardType: TextInputType.number,
-                textInputAction: TextInputAction.next,
-                focusNode: _inPin,
-                onFieldSubmitted: (term) {
-                  _inPin.unfocus();
-                  FocusScope.of(context).requestFocus(_inPassword);
-                },
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.mail),
-                  labelText: "PIN",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: BorderSide(
-                      color: Colors.amber,
-                      style: BorderStyle.solid,
-                    ),
-                  ),
-                ),
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return "This Field is Required";
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              TextFormField(
-                  controller: inPasswordController,
-                  keyboardType: TextInputType.visiblePassword,
-                  textInputAction: TextInputAction.next,
-                  focusNode: _inPassword,
-                  onFieldSubmitted: (term) {
-                    _inPassword.unfocus();
-                    FocusScope.of(context).requestFocus(_inConfirmPassword);
-                  },
-                  decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.vpn_key),
-                    labelText: "Password",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0),
-                      borderSide: BorderSide(
-                        color: Colors.amber,
-                        style: BorderStyle.solid,
-                      ),
-                    ),
-                  ),
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return "This Field is Required";
-                    }
-                    return null;
-                  }),
-              SizedBox(
-                height: 16.0,
-              ),
-              TextFormField(
-                controller: inConfirmPasswordController,
-                keyboardType: TextInputType.visiblePassword,
-                textInputAction: TextInputAction.done,
-                focusNode: _inConfirmPassword,
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.vpn_key),
-                  labelText: "Confirm Password",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: BorderSide(
-                      color: Colors.amber,
-                      style: BorderStyle.solid,
-                    ),
-                  ),
-                ),
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return "This Field is Required";
-                  } else if (value.toString() !=
-                      inPasswordController.text.toString()) {
-                    return "Passwords Don't Match";
-                  }
                   return null;
                 },
               ),

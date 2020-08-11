@@ -14,21 +14,20 @@ class UserOwner {
   String oIfsc;
   String oRegistered;
 
-  UserOwner(
-      {this.success,
-      this.oId,
-      this.oName,
-      this.oEmail,
-      this.oPhoneCode,
-      this.oPhone,
-      this.oAddress,
-      this.oCity,
-      this.oOperatingRoute,
-      this.oPermitStates,
-      this.oPan,
-      this.oBank,
-      this.oIfsc,
-      this.oRegistered});
+  UserOwner({this.success,
+    this.oId,
+    this.oName,
+    this.oEmail,
+    this.oPhoneCode,
+    this.oPhone,
+    this.oAddress,
+    this.oCity,
+    this.oOperatingRoute,
+    this.oPermitStates,
+    this.oPan,
+    this.oBank,
+    this.oIfsc,
+    this.oRegistered});
 
   factory UserOwner.fromJson(Map<String, dynamic> parsedJson) {
     return UserOwner(
@@ -48,7 +47,8 @@ class UserOwner {
         oRegistered: parsedJson['registered on']);
   }
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() =>
+      {
         'success': "1",
         'id': this.oId,
         'name': this.oName,
@@ -86,25 +86,24 @@ class UserDriver {
   bool dVerified;
   String dRegistered;
 
-  UserDriver(
-      {this.success,
-      this.dId,
-      this.dName,
-      this.dEmail,
-      this.dPhoneCode,
-      this.dPhone,
-      this.dPassword,
-      this.dAddress,
-      this.dRc,
-      this.dLicense,
-      this.dInsurance,
-      this.dRoadTax,
-      this.dRto,
-      this.dPan,
-      this.dBank,
-      this.dIfsc,
-      this.dVerified,
-      this.dRegistered});
+  UserDriver({this.success,
+    this.dId,
+    this.dName,
+    this.dEmail,
+    this.dPhoneCode,
+    this.dPhone,
+    this.dPassword,
+    this.dAddress,
+    this.dRc,
+    this.dLicense,
+    this.dInsurance,
+    this.dRoadTax,
+    this.dRto,
+    this.dPan,
+    this.dBank,
+    this.dIfsc,
+    this.dVerified,
+    this.dRegistered});
 
   factory UserDriver.fromJson(Map<String, dynamic> parsedJson) {
     return UserDriver(
@@ -131,126 +130,94 @@ class UserDriver {
 
 class UserCustomerIndividual {
   bool success;
-  String dId;
-  String dName;
-  String dEmail;
-  String dPhoneCode;
-  String dPhone;
-  String dPassword;
-  String dAddress;
-  String dRc;
-  String dLicense;
-  String dInsurance;
-  String dRoadTax;
-  String dRto;
-  String dPan;
-  String dBank;
-  String dIfsc;
-  bool dVerified;
-  String dRegistered;
+  String inId;
+  String inName;
+  String inEmail;
+  String inPhoneCode;
+  String inPhone;
+  String inCity;
+  String inAddress;
+  String inPin;
+  String inPan;
+  String inRegistered;
 
-  UserCustomerIndividual(
-      {this.success,
-        this.dId,
-        this.dName,
-        this.dEmail,
-        this.dPhoneCode,
-        this.dPhone,
-        this.dPassword,
-        this.dAddress,
-        this.dRc,
-        this.dLicense,
-        this.dInsurance,
-        this.dRoadTax,
-        this.dRto,
-        this.dPan,
-        this.dBank,
-        this.dIfsc,
-        this.dVerified,
-        this.dRegistered});
+  UserCustomerIndividual({this.success,
+    this.inId,
+    this.inName,
+    this.inEmail,
+    this.inPhoneCode,
+    this.inPhone,
+    this.inCity,
+    this.inAddress,
+    this.inPin,
+    this.inPan,
+    this.inRegistered});
 
   factory UserCustomerIndividual.fromJson(Map<String, dynamic> parsedJson) {
     return UserCustomerIndividual(
         success: parsedJson['success'] == '1' ? true : false,
-        dId: parsedJson['d_id'],
-        dName: parsedJson['d_name'],
-        dEmail: parsedJson['d_email'],
-        dPhoneCode: parsedJson['d_phone_code'],
-        dPhone: parsedJson['d_phone'],
-        dPassword: parsedJson['d_password'],
-        dAddress: parsedJson['d_address'],
-        dRc: parsedJson['d_rc'],
-        dLicense: parsedJson['d_license'],
-        dInsurance: parsedJson['d_insurance'],
-        dRoadTax: parsedJson['d_road_tax'],
-        dRto: parsedJson['d_rto'],
-        dPan: parsedJson['d_pan'],
-        dBank: parsedJson['d_bank'],
-        dIfsc: parsedJson['d_ifsc'],
-        dVerified: parsedJson['d_verified'] == '1' ? true : false,
-        dRegistered: parsedJson['d_registered']);
+        inId: parsedJson['id'],
+        inName: parsedJson['name'],
+        inEmail: parsedJson['email'],
+        inPhoneCode: parsedJson['phone_con_code'],
+        inPhone: parsedJson['phone'],
+        inCity: parsedJson['city'],
+        inAddress: parsedJson['address'],
+        inPin: parsedJson['pin code'],
+        inPan: parsedJson['pan number'],
+        inRegistered: parsedJson['registered on']);
   }
 }
 
 class UserCustomerCompany {
   bool success;
-  String dId;
-  String dName;
-  String dEmail;
-  String dPhoneCode;
-  String dPhone;
-  String dPassword;
-  String dAddress;
-  String dRc;
-  String dLicense;
-  String dInsurance;
-  String dRoadTax;
-  String dRto;
-  String dPan;
-  String dBank;
-  String dIfsc;
-  bool dVerified;
-  String dRegistered;
+  String coId;
+  String coName;
+  String coEmail;
+  String coPhoneCode;
+  String coPhone;
+  String coAddress;
+  String coCity;
+  String coPin;
+  String coCompanyName;
+  String coCompanyType;
+  String coCompanyTax;
+  String coCompanyPan;
+  String coCompanyWebsite;
+  String coRegistered;
 
-  UserCustomerCompany(
-      {this.success,
-        this.dId,
-        this.dName,
-        this.dEmail,
-        this.dPhoneCode,
-        this.dPhone,
-        this.dPassword,
-        this.dAddress,
-        this.dRc,
-        this.dLicense,
-        this.dInsurance,
-        this.dRoadTax,
-        this.dRto,
-        this.dPan,
-        this.dBank,
-        this.dIfsc,
-        this.dVerified,
-        this.dRegistered});
+  UserCustomerCompany({this.success,
+    this.coId,
+    this.coName,
+    this.coEmail,
+    this.coPhoneCode,
+    this.coPhone,
+    this.coAddress,
+    this.coCity,
+    this.coPin,
+    this.coCompanyName,
+    this.coCompanyType,
+    this.coCompanyTax,
+    this.coCompanyPan,
+    this.coCompanyWebsite,
+    this.coRegistered});
 
   factory UserCustomerCompany.fromJson(Map<String, dynamic> parsedJson) {
     return UserCustomerCompany(
         success: parsedJson['success'] == '1' ? true : false,
-        dId: parsedJson['d_id'],
-        dName: parsedJson['d_name'],
-        dEmail: parsedJson['d_email'],
-        dPhoneCode: parsedJson['d_phone_code'],
-        dPhone: parsedJson['d_phone'],
-        dPassword: parsedJson['d_password'],
-        dAddress: parsedJson['d_address'],
-        dRc: parsedJson['d_rc'],
-        dLicense: parsedJson['d_license'],
-        dInsurance: parsedJson['d_insurance'],
-        dRoadTax: parsedJson['d_road_tax'],
-        dRto: parsedJson['d_rto'],
-        dPan: parsedJson['d_pan'],
-        dBank: parsedJson['d_bank'],
-        dIfsc: parsedJson['d_ifsc'],
-        dVerified: parsedJson['d_verified'] == '1' ? true : false,
-        dRegistered: parsedJson['d_registered']);
+        coId: parsedJson['id'],
+        coName: parsedJson['name'],
+        coEmail: parsedJson['email'],
+        coPhoneCode: parsedJson['phone_con_code'],
+        coPhone: parsedJson['phone'],
+        coAddress: parsedJson['address'],
+        coCity: parsedJson['city'],
+        coPin: parsedJson['pin code'],
+        coCompanyName: parsedJson['company name'],
+        coCompanyType: parsedJson['company type'],
+        coCompanyTax: parsedJson['company service tax'],
+        coCompanyPan: parsedJson['company pan number'],
+        coCompanyWebsite: parsedJson['company website'],
+        coRegistered: parsedJson['registered on']);
   }
 }

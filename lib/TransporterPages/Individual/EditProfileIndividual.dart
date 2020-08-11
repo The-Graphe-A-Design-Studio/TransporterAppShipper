@@ -4,37 +4,31 @@ import 'package:transportationapp/DialogScreens/DialogFailed.dart';
 import 'package:transportationapp/DialogScreens/DialogProcessing.dart';
 import 'package:transportationapp/DialogScreens/DialogSuccess.dart';
 import 'package:transportationapp/HttpHandler.dart';
-import 'package:transportationapp/MyConstants.dart';
-import 'package:transportationapp/PostMethodResult.dart';
+import 'package:transportationapp/Models/User.dart';
 
 class EditProfileIndividual extends StatefulWidget {
-  EditProfileIndividual({Key key}) : super(key: key);
+  final UserCustomerIndividual userCustomerIndividual;
+
+  EditProfileIndividual({Key key, this.userCustomerIndividual})
+      : super(key: key);
 
   @override
   _EditProfileIndividualState createState() => _EditProfileIndividualState();
 }
 
 enum WidgetMarker {
-  options,
-  signUpOption,
   individualCredentials,
-  companyCredentials1,
-  companyCredentials2,
+  changePassword,
   otpVerification,
-  signIn,
 }
 
 class _EditProfileIndividualState extends State<EditProfileIndividual> {
   WidgetMarker selectedWidgetMarker;
 
   final GlobalKey<FormState> _formKeyIndividualCredentials =
-  GlobalKey<FormState>();
-  final GlobalKey<FormState> _formKeyCompanyCredentials1 =
-  GlobalKey<FormState>();
-  final GlobalKey<FormState> _formKeyCompanyCredentials2 =
-  GlobalKey<FormState>();
+      GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKeyChangePassword = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKeyOtp = GlobalKey<FormState>();
-  final GlobalKey<FormState> _formKeySignIn = GlobalKey<FormState>();
 
   final inNameController = TextEditingController();
   final inMobileNumberController = TextEditingController();
@@ -43,57 +37,24 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
   final inAddressController = TextEditingController();
   final inPinController = TextEditingController();
   final inPanController = TextEditingController();
-  final inPasswordController = TextEditingController();
-  final inConfirmPasswordController = TextEditingController();
 
-  final coCustomerNameController = TextEditingController();
-  final coMobileNumberController = TextEditingController();
-  final coEmailController = TextEditingController();
-  final coCityController = TextEditingController();
-  final coAddressController = TextEditingController();
-  final coPinController = TextEditingController();
-  final coCustomerPanController = TextEditingController();
-  final coPasswordController = TextEditingController();
-  final coConfirmPasswordController = TextEditingController();
-
-  final coNameController = TextEditingController();
-  final coTypeController = TextEditingController();
-  final coTaxController = TextEditingController();
-  final coPanController = TextEditingController();
-  final coWebsiteController = TextEditingController();
+  final currPasswordController = TextEditingController();
+  final newPasswordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
 
   final otpController = TextEditingController();
-
-  final passwordControllerSignIn = TextEditingController();
-  final mobileNumberControllerSignIn = TextEditingController();
 
   final FocusNode _inName = FocusNode();
   final FocusNode _inMobileNumber = FocusNode();
   final FocusNode _inEmail = FocusNode();
-  final FocusNode _inPassword = FocusNode();
-  final FocusNode _inConfirmPassword = FocusNode();
   final FocusNode _inCity = FocusNode();
   final FocusNode _inAddress = FocusNode();
   final FocusNode _inPin = FocusNode();
   final FocusNode _inPan = FocusNode();
 
-  final FocusNode _coCustomerName = FocusNode();
-  final FocusNode _coMobileNumber = FocusNode();
-  final FocusNode _coEmail = FocusNode();
-  final FocusNode _coPassword = FocusNode();
-  final FocusNode _coConfirmPassword = FocusNode();
-  final FocusNode _coCity = FocusNode();
-  final FocusNode _coAddress = FocusNode();
-  final FocusNode _coPin = FocusNode();
-  final FocusNode _coCustomerPan = FocusNode();
-  final FocusNode _coName = FocusNode();
-  final FocusNode _coType = FocusNode();
-  final FocusNode _coTax = FocusNode();
-  final FocusNode _coPan = FocusNode();
-  final FocusNode _coWebsite = FocusNode();
-
-  final FocusNode _mobileNumberSignIn = FocusNode();
-  final FocusNode _passwordSignIn = FocusNode();
+  final FocusNode _currPassword = FocusNode();
+  final FocusNode _newPassword = FocusNode();
+  final FocusNode _confirmPassword = FocusNode();
 
   int regType = 0;
   bool rememberMe = true;
@@ -101,7 +62,7 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
   @override
   void initState() {
     super.initState();
-    selectedWidgetMarker = WidgetMarker.signUpOption;
+    selectedWidgetMarker = WidgetMarker.individualCredentials;
   }
 
   @override
@@ -113,29 +74,12 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
     inAddressController.dispose();
     inPinController.dispose();
     inPanController.dispose();
-    inPasswordController.dispose();
-    inConfirmPasswordController.dispose();
 
-    coCustomerNameController.dispose();
-    coMobileNumberController.dispose();
-    coEmailController.dispose();
-    coCityController.dispose();
-    coAddressController.dispose();
-    coPinController.dispose();
-    coCustomerPanController.dispose();
-    coPasswordController.dispose();
-    coConfirmPasswordController.dispose();
-
-    coNameController.dispose();
-    coTypeController.dispose();
-    coTaxController.dispose();
-    coPanController.dispose();
-    coWebsiteController.dispose();
+    currPasswordController.dispose();
+    newPasswordController.dispose();
+    confirmPasswordController.dispose();
 
     otpController.dispose();
-
-    mobileNumberControllerSignIn.dispose();
-    passwordControllerSignIn.dispose();
 
     super.dispose();
   }
@@ -148,29 +92,8 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
     inAddressController.clear();
     inPinController.clear();
     inPanController.clear();
-    inPasswordController.clear();
-    inConfirmPasswordController.clear();
-
-    coCustomerNameController.clear();
-    coMobileNumberController.clear();
-    coEmailController.clear();
-    coCityController.clear();
-    coAddressController.clear();
-    coPinController.clear();
-    coCustomerPanController.clear();
-    coPasswordController.clear();
-    coConfirmPasswordController.clear();
-
-    coNameController.clear();
-    coTypeController.clear();
-    coTaxController.clear();
-    coPanController.clear();
-    coWebsiteController.clear();
 
     otpController.clear();
-
-    mobileNumberControllerSignIn.clear();
-    passwordControllerSignIn.clear();
   }
 
   void postSignUpRequestIndividual(BuildContext _context) {
@@ -183,8 +106,6 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
       inEmailController.text.toString(),
       inAddressController.text.toString(),
       inCityController.text.toString(),
-      inPasswordController.text.toString(),
-      inConfirmPasswordController.text.toString(),
       inPanController.text.toString(),
       inPinController.text.toString()
     ]).then((value) async {
@@ -219,78 +140,20 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
     });
   }
 
-  void postSignUpRequestCompany(BuildContext _context) {
-    DialogProcessing().showCustomDialog(context,
-        title: "Sign Up Request", text: "Processing, Please Wait!");
-    HTTPHandler().registerCustomerIndividual([
-      coCustomerNameController.text.toString(),
-      '91',
-      coMobileNumberController.text.toString(),
-      coEmailController.text.toString(),
-      coAddressController.text.toString(),
-      coCityController.text.toString(),
-      coPasswordController.text.toString(),
-      coConfirmPasswordController.text.toString(),
-      coCustomerPanController.text.toString(),
-      coPinController.text.toString(),
-      coNameController.text.toString(),
-      coTypeController.text.toString(),
-      coTaxController.text.toString(),
-      coPanController.text.toString(),
-      coWebsiteController.text.toString()
-    ]).then((value) async {
-      Navigator.pop(context);
-      if (value.success) {
-        DialogSuccess().showCustomDialog(context, title: "Sign Up");
-        await Future.delayed(Duration(seconds: 1), () {});
-        setState(() {
-          selectedWidgetMarker = WidgetMarker.otpVerification;
-        });
-        Navigator.pop(context);
-        Scaffold.of(_context).showSnackBar(SnackBar(
-          backgroundColor: Colors.black,
-          content: Text(
-            value.message,
-            style: TextStyle(color: Colors.white),
-          ),
-        ));
-      } else {
-        DialogFailed()
-            .showCustomDialog(context, title: "Sign Up", text: value.message);
-        await Future.delayed(Duration(seconds: 3), () {});
-        Navigator.pop(context);
-      }
-    }).catchError((error) async {
-      print(error);
-      Navigator.pop(context);
-      DialogFailed()
-          .showCustomDialog(context, title: "Sign Up", text: "Network Error");
-      await Future.delayed(Duration(seconds: 3), () {});
-      Navigator.pop(context);
-    });
-  }
-
-  void postOtpVerificationRequest(BuildContext _context, String phNumber,
-      String otpNumber) {
+  void postOtpVerificationRequest(
+      BuildContext _context, String phNumber, String otpNumber) {
     DialogProcessing().showCustomDialog(context,
         title: "OTP Verification", text: "Processing, Please Wait!");
     HTTPHandler()
         .registerVerifyOtpCustomer([phNumber, otpNumber]).then((value) async {
       Navigator.pop(context);
       if (value.success) {
-        DialogSuccess().showCustomDialog(context, title: "OTP Verification");
+        DialogSuccess().showCustomDialog(context,
+            title: "OTP Verification",
+            text: "You may now Sign In to your Account.");
         await Future.delayed(Duration(seconds: 1), () {});
-        setState(() {
-          selectedWidgetMarker = WidgetMarker.signIn;
-        });
         Navigator.pop(context);
-        Scaffold.of(_context).showSnackBar(SnackBar(
-          backgroundColor: Colors.black,
-          content: Text(
-            "You may now Sign In to your Account.",
-            style: TextStyle(color: Colors.white),
-          ),
-        ));
+        HTTPHandler().signOut(context);
       } else {
         DialogFailed().showCustomDialog(context,
             title: "OTP Verification", text: value.message);
@@ -306,65 +169,29 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
     });
   }
 
-  void postSignInRequest(BuildContext _context) {
+  void postResendOtpRequest(BuildContext _context, String phNumber) {
     DialogProcessing().showCustomDialog(context,
-        title: "Sign In", text: "Processing, Please Wait!");
-    HTTPHandler().loginCustomer([
-      regType.toString(),
-      '91',
-      mobileNumberControllerSignIn.text,
-      passwordControllerSignIn.text,
-      rememberMe
-    ]).then((value) async {
-      if (value[0]) {
-        /*userOwner = value[1];*/
-        Navigator.pop(context);
-        DialogSuccess().showCustomDialog(context, title: "Sign In");
+        title: "Resend OTP", text: "Processing, Please Wait!");
+    HTTPHandler().registerResendOtpCustomer([phNumber]).then((value) async {
+      Navigator.pop(context);
+      if (value.success) {
+        DialogSuccess().showCustomDialog(context, title: "Resend OTP");
         await Future.delayed(Duration(seconds: 1), () {});
         Navigator.pop(context);
-        Navigator.pushNamedAndRemoveUntil(
-            _context, newTransportingOrderPage, (route) => false);
+        Scaffold.of(_context).showSnackBar(SnackBar(
+          backgroundColor: Colors.black,
+          content: Text(
+            value.message,
+            style: TextStyle(color: Colors.white),
+          ),
+        ));
       } else {
-        PostResultOne postResultOne = value[1];
-        Navigator.pop(context);
         DialogFailed().showCustomDialog(context,
-            title: "Sign In", text: postResultOne.message);
+            title: "Resend OTP", text: value.message);
         await Future.delayed(Duration(seconds: 3), () {});
         Navigator.pop(context);
       }
     }).catchError((error) async {
-      Navigator.pop(context);
-      DialogFailed()
-          .showCustomDialog(context, title: "Sign In", text: "Network Error");
-      await Future.delayed(Duration(seconds: 3), () {});
-      Navigator.pop(context);
-    });
-  }
-
-  void postResendOtpRequest(BuildContext _context, String phNumber) {
-    DialogProcessing().showCustomDialog(context,
-        title: "Resend OTP", text: "Processing, Please Wait!");
-    HTTPHandler().registerResendOtpCustomer([phNumber]).then(
-            (value) async {
-          Navigator.pop(context);
-          if (value.success) {
-            DialogSuccess().showCustomDialog(context, title: "Resend OTP");
-            await Future.delayed(Duration(seconds: 1), () {});
-            Navigator.pop(context);
-            Scaffold.of(_context).showSnackBar(SnackBar(
-              backgroundColor: Colors.black,
-              content: Text(
-                value.message,
-                style: TextStyle(color: Colors.white),
-              ),
-            ));
-          } else {
-            DialogFailed().showCustomDialog(context,
-                title: "Resend OTP", text: value.message);
-            await Future.delayed(Duration(seconds: 3), () {});
-            Navigator.pop(context);
-          }
-        }).catchError((error) async {
       Navigator.pop(context);
       DialogFailed().showCustomDialog(context,
           title: "Resend OTP", text: "Network Error");
@@ -373,254 +200,39 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
     });
   }
 
-  Widget getSignUpOptionsBottomSheetWidget(context,
-      ScrollController scrollController) {
-    return ListView(
-      controller: scrollController,
-      children: <Widget>[
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: CircleAvatar(
-                backgroundColor: Colors.transparent,
-                child: Icon(
-                  Icons.arrow_back_ios,
-                  color: Color(0xff252427),
-                ),
-              ),
-            ),
-          ),
-        ),
-        Align(
-          alignment: Alignment.center,
-          child: Image(
-            image: AssetImage('assets/images/logo_black.png'),
-            height: 145.0,
-            width: 145.0,
-          ),
-        ),
-        Align(
-          alignment: Alignment.center,
-          child: Material(
-            child: Text("Welcome to Some App."),
-          ),
-        ),
-        Align(
-          alignment: Alignment.center,
-          child: Material(
-            child: Text("Intro Content Intro Content"),
-          ),
-        ),
-        Align(
-          alignment: Alignment.center,
-          child: Material(
-            child: Text("Intro Content"),
-          ),
-        ),
-        SizedBox(height: 40.0),
-        Material(
-          color: Colors.transparent,
-          child: InkWell(
-            splashColor: Colors.transparent,
-            onTap: () {
-              setState(() {
-                regType = 1;
-                selectedWidgetMarker = WidgetMarker.options;
-              });
-            },
-            child: Container(
-              width: MediaQuery
-                  .of(context)
-                  .size
-                  .width * 0.7,
-              height: 50.0,
-              child: Center(
-                child: Text(
-                  "Individual",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 24.0,
-                      fontWeight: FontWeight.bold),
-                ),
-              ),
-              decoration: BoxDecoration(
-                color: Color(0xff252427),
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(width: 2.0, color: Color(0xff252427)),
-              ),
-            ),
-          ),
-        ),
-        SizedBox(
-          height: 30.0,
-        ),
-        Material(
-          color: Colors.transparent,
-          child: InkWell(
-            splashColor: Colors.transparent,
-            onTap: () {
-              setState(() {
-                regType = 2;
-                selectedWidgetMarker = WidgetMarker.options;
-              });
-            },
-            child: Container(
-              width: MediaQuery
-                  .of(context)
-                  .size
-                  .width * 0.7,
-              height: 50.0,
-              child: Center(
-                child: Text(
-                  "Company",
-                  style: TextStyle(
-                      color: Color(0xff252427),
-                      fontSize: 24.0,
-                      fontWeight: FontWeight.bold),
-                ),
-              ),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(width: 2.0, color: Color(0xff252427)),
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
+  void postChangePasswordRequest(BuildContext _context) {
+    DialogProcessing().showCustomDialog(context,
+        title: "Change Password", text: "Processing, Please Wait!");
+    HTTPHandler().editOwnerInfoChangePassword([
+      widget.userCustomerIndividual.inId.toString(),
+      currPasswordController.text.toString(),
+      newPasswordController.text.toString(),
+      confirmPasswordController.text.toString()
+    ]).then((value) async {
+      Navigator.pop(context);
+      if (value.success) {
+        DialogSuccess().showCustomDialog(context,
+            title: "Change Password", text: value.message);
+        await Future.delayed(Duration(seconds: 1), () {});
+        Navigator.pop(context);
+        HTTPHandler().signOut(context);
+      } else {
+        DialogFailed().showCustomDialog(context,
+            title: "Change Password", text: value.message);
+        await Future.delayed(Duration(seconds: 3), () {});
+        Navigator.pop(context);
+      }
+    }).catchError((error) async {
+      Navigator.pop(context);
+      DialogFailed().showCustomDialog(context,
+          title: "Change Password", text: "Network Error");
+      await Future.delayed(Duration(seconds: 3), () {});
+      Navigator.pop(context);
+    });
   }
 
-  Widget getOptionsBottomSheetWidget(context,
-      ScrollController scrollController) {
-    return ListView(
-      controller: scrollController,
-      children: <Widget>[
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: CircleAvatar(
-                backgroundColor: Colors.transparent,
-                child: Icon(
-                  Icons.arrow_back_ios,
-                  color: Color(0xff252427),
-                ),
-              ),
-            ),
-          ),
-        ),
-        Align(
-          alignment: Alignment.center,
-          child: Image(
-            image: AssetImage('assets/images/logo_black.png'),
-            height: 145.0,
-            width: 145.0,
-          ),
-        ),
-        Align(
-          alignment: Alignment.center,
-          child: Material(
-            child: Text("Welcome to Some App."),
-          ),
-        ),
-        Align(
-          alignment: Alignment.center,
-          child: Material(
-            child: Text("Intro Content Intro Content"),
-          ),
-        ),
-        Align(
-          alignment: Alignment.center,
-          child: Material(
-            child: Text("Intro Content"),
-          ),
-        ),
-        SizedBox(height: 40.0),
-        Material(
-          color: Colors.transparent,
-          child: InkWell(
-            splashColor: Colors.transparent,
-            onTap: () {
-              setState(() {
-                if (regType == 1) {
-                  selectedWidgetMarker = WidgetMarker.individualCredentials;
-                } else if (regType == 2) {
-                  selectedWidgetMarker = WidgetMarker.companyCredentials1;
-                }
-              });
-            },
-            child: Container(
-              width: MediaQuery
-                  .of(context)
-                  .size
-                  .width * 0.7,
-              height: 50.0,
-              child: Center(
-                child: Text(
-                  "Sign Up",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 24.0,
-                      fontWeight: FontWeight.bold),
-                ),
-              ),
-              decoration: BoxDecoration(
-                color: Color(0xff252427),
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(width: 2.0, color: Color(0xff252427)),
-              ),
-            ),
-          ),
-        ),
-        SizedBox(
-          height: 30.0,
-        ),
-        Material(
-          color: Colors.transparent,
-          child: InkWell(
-            splashColor: Colors.transparent,
-            onTap: () {
-              setState(() {
-                selectedWidgetMarker = WidgetMarker.signIn;
-              });
-            },
-            child: Container(
-              width: MediaQuery
-                  .of(context)
-                  .size
-                  .width * 0.7,
-              height: 50.0,
-              child: Center(
-                child: Text(
-                  "Sign In",
-                  style: TextStyle(
-                      color: Color(0xff252427),
-                      fontSize: 24.0,
-                      fontWeight: FontWeight.bold),
-                ),
-              ),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(width: 2.0, color: Color(0xff252427)),
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget getIndividualCredentialsBottomSheetWidget(context,
-      ScrollController scrollController) {
+  Widget getIndividualCredentialsBottomSheetWidget(
+      context, ScrollController scrollController) {
     return ListView(controller: scrollController, children: <Widget>[
       SingleChildScrollView(
         child: Form(
@@ -636,10 +248,7 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
                       color: Colors.transparent,
                       child: InkWell(
                         onTap: () {
-                          setState(() {
-                            clearControllers();
-                            selectedWidgetMarker = WidgetMarker.options;
-                          });
+                          Navigator.pop(context);
                         },
                         child: CircleAvatar(
                           backgroundColor: Colors.transparent,
@@ -659,13 +268,11 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
                       child: InkWell(
                         onTap: () {
                           setState(() {
-                            clearControllers();
-                            regType = 0;
-                            selectedWidgetMarker = WidgetMarker.signUpOption;
+                            selectedWidgetMarker = WidgetMarker.changePassword;
                           });
                         },
                         child: Text(
-                          "Skip",
+                          "Change Password",
                           style: TextStyle(
                               color: Colors.black12,
                               fontWeight: FontWeight.bold,
@@ -891,12 +498,8 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
               TextFormField(
                 controller: inPinController,
                 keyboardType: TextInputType.number,
-                textInputAction: TextInputAction.next,
+                textInputAction: TextInputAction.done,
                 focusNode: _inPin,
-                onFieldSubmitted: (term) {
-                  _inPin.unfocus();
-                  FocusScope.of(context).requestFocus(_inPassword);
-                },
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.dialpad),
                   labelText: "PIN",
@@ -918,64 +521,6 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
               SizedBox(
                 height: 16.0,
               ),
-              TextFormField(
-                  controller: inPasswordController,
-                  keyboardType: TextInputType.visiblePassword,
-                  textInputAction: TextInputAction.next,
-                  focusNode: _inPassword,
-                  onFieldSubmitted: (term) {
-                    _inPassword.unfocus();
-                    FocusScope.of(context).requestFocus(_inConfirmPassword);
-                  },
-                  decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.vpn_key),
-                    labelText: "Password",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0),
-                      borderSide: BorderSide(
-                        color: Colors.amber,
-                        style: BorderStyle.solid,
-                      ),
-                    ),
-                  ),
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return "This Field is Required";
-                    }
-                    return null;
-                  }),
-              SizedBox(
-                height: 16.0,
-              ),
-              TextFormField(
-                controller: inConfirmPasswordController,
-                keyboardType: TextInputType.visiblePassword,
-                textInputAction: TextInputAction.done,
-                focusNode: _inConfirmPassword,
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.vpn_key),
-                  labelText: "Confirm Password",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: BorderSide(
-                      color: Colors.amber,
-                      style: BorderStyle.solid,
-                    ),
-                  ),
-                ),
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return "This Field is Required";
-                  } else if (value.toString() !=
-                      inPasswordController.text.toString()) {
-                    return "Passwords Don't Match";
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
               Material(
                 color: Colors.transparent,
                 child: InkWell(
@@ -986,10 +531,7 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
                     }
                   },
                   child: Container(
-                    width: MediaQuery
-                        .of(context)
-                        .size
-                        .width,
+                    width: MediaQuery.of(context).size.width,
                     height: 50.0,
                     child: Center(
                       child: Text(
@@ -1015,410 +557,12 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
     ]);
   }
 
-  Widget getCompanyCredentials1BottomSheetWidget(context,
-      ScrollController scrollController) {
+  Widget getChangePasswordBottomSheetWidget(
+      context, ScrollController scrollController) {
     return ListView(controller: scrollController, children: <Widget>[
       SingleChildScrollView(
         child: Form(
-          key: _formKeyCompanyCredentials1,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        onTap: () {
-                          setState(() {
-                            clearControllers();
-                            selectedWidgetMarker = WidgetMarker.options;
-                          });
-                        },
-                        child: CircleAvatar(
-                          backgroundColor: Colors.transparent,
-                          child: Icon(
-                            Icons.arrow_back_ios,
-                            color: Color(0xff252427),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Spacer(),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        onTap: () {
-                          setState(() {
-                            clearControllers();
-                            regType = 0;
-                            selectedWidgetMarker = WidgetMarker.signUpOption;
-                          });
-                        },
-                        child: Text(
-                          "Skip",
-                          style: TextStyle(
-                              color: Colors.black12,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 26.0),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 10.0,
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              TextFormField(
-                controller: coNameController,
-                keyboardType: TextInputType.text,
-                textCapitalization: TextCapitalization.words,
-                textInputAction: TextInputAction.next,
-                focusNode: _coCustomerName,
-                onFieldSubmitted: (term) {
-                  _coCustomerName.unfocus();
-                  FocusScope.of(context).requestFocus(_coMobileNumber);
-                },
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.person),
-                  labelText: "Full Name",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: BorderSide(
-                      color: Colors.amber,
-                      style: BorderStyle.solid,
-                    ),
-                  ),
-                ),
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return "This Field is Required";
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              Row(
-                children: [
-                  SizedBox(
-                    child: TextFormField(
-                      readOnly: true,
-                      decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.dialpad),
-                        hintText: "+91",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5.0),
-                          borderSide: BorderSide(
-                            color: Colors.amber,
-                            style: BorderStyle.solid,
-                          ),
-                        ),
-                      ),
-                    ),
-                    width: 97.0,
-                  ),
-                  SizedBox(width: 16.0),
-                  Flexible(
-                    child: TextFormField(
-                      controller: coMobileNumberController,
-                      keyboardType: TextInputType.number,
-                      textInputAction: TextInputAction.next,
-                      focusNode: _coMobileNumber,
-                      onFieldSubmitted: (term) {
-                        _coMobileNumber.unfocus();
-                        FocusScope.of(context).requestFocus(_coEmail);
-                      },
-                      decoration: InputDecoration(
-                        labelText: "Mobile Number",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5.0),
-                          borderSide: BorderSide(
-                            color: Colors.amber,
-                            style: BorderStyle.solid,
-                          ),
-                        ),
-                      ),
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return "This Field is Required";
-                        } else if (value.length < 10) {
-                          return "Enter Valid Mobile Number";
-                        }
-                        return null;
-                      },
-                    ),
-                  )
-                ],
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              TextFormField(
-                controller: coEmailController,
-                keyboardType: TextInputType.emailAddress,
-                textInputAction: TextInputAction.next,
-                focusNode: _coEmail,
-                onFieldSubmitted: (term) {
-                  _coEmail.unfocus();
-                  FocusScope.of(context).requestFocus(_coPassword);
-                },
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.mail),
-                  labelText: "Email",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: BorderSide(
-                      color: Colors.amber,
-                      style: BorderStyle.solid,
-                    ),
-                  ),
-                ),
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return "This Field is Required";
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              TextFormField(
-                controller: coCustomerPanController,
-                keyboardType: TextInputType.text,
-                textInputAction: TextInputAction.next,
-                focusNode: _coCustomerPan,
-                onFieldSubmitted: (term) {
-                  _coCustomerPan.unfocus();
-                  FocusScope.of(context).requestFocus(_coAddress);
-                },
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.location_on),
-                  labelText: "Address",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: BorderSide(
-                      color: Colors.amber,
-                      style: BorderStyle.solid,
-                    ),
-                  ),
-                ),
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return "This Field is Required";
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              TextFormField(
-                controller: coAddressController,
-                keyboardType: TextInputType.text,
-                textInputAction: TextInputAction.next,
-                focusNode: _coAddress,
-                onFieldSubmitted: (term) {
-                  _coAddress.unfocus();
-                  FocusScope.of(context).requestFocus(_coCity);
-                },
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.mail),
-                  labelText: "Address",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: BorderSide(
-                      color: Colors.amber,
-                      style: BorderStyle.solid,
-                    ),
-                  ),
-                ),
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return "This Field is Required";
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              TextFormField(
-                controller: coCityController,
-                keyboardType: TextInputType.text,
-                textInputAction: TextInputAction.next,
-                focusNode: _coCity,
-                onFieldSubmitted: (term) {
-                  _coCity.unfocus();
-                  FocusScope.of(context).requestFocus(_coPin);
-                },
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.mail),
-                  labelText: "City",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: BorderSide(
-                      color: Colors.amber,
-                      style: BorderStyle.solid,
-                    ),
-                  ),
-                ),
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return "This Field is Required";
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              TextFormField(
-                controller: coPinController,
-                keyboardType: TextInputType.number,
-                textInputAction: TextInputAction.next,
-                focusNode: _coPin,
-                onFieldSubmitted: (term) {
-                  _coPin.unfocus();
-                  FocusScope.of(context).requestFocus(_coPassword);
-                },
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.mail),
-                  labelText: "PIN",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: BorderSide(
-                      color: Colors.amber,
-                      style: BorderStyle.solid,
-                    ),
-                  ),
-                ),
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return "This Field is Required";
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              TextFormField(
-                  controller: coPasswordController,
-                  keyboardType: TextInputType.visiblePassword,
-                  textInputAction: TextInputAction.next,
-                  focusNode: _coPassword,
-                  onFieldSubmitted: (term) {
-                    _coPassword.unfocus();
-                    FocusScope.of(context).requestFocus(_coConfirmPassword);
-                  },
-                  decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.vpn_key),
-                    labelText: "Password",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0),
-                      borderSide: BorderSide(
-                        color: Colors.amber,
-                        style: BorderStyle.solid,
-                      ),
-                    ),
-                  ),
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return "This Field is Required";
-                    }
-                    return null;
-                  }),
-              SizedBox(
-                height: 16.0,
-              ),
-              TextFormField(
-                controller: coConfirmPasswordController,
-                keyboardType: TextInputType.visiblePassword,
-                textInputAction: TextInputAction.done,
-                focusNode: _coConfirmPassword,
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.vpn_key),
-                  labelText: "Confirm Password",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: BorderSide(
-                      color: Colors.amber,
-                      style: BorderStyle.solid,
-                    ),
-                  ),
-                ),
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return "This Field is Required";
-                  } else if (value.toString() !=
-                      inPasswordController.text.toString()) {
-                    return "Passwords Don't Match";
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  splashColor: Colors.transparent,
-                  onTap: () {
-                    if (_formKeyCompanyCredentials1.currentState.validate()) {
-                      setState(() {
-                        selectedWidgetMarker = WidgetMarker.companyCredentials2;
-                      });
-                    }
-                  },
-                  child: Container(
-                    width: MediaQuery
-                        .of(context)
-                        .size
-                        .width,
-                    height: 50.0,
-                    child: Center(
-                      child: Text(
-                        "Next",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 24.0,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    decoration: BoxDecoration(
-                      color: Color(0xff252427),
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(width: 2.0, color: Color(0xff252427)),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    ]);
-  }
-
-  Widget getCompanyCredentials2BottomSheetWidget(context,
-      ScrollController scrollController) {
-    return ListView(controller: scrollController, children: <Widget>[
-      SingleChildScrollView(
-        child: Form(
-          key: _formKeyCompanyCredentials2,
+          key: _formKeyChangePassword,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -1432,7 +576,7 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
                         onTap: () {
                           setState(() {
                             selectedWidgetMarker =
-                                WidgetMarker.companyCredentials1;
+                                WidgetMarker.individualCredentials;
                           });
                         },
                         child: CircleAvatar(
@@ -1454,8 +598,8 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
                         onTap: () {
                           setState(() {
                             clearControllers();
-                            regType = 0;
-                            selectedWidgetMarker = WidgetMarker.signUpOption;
+                            selectedWidgetMarker =
+                                WidgetMarker.individualCredentials;
                           });
                         },
                         child: Text(
@@ -1477,18 +621,18 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
                 height: 16.0,
               ),
               TextFormField(
-                controller: coNameController,
-                keyboardType: TextInputType.text,
-                textCapitalization: TextCapitalization.words,
+                controller: currPasswordController,
+                obscureText: true,
+                keyboardType: TextInputType.visiblePassword,
                 textInputAction: TextInputAction.next,
-                focusNode: _coName,
+                focusNode: _currPassword,
                 onFieldSubmitted: (term) {
-                  _coName.unfocus();
-                  FocusScope.of(context).requestFocus(_coType);
+                  _currPassword.unfocus();
+                  FocusScope.of(context).requestFocus(_newPassword);
                 },
                 decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.person),
-                  labelText: "Company Name",
+                  prefixIcon: Icon(Icons.vpn_key),
+                  labelText: "Current Password",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5.0),
                     borderSide: BorderSide(
@@ -1508,157 +652,17 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
                 height: 16.0,
               ),
               TextFormField(
-                controller: coTypeController,
-                keyboardType: TextInputType.emailAddress,
-                textInputAction: TextInputAction.next,
-                focusNode: _coType,
-                onFieldSubmitted: (term) {
-                  _coType.unfocus();
-                  FocusScope.of(context).requestFocus(_coTax);
-                },
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.mail),
-                  labelText: "Type",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: BorderSide(
-                      color: Colors.amber,
-                      style: BorderStyle.solid,
-                    ),
-                  ),
-                ),
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return "This Field is Required";
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              TextFormField(
-                controller: coTaxController,
-                keyboardType: TextInputType.text,
-                textInputAction: TextInputAction.next,
-                focusNode: _coTax,
-                onFieldSubmitted: (term) {
-                  _coTax.unfocus();
-                  FocusScope.of(context).requestFocus(_coPan);
-                },
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.location_on),
-                  labelText: "Service Tax",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: BorderSide(
-                      color: Colors.amber,
-                      style: BorderStyle.solid,
-                    ),
-                  ),
-                ),
-                validator: (value) {
-                  return null;
-                },
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              TextFormField(
-                controller: coPanController,
-                keyboardType: TextInputType.number,
-                textInputAction: TextInputAction.next,
-                focusNode: _coPan,
-                onFieldSubmitted: (term) {
-                  _coPan.unfocus();
-                  FocusScope.of(context).requestFocus(_coWebsite);
-                },
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.mail),
-                  labelText: "Pan",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: BorderSide(
-                      color: Colors.amber,
-                      style: BorderStyle.solid,
-                    ),
-                  ),
-                ),
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return "This Field is Required";
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              TextFormField(
-                controller: coWebsiteController,
-                keyboardType: TextInputType.text,
-                textInputAction: TextInputAction.done,
-                focusNode: _coWebsite,
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.mail),
-                  labelText: "Website",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: BorderSide(
-                      color: Colors.amber,
-                      style: BorderStyle.solid,
-                    ),
-                  ),
-                ),
-                validator: (value) {
-                  return null;
-                },
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              TextFormField(
-                controller: inPinController,
-                keyboardType: TextInputType.number,
-                textInputAction: TextInputAction.next,
-                focusNode: _inPin,
-                onFieldSubmitted: (term) {
-                  _inPin.unfocus();
-                  FocusScope.of(context).requestFocus(_inPassword);
-                },
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.mail),
-                  labelText: "PIN",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: BorderSide(
-                      color: Colors.amber,
-                      style: BorderStyle.solid,
-                    ),
-                  ),
-                ),
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return "This Field is Required";
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              TextFormField(
-                  controller: inPasswordController,
+                  controller: newPasswordController,
                   keyboardType: TextInputType.visiblePassword,
                   textInputAction: TextInputAction.next,
-                  focusNode: _inPassword,
+                  focusNode: _newPassword,
                   onFieldSubmitted: (term) {
-                    _inPassword.unfocus();
-                    FocusScope.of(context).requestFocus(_inConfirmPassword);
+                    _newPassword.unfocus();
+                    FocusScope.of(context).requestFocus(_confirmPassword);
                   },
                   decoration: InputDecoration(
                     prefixIcon: Icon(Icons.vpn_key),
-                    labelText: "Password",
+                    labelText: "New Password",
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5.0),
                       borderSide: BorderSide(
@@ -1677,13 +681,13 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
                 height: 16.0,
               ),
               TextFormField(
-                controller: inConfirmPasswordController,
+                controller: confirmPasswordController,
                 keyboardType: TextInputType.visiblePassword,
                 textInputAction: TextInputAction.done,
-                focusNode: _inConfirmPassword,
+                focusNode: _confirmPassword,
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.vpn_key),
-                  labelText: "Confirm Password",
+                  labelText: "Confirm New Password",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5.0),
                     borderSide: BorderSide(
@@ -1696,7 +700,7 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
                   if (value.isEmpty) {
                     return "This Field is Required";
                   } else if (value.toString() !=
-                      inPasswordController.text.toString()) {
+                      newPasswordController.text.toString()) {
                     return "Passwords Don't Match";
                   }
                   return null;
@@ -1710,19 +714,16 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
                 child: InkWell(
                   splashColor: Colors.transparent,
                   onTap: () {
-                    if (_formKeyIndividualCredentials.currentState.validate()) {
-                      postSignUpRequestCompany(context);
+                    if (_formKeyChangePassword.currentState.validate()) {
+                      postChangePasswordRequest(context);
                     }
                   },
                   child: Container(
-                    width: MediaQuery
-                        .of(context)
-                        .size
-                        .width,
+                    width: MediaQuery.of(context).size.width,
                     height: 50.0,
                     child: Center(
                       child: Text(
-                        "Sign Up",
+                        "Change Password",
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 24.0,
@@ -1744,8 +745,8 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
     ]);
   }
 
-  Widget getOtpVerificationBottomSheetWidget(context,
-      ScrollController scrollController) {
+  Widget getOtpVerificationBottomSheetWidget(
+      context, ScrollController scrollController) {
     return ListView(controller: scrollController, children: <Widget>[
       SingleChildScrollView(
         child: Form(
@@ -1762,17 +763,9 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
                       child: InkWell(
                         onTap: () {
                           setState(() {
-                            if (regType == 1) {
-                              selectedWidgetMarker =
-                                  WidgetMarker.individualCredentials;
-                            } else if (regType == 2) {
-                              selectedWidgetMarker =
-                                  WidgetMarker.companyCredentials2;
-                            } else {
-                              clearControllers();
-                              regType = 0;
-                              selectedWidgetMarker = WidgetMarker.signUpOption;
-                            }
+                            otpController.clear();
+                            selectedWidgetMarker =
+                                WidgetMarker.individualCredentials;
                           });
                         },
                         child: CircleAvatar(
@@ -1793,9 +786,9 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
                       child: InkWell(
                         onTap: () {
                           setState(() {
-                            clearControllers();
-                            regType = 0;
-                            selectedWidgetMarker = WidgetMarker.signUpOption;
+                            otpController.clear();
+                            selectedWidgetMarker =
+                                WidgetMarker.individualCredentials;
                           });
                         },
                         child: Text(
@@ -1857,11 +850,8 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
                     setState(() {
                       otpController.clear();
                     });
-                    if (regType == 1) {
-                      postResendOtpRequest(context, inMobileNumberController.text.toString());
-                    } else if (regType==2) {
-                      postResendOtpRequest(context, coMobileNumberController.text.toString());
-                    }
+                    postResendOtpRequest(
+                        context, inMobileNumberController.text.toString());
                   },
                   child: Text(
                     "Resend OTP",
@@ -1880,19 +870,13 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
                 child: InkWell(
                   splashColor: Colors.transparent,
                   onTap: () {
-                    print(regType);
-                    print(otpController.text.toString());
-                    if (regType == 1) {
-                      postOtpVerificationRequest(context, inMobileNumberController.text.toString(), otpController.text.toString());
-                    } else if (regType==2) {
-                      postOtpVerificationRequest(context, coMobileNumberController.text.toString(), otpController.text.toString());
-                    }
+                    postOtpVerificationRequest(
+                        context,
+                        inMobileNumberController.text.toString(),
+                        otpController.text.toString());
                   },
                   child: Container(
-                    width: MediaQuery
-                        .of(context)
-                        .size
-                        .width,
+                    width: MediaQuery.of(context).size.width,
                     height: 50.0,
                     child: Center(
                       child: Text(
@@ -1918,287 +902,12 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
     ]);
   }
 
-  Widget getSignInBottomSheetWidget(context,
-      ScrollController scrollController) {
-    return ListView(controller: scrollController, children: <Widget>[
-      SingleChildScrollView(
-        child: Form(
-          key: _formKeySignIn,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        onTap: () {
-                          setState(() {
-                            clearControllers();
-                            selectedWidgetMarker = WidgetMarker.options;
-                          });
-                        },
-                        child: CircleAvatar(
-                          backgroundColor: Colors.transparent,
-                          child: Icon(
-                            Icons.arrow_back_ios,
-                            color: Color(0xff252427),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Spacer(),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        onTap: () {
-                          setState(() {
-                            clearControllers();
-                            regType = 0;
-                            selectedWidgetMarker = WidgetMarker.signUpOption;
-                          });
-                        },
-                        child: Text(
-                          "Skip",
-                          style: TextStyle(
-                              color: Colors.black12,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 26.0),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 10.0,
-                  ),
-                ],
-              ),
-              Align(
-                alignment: Alignment.center,
-                child: Image(
-                  image: AssetImage('assets/images/logo_black.png'),
-                  height: 145.0,
-                  width: 145.0,
-                ),
-              ),
-              SizedBox(
-                height: 20.0,
-              ),
-              Row(
-                children: [
-                  SizedBox(
-                    child: TextFormField(
-                      readOnly: true,
-                      decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.dialpad),
-                        hintText: "+91",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5.0),
-                          borderSide: BorderSide(
-                            color: Colors.amber,
-                            style: BorderStyle.solid,
-                          ),
-                        ),
-                      ),
-                    ),
-                    width: 97.0,
-                  ),
-                  SizedBox(width: 16.0),
-                  Flexible(
-                    child: TextFormField(
-                      controller: mobileNumberControllerSignIn,
-                      keyboardType: TextInputType.number,
-                      textInputAction: TextInputAction.next,
-                      focusNode: _mobileNumberSignIn,
-                      onFieldSubmitted: (term) {
-                        _mobileNumberSignIn.unfocus();
-                        FocusScope.of(context).requestFocus(_passwordSignIn);
-                      },
-                      decoration: InputDecoration(
-                        labelText: "Mobile Number",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5.0),
-                          borderSide: BorderSide(
-                            color: Colors.amber,
-                            style: BorderStyle.solid,
-                          ),
-                        ),
-                      ),
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return "This Field is Required";
-                        } else if (value.length != 10) {
-                          return "Enter Valid Mobile Number";
-                        }
-                        return null;
-                      },
-                    ),
-                  )
-                ],
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              TextFormField(
-                controller: passwordControllerSignIn,
-                keyboardType: TextInputType.visiblePassword,
-                textInputAction: TextInputAction.done,
-                focusNode: _passwordSignIn,
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.vpn_key),
-                  labelText: "Password",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: BorderSide(
-                      color: Colors.amber,
-                      style: BorderStyle.solid,
-                    ),
-                  ),
-                ),
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return "This Field is Required";
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              Row(
-                children: [
-                  Checkbox(
-                    value: rememberMe,
-                    checkColor: Colors.white,
-                    activeColor: Color(0xff252427),
-                    onChanged: (bool value) {
-                      setState(() {
-                        rememberMe = value;
-                      });
-                    },
-                  ),
-                  SizedBox(
-                    width: 0.0,
-                  ),
-                  Text("Remember Me"),
-                  Spacer(),
-                  GestureDetector(
-                    onTap: () {
-                      print("Forgot Password");
-                    },
-                    child: Container(
-                      child: Text("Forgot Password?"),
-                    ),
-                  )
-                ],
-              ),
-              SizedBox(
-                height: 30.0,
-              ),
-              Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  splashColor: Colors.transparent,
-                  onTap: () {
-                    if (_formKeySignIn.currentState.validate()) {
-                      postSignInRequest(context);
-                    }
-                  },
-                  child: Container(
-                    width: MediaQuery
-                        .of(context)
-                        .size
-                        .width,
-                    height: 50.0,
-                    child: Center(
-                      child: Text(
-                        "Sign In",
-                        style: TextStyle(
-                            color: Color(0xff252427),
-                            fontSize: 24.0,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(width: 2.0, color: Color(0xff252427)),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    ]);
-  }
-
-  Widget getSignUpOptionsWidget(context) {
-    return Center(
-      child: Column(
-        children: <Widget>[
-          SizedBox(
-            height: MediaQuery
-                .of(context)
-                .size
-                .width * 0.3 - 20,
-          ),
-          Text(
-            "User",
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 40.0,
-                fontWeight: FontWeight.bold),
-          ),
-          Text(
-            "Type",
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 40.0,
-                fontWeight: FontWeight.bold),
-          ),
-          Spacer(),
-        ],
-      ),
-    );
-  }
-
-  Widget getOptionsWidget(context) {
-    return Center(
-      child: Column(
-        children: <Widget>[
-          SizedBox(
-            height: MediaQuery
-                .of(context)
-                .size
-                .width * 0.3,
-          ),
-          Text(
-            "Hi, User",
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 40.0,
-                fontWeight: FontWeight.bold),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget getIndividualCredentialsWidget(context) {
     return Center(
       child: Column(
         children: <Widget>[
           SizedBox(
-            height: MediaQuery
-                .of(context)
-                .size
-                .width * 0.3 - 20,
+            height: MediaQuery.of(context).size.width * 0.3 - 20,
           ),
           Text(
             "Enter",
@@ -2209,66 +918,6 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
           ),
           Text(
             "Credentials",
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 40.0,
-                fontWeight: FontWeight.bold),
-          ),
-          Spacer(),
-        ],
-      ),
-    );
-  }
-
-  Widget getCompanyCredentials1Widget(context) {
-    return Center(
-      child: Column(
-        children: <Widget>[
-          SizedBox(
-            height: MediaQuery
-                .of(context)
-                .size
-                .width * 0.3 - 20,
-          ),
-          Text(
-            "Enter",
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 40.0,
-                fontWeight: FontWeight.bold),
-          ),
-          Text(
-            "Credentials",
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 40.0,
-                fontWeight: FontWeight.bold),
-          ),
-          Spacer(),
-        ],
-      ),
-    );
-  }
-
-  Widget getCompanyCredentials2Widget(context) {
-    return Center(
-      child: Column(
-        children: <Widget>[
-          SizedBox(
-            height: MediaQuery
-                .of(context)
-                .size
-                .width * 0.3 - 20,
-          ),
-          Text(
-            "Enter",
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 40.0,
-                fontWeight: FontWeight.bold),
-          ),
-          Text(
-            "Company Data",
             style: TextStyle(
                 color: Colors.white,
                 fontSize: 40.0,
@@ -2285,10 +934,7 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
       child: Column(
         children: <Widget>[
           SizedBox(
-            height: MediaQuery
-                .of(context)
-                .size
-                .width * 0.3 - 20,
+            height: MediaQuery.of(context).size.width * 0.3 - 20,
           ),
           Text(
             "OTP",
@@ -2310,18 +956,22 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
     );
   }
 
-  Widget getSignInWidget(context) {
+  Widget getChangePasswordWidget(context) {
     return Center(
       child: Column(
         children: <Widget>[
           SizedBox(
-            height: MediaQuery
-                .of(context)
-                .size
-                .width * 0.3,
+            height: MediaQuery.of(context).size.width * 0.3 - 20,
           ),
           Text(
-            "Welcome Back!",
+            "Reset",
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: 40.0,
+                fontWeight: FontWeight.bold),
+          ),
+          Text(
+            "Password",
             style: TextStyle(
                 color: Colors.white,
                 fontSize: 40.0,
@@ -2335,92 +985,46 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
 
   Widget getCustomWidget(context) {
     switch (selectedWidgetMarker) {
-      case WidgetMarker.signUpOption:
-        return getSignUpOptionsWidget(context);
-      case WidgetMarker.options:
-        return getOptionsWidget(context);
       case WidgetMarker.individualCredentials:
         return getIndividualCredentialsWidget(context);
-      case WidgetMarker.companyCredentials1:
-        return getCompanyCredentials1Widget(context);
-      case WidgetMarker.companyCredentials2:
-        return getCompanyCredentials2Widget(context);
       case WidgetMarker.otpVerification:
         return getOtpVerificationWidget(context);
-      case WidgetMarker.signIn:
-        return getSignInWidget(context);
+      case WidgetMarker.changePassword:
+        return getChangePasswordWidget(context);
     }
-    return getSignUpOptionsWidget(context);
+    return getIndividualCredentialsWidget(context);
   }
 
-  Widget getCustomBottomSheetWidget(context,
-      ScrollController scrollController) {
+  Widget getCustomBottomSheetWidget(
+      context, ScrollController scrollController) {
     switch (selectedWidgetMarker) {
-      case WidgetMarker.signUpOption:
-        return getSignUpOptionsBottomSheetWidget(context, scrollController);
-      case WidgetMarker.options:
-        return getOptionsBottomSheetWidget(context, scrollController);
       case WidgetMarker.individualCredentials:
         return getIndividualCredentialsBottomSheetWidget(
             context, scrollController);
-      case WidgetMarker.companyCredentials1:
-        return getCompanyCredentials1BottomSheetWidget(
-            context, scrollController);
-      case WidgetMarker.companyCredentials2:
-        return getCompanyCredentials2BottomSheetWidget(
-            context, scrollController);
       case WidgetMarker.otpVerification:
         return getOtpVerificationBottomSheetWidget(context, scrollController);
-      case WidgetMarker.signIn:
-        return getSignInBottomSheetWidget(context, scrollController);
+      case WidgetMarker.changePassword:
+        return getChangePasswordBottomSheetWidget(context, scrollController);
     }
-    return getSignUpOptionsBottomSheetWidget(context, scrollController);
+    return getIndividualCredentialsBottomSheetWidget(context, scrollController);
   }
 
   Future<bool> onBackPressed() {
     switch (selectedWidgetMarker) {
-      case WidgetMarker.signUpOption:
-        return Future.value(true);
-      case WidgetMarker.options:
-        setState(() {
-          clearControllers();
-          regType = 0;
-          selectedWidgetMarker = WidgetMarker.signUpOption;
-        });
-        return Future.value(false);
       case WidgetMarker.individualCredentials:
+        return Future.value(true);
+      case WidgetMarker.changePassword:
         setState(() {
-          clearControllers();
-          selectedWidgetMarker = WidgetMarker.options;
-        });
-        return Future.value(false);
-      case WidgetMarker.companyCredentials1:
-        setState(() {
-          clearControllers();
-          selectedWidgetMarker = WidgetMarker.options;
-        });
-        return Future.value(false);
-      case WidgetMarker.companyCredentials2:
-        setState(() {
-          selectedWidgetMarker = WidgetMarker.companyCredentials1;
+          currPasswordController.clear();
+          newPasswordController.clear();
+          confirmPasswordController.clear();
+          selectedWidgetMarker = WidgetMarker.individualCredentials;
         });
         return Future.value(false);
       case WidgetMarker.otpVerification:
         setState(() {
-          if (regType == 1) {
-            selectedWidgetMarker = WidgetMarker.individualCredentials;
-          } else if (regType == 2) {
-            selectedWidgetMarker = WidgetMarker.companyCredentials2;
-          } else {
-            regType = 0;
-            selectedWidgetMarker = WidgetMarker.signUpOption;
-          }
-        });
-        return Future.value(false);
-      case WidgetMarker.signIn:
-        setState(() {
-          clearControllers();
-          selectedWidgetMarker = WidgetMarker.options;
+          otpController.clear();
+          selectedWidgetMarker = WidgetMarker.individualCredentials;
         });
         return Future.value(false);
     }

@@ -17,25 +17,34 @@ import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/TransporterPages/Ord
 import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/OwnerPages/OwnerOptionsPage.dart';
 import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/TransporterPages/RequestTransport.dart';
 import 'package:transportationapp/SplashScreen.dart';
+import 'package:transportationapp/TransporterPages/Company/EditProfileCompany.dart';
 import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/CommonPages/TollCalculator.dart';
 import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/TransporterPages/TransporterOptionsPage.dart';
 import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/CommonPages/TripPlanner.dart';
+import 'package:transportationapp/TransporterPages/Company/HomePageCompany.dart';
+import 'package:transportationapp/TransporterPages/Individual/EditProfileIndividual.dart';
+import 'package:transportationapp/TransporterPages/Individual/HomePageIndividual.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final args = settings.arguments;
 
     switch (settings.name) {
+      //Basic Pages
       case splashPage:
         return FadeRoute(page: SplashScreen());
+
+      //Login or Signup Pages
       case introLoginOptionPage:
-          return FadeRoute(page: IntroPageLoginOptions());
+        return FadeRoute(page: IntroPageLoginOptions());
       case ownerOptionPage:
         return FadeRoute(page: OwnerOptionsPage());
       case driverOptionPage:
         return FadeRoute(page: DriverOptionsPage());
       case transporterOptionPage:
         return FadeRoute(page: TransporterOptionsPage());
+
+    //Pages which don't need LoggedIn User
       case emiCalculatorPage:
         return FadeRoute(page: EmiCalculator());
       case freightCalculatorPage:
@@ -44,26 +53,50 @@ class RouteGenerator {
         return FadeRoute(page: TollCalculator());
       case tripPlannerPage:
         return FadeRoute(page: TripPlanner());
+
+    //Pages once the user is LoggedIn - Driver
       case homePageDriver:
         return FadeRoute(page: HomePageDriver(userDriver: args));
-      case homePageOwner:
-        return FadeRoute(page: HomePageOwner(userOwner: args));
-      case addTruckOwner:
-        return FadeRoute(page: AddTruckOwner(userOwner: args));
       case driverUpcomingOrderPage:
         return FadeRoute(page: DriverUpcomingOrder());
-      case viewTrucksOwner:
-        return FadeRoute(page: ViewTrucksOwner(userOwner: args,));
-      case editTrucksOwner:
-        return FadeRoute(page: EditTruckOwner(truck: (args as Map)["truck"], viewTrucksOwnerState :(args as Map)["state"]));
-      case viewProfileOwner:
-        return FadeRoute(page: ViewProfileOwner(userOwner: args,));
+
+    //Pages once the user is LoggedIn - Transporter
+      case homePageTransporterCompany:
+        return FadeRoute(page: HomePageCompany());
+      case homePageTransporterIndividual:
+        return FadeRoute(page: HomePageIndividual());
+      case editProfileCompany:
+        return FadeRoute(page: EditProfileCompany());
+      case editProfileIndividual:
+        return FadeRoute(page: EditProfileIndividual());
       case newTransportingOrderPage:
         return FadeRoute(page: NewTransportingOrder());
       case orderSummaryPage:
         return FadeRoute(page: OrderSummaryScreen());
       case requestTransportPage:
         return FadeRoute(page: RequestTransport());
+
+    //Pages once the user is LoggedIn - Owner
+      case homePageOwner:
+        return FadeRoute(page: HomePageOwner(userOwner: args));
+      case addTruckOwner:
+        return FadeRoute(page: AddTruckOwner(userOwner: args));
+      case viewTrucksOwner:
+        return FadeRoute(
+            page: ViewTrucksOwner(
+          userOwner: args,
+        ));
+      case editTrucksOwner:
+        return FadeRoute(
+            page: EditTruckOwner(
+                truck: (args as Map)["truck"],
+                viewTrucksOwnerState: (args as Map)["state"]));
+      case viewProfileOwner:
+        return FadeRoute(
+            page: ViewProfileOwner(
+          userOwner: args,
+        ));
+
       default:
         return _errorRoute();
     }
