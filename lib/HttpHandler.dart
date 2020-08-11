@@ -435,14 +435,14 @@ class HTTPHandler {
       var jsonResult = json.decode(result.body);
       SharedPreferences prefs = await SharedPreferences.getInstance();
       if (jsonResult['success'] == '1') {
-        if (data[0] == 2) {
+        if (data[0] == "2") {
           UserCustomerCompany userCustomerCompany =
               UserCustomerCompany.fromJson(jsonResult);
           prefs.setBool('rememberMe', data[4]);
           prefs.setString('userType', transporterUserCompany);
           prefs.setString('userData', result.body);
           return [true, userCustomerCompany];
-        } else if (data[0] == 1) {
+        } else if (data[0] == "1") {
           UserCustomerIndividual userCustomerIndividual =
               UserCustomerIndividual.fromJson(jsonResult);
           prefs.setBool('rememberMe', data[4]);
