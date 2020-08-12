@@ -15,6 +15,8 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   UserDriver userDriver;
   UserOwner userOwner;
+  UserCustomerCompany userCustomerCompany;
+  UserCustomerIndividual userCustomerIndividual;
   String userType;
 
   Future<bool> doSomeAction() async {
@@ -29,6 +31,10 @@ class _SplashScreenState extends State<SplashScreen> {
       } else if (userType == driverUser) {
         userDriver =
             UserDriver.fromJson(json.decode(prefs.getString("userData")));
+      } else if (userType == transporterUserCompany) {
+        userCustomerCompany = UserCustomerCompany.fromJson(json.decode(prefs.getString("userData")));
+      } else if (userType == transporterUserIndividual) {
+        userCustomerIndividual = UserCustomerIndividual.fromJson(json.decode(prefs.getString("userData")));
       }
     }
     return Future.value(rememberMe);
@@ -45,6 +51,13 @@ class _SplashScreenState extends State<SplashScreen> {
         } else if (userType == driverUser) {
           Navigator.pushReplacementNamed(context, homePageDriver,
               arguments: userDriver);
+        } else if (userType == transporterUserCompany) {
+          Navigator.pushReplacementNamed(context, homePageTransporterCompany, arguments: userCustomerCompany);
+        } else if (userType == transporterUserIndividual) {
+          Navigator.pushReplacementNamed(
+              context, homePageTransporterIndividual, arguments: userCustomerIndividual);
+        } else {
+          Navigator.pushReplacementNamed(context, introLoginOptionPage);
         }
       } else {
         Navigator.pushReplacementNamed(context, introLoginOptionPage);

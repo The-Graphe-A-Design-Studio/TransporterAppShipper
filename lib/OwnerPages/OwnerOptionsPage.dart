@@ -1033,6 +1033,7 @@ class _OwnerOptionsPageState extends State<OwnerOptionsPage> {
                 height: 20.0,
               ),
               TextFormField(
+                obscureText: true,
                 controller: otpController,
                 keyboardType: TextInputType.phone,
                 textCapitalization: TextCapitalization.words,

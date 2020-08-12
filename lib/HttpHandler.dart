@@ -484,20 +484,42 @@ class HTTPHandler {
 
   Future<PostResultOne> editCustomerCompany(List data) async {
     try {
-      var result = await http.post("$baseURLCustomer/company_register", body: {
-        'cu_name': data[0],
-        'cu_phone_code': data[1],
-        'cu_phone': data[2],
-        'cu_email': data[3],
-        'cu_address': data[4],
-        'cu_city': data[5],
-        'cu_pan': data[8],
-        'cu_pin': data[9],
-        'cu_co_name': data[7],
-        'cu_co_type': data[8],
-        'cu_co_service_tax': data[9],
-        'cu_co_pan_num': data[7],
-        'cu_co_website': data[8],
+      var result = await http.post("$baseURLCustomer/company_profile", body: {
+        'cu_id': data[0],
+        'cu_name': data[1],
+        'cu_phone_code': data[2],
+        'cu_phone': data[3],
+        'cu_email': data[4],
+        'cu_address': data[5],
+        'cu_city': data[6],
+        'cu_pan': data[7],
+        'cu_pin': data[8],
+        'cu_co_name': data[9],
+        'cu_co_type': data[10],
+        'cu_co_service_tax': data[11],
+        'cu_co_pan_num': data[12],
+        'cu_co_website': data[13],
+      });
+      return PostResultOne.fromJson(json.decode(result.body));
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<PostResultOne> editVerifyOtpCustomer(List data) async {
+    try {
+      var result = await http.post("$baseURLCustomer/verification",
+          body: {'cu_id': data[0], 'edit_phone_number': data[1], 'edit_otp': data[2]});
+      return PostResultOne.fromJson(json.decode(result.body));
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<PostResultOne> editResendOtpCustomer(List data) async {
+    try {
+      var result = await http.post("$baseURLCustomer/verification", body: {
+        'edit_resend_otp': data[0],
       });
       return PostResultOne.fromJson(json.decode(result.body));
     } catch (error) {

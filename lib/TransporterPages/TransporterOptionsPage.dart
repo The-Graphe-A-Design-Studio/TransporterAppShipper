@@ -57,7 +57,7 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
   final coConfirmPasswordController = TextEditingController();
 
   final coNameController = TextEditingController();
-  final coTypeController = TextEditingController();
+  String coTypeController;
   final coTaxController = TextEditingController();
   final coPanController = TextEditingController();
   final coWebsiteController = TextEditingController();
@@ -87,7 +87,6 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
   final FocusNode _coPin = FocusNode();
   final FocusNode _coCustomerPan = FocusNode();
   final FocusNode _coName = FocusNode();
-  final FocusNode _coType = FocusNode();
   final FocusNode _coTax = FocusNode();
   final FocusNode _coPan = FocusNode();
   final FocusNode _coWebsite = FocusNode();
@@ -127,7 +126,7 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
     coConfirmPasswordController.dispose();
 
     coNameController.dispose();
-    coTypeController.dispose();
+    coTypeController = null;
     coTaxController.dispose();
     coPanController.dispose();
     coWebsiteController.dispose();
@@ -162,7 +161,7 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
     coConfirmPasswordController.clear();
 
     coNameController.clear();
-    coTypeController.clear();
+    coTypeController = null;
     coTaxController.clear();
     coPanController.clear();
     coWebsiteController.clear();
@@ -234,7 +233,7 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
       coCustomerPanController.text.toString(),
       coPinController.text.toString(),
       coNameController.text.toString(),
-      coTypeController.text.toString(),
+      coTypeController.toString(),
       coTaxController.text.toString(),
       coPanController.text.toString(),
       coWebsiteController.text.toString()
@@ -323,10 +322,12 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
         Navigator.pop(context);
         if (regType == 1) {
           Navigator.pushNamedAndRemoveUntil(
-              _context, homePageTransporterIndividual, (route) => false, arguments: value[1]);
+              _context, homePageTransporterIndividual, (route) => false,
+              arguments: value[1]);
         } else if (regType == 2) {
           Navigator.pushNamedAndRemoveUntil(
-              _context, homePageTransporterCompany, (route) => false, arguments: value[1]);
+              _context, homePageTransporterCompany, (route) => false,
+              arguments: value[1]);
         }
       } else {
         PostResultOne postResultOne = value[1];
@@ -792,6 +793,7 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
               TextFormField(
                 controller: inPanController,
                 keyboardType: TextInputType.text,
+                textCapitalization: TextCapitalization.characters,
                 textInputAction: TextInputAction.next,
                 focusNode: _inPan,
                 onFieldSubmitted: (term) {
@@ -890,7 +892,7 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                 },
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.dialpad),
-                  labelText: "PIN",
+                  labelText: "ZIP Code",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5.0),
                     borderSide: BorderSide(
@@ -910,6 +912,7 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                 height: 16.0,
               ),
               TextFormField(
+                  obscureText: true,
                   controller: inPasswordController,
                   keyboardType: TextInputType.visiblePassword,
                   textInputAction: TextInputAction.next,
@@ -939,6 +942,7 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                 height: 16.0,
               ),
               TextFormField(
+                obscureText: true,
                 controller: inConfirmPasswordController,
                 keyboardType: TextInputType.visiblePassword,
                 textInputAction: TextInputAction.done,
@@ -1067,7 +1071,7 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                 height: 16.0,
               ),
               TextFormField(
-                controller: coNameController,
+                controller: coCustomerNameController,
                 keyboardType: TextInputType.text,
                 textCapitalization: TextCapitalization.words,
                 textInputAction: TextInputAction.next,
@@ -1185,6 +1189,7 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
               TextFormField(
                 controller: coCustomerPanController,
                 keyboardType: TextInputType.text,
+                textCapitalization: TextCapitalization.characters,
                 textInputAction: TextInputAction.next,
                 focusNode: _coCustomerPan,
                 onFieldSubmitted: (term) {
@@ -1283,7 +1288,7 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                 },
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.dialpad),
-                  labelText: "PIN",
+                  labelText: "ZIP Code",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5.0),
                     borderSide: BorderSide(
@@ -1303,6 +1308,7 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                 height: 16.0,
               ),
               TextFormField(
+                  obscureText: true,
                   controller: coPasswordController,
                   keyboardType: TextInputType.visiblePassword,
                   textInputAction: TextInputAction.next,
@@ -1332,6 +1338,7 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                 height: 16.0,
               ),
               TextFormField(
+                obscureText: true,
                 controller: coConfirmPasswordController,
                 keyboardType: TextInputType.visiblePassword,
                 textInputAction: TextInputAction.done,
@@ -1469,41 +1476,11 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                 focusNode: _coName,
                 onFieldSubmitted: (term) {
                   _coName.unfocus();
-                  FocusScope.of(context).requestFocus(_coType);
-                },
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.person),
-                  labelText: "Company Name",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: BorderSide(
-                      color: Colors.amber,
-                      style: BorderStyle.solid,
-                    ),
-                  ),
-                ),
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return "This Field is Required";
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              TextFormField(
-                controller: coTypeController,
-                keyboardType: TextInputType.emailAddress,
-                textInputAction: TextInputAction.next,
-                focusNode: _coType,
-                onFieldSubmitted: (term) {
-                  _coType.unfocus();
                   FocusScope.of(context).requestFocus(_coTax);
                 },
                 decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.mail),
-                  labelText: "Type",
+                  prefixIcon: Icon(Icons.people),
+                  labelText: "Company Name",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5.0),
                     borderSide: BorderSide(
@@ -1532,7 +1509,7 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                   FocusScope.of(context).requestFocus(_coPan);
                 },
                 decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.location_on),
+                  prefixIcon: Icon(Icons.payment),
                   labelText: "Service Tax",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5.0),
@@ -1551,7 +1528,8 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
               ),
               TextFormField(
                 controller: coPanController,
-                keyboardType: TextInputType.number,
+                keyboardType: TextInputType.text,
+                textCapitalization: TextCapitalization.characters,
                 textInputAction: TextInputAction.next,
                 focusNode: _coPan,
                 onFieldSubmitted: (term) {
@@ -1560,7 +1538,7 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                 },
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.mail),
-                  labelText: "Pan",
+                  labelText: "Pan Number",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5.0),
                     borderSide: BorderSide(
@@ -1581,11 +1559,11 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
               ),
               TextFormField(
                 controller: coWebsiteController,
-                keyboardType: TextInputType.text,
+                keyboardType: TextInputType.url,
                 textInputAction: TextInputAction.done,
                 focusNode: _coWebsite,
                 decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.mail),
+                  prefixIcon: Icon(Icons.link),
                   labelText: "Website",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5.0),
@@ -1602,12 +1580,79 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
               SizedBox(
                 height: 16.0,
               ),
+              DropdownButton(
+                isExpanded: true,
+                value: coTypeController,
+                dropdownColor: Colors.white,
+                items: [
+                  DropdownMenuItem(
+                    child: Text("Agro Products Mfg/Supplier"),
+                    value: "Agro Products Mfg/Supplier",
+                  ),
+                  DropdownMenuItem(
+                    child: Text("Builder/Building Material Suppliers"),
+                    value: "Builder/Building Material Suppliers",
+                  ),
+                  DropdownMenuItem(
+                    child: Text("Cement/Coal Plant"),
+                    value: "Cement/Coal Plant",
+                  ),
+                  DropdownMenuItem(
+                    child: Text("Dealer/Commission Agent/Distributor"),
+                    value: "Dealer/Commission Agent/Distributor",
+                  ),
+                  DropdownMenuItem(
+                    child: Text("Export/Import Firm"),
+                    value: "Export/Import Firm",
+                  ),
+                  DropdownMenuItem(
+                    child: Text("Job/Maintenance"),
+                    value: "Job/Maintenance",
+                  ),
+                  DropdownMenuItem(
+                    child: Text("Manufacturing/Traders"),
+                    value: "Manufacturing/Traders",
+                  ),
+                  DropdownMenuItem(
+                    child: Text("Machinery Manufacturing/Suppliers"),
+                    value: "Machinery Manufacturing/Suppliers",
+                  ),
+                  DropdownMenuItem(
+                    child: Text("Print/Media Related"),
+                    value: "Print/Media Related",
+                  ),
+                  DropdownMenuItem(
+                    child: Text("Raw Material Supplier"),
+                    value: "Raw Material Supplier",
+                  ),
+                  DropdownMenuItem(
+                    child: Text("Sales & Services"),
+                    value: "Sales & Services",
+                  ),
+                  DropdownMenuItem(
+                    child: Text("Traders/Shop Keeper/Merchant"),
+                    value: "Traders/Shop Keeper/Merchant",
+                  ),
+                  DropdownMenuItem(
+                      child: Text("Wood Product Mfg/Supplier/Merchant"),
+                      value: "Wood Product Mfg/Supplier/Merchant")
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    coTypeController = value;
+                  });
+                },
+                hint: Text("Select Company Type"),
+              ),
+              SizedBox(
+                height: 16.0,
+              ),
               Material(
                 color: Colors.transparent,
                 child: InkWell(
                   splashColor: Colors.transparent,
                   onTap: () {
-                    if (_formKeyIndividualCredentials.currentState.validate()) {
+                    if (_formKeyCompanyCredentials2.currentState.validate() && (coTypeController!=null)) {
                       postSignUpRequestCompany(context);
                     }
                   },
@@ -1719,6 +1764,7 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                 height: 20.0,
               ),
               TextFormField(
+                obscureText: true,
                 controller: otpController,
                 keyboardType: TextInputType.phone,
                 textCapitalization: TextCapitalization.words,
@@ -1944,6 +1990,7 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                 height: 16.0,
               ),
               TextFormField(
+                obscureText: true,
                 controller: passwordControllerSignIn,
                 keyboardType: TextInputType.visiblePassword,
                 textInputAction: TextInputAction.done,

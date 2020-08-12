@@ -38,7 +38,7 @@ class _EditProfileCompanyState extends State<EditProfileCompany> {
   final coCustomerPanController = TextEditingController();
 
   final coNameController = TextEditingController();
-  final coTypeController = TextEditingController();
+  String coTypeController;
   final coTaxController = TextEditingController();
   final coPanController = TextEditingController();
   final coWebsiteController = TextEditingController();
@@ -57,7 +57,6 @@ class _EditProfileCompanyState extends State<EditProfileCompany> {
   final FocusNode _coPin = FocusNode();
   final FocusNode _coCustomerPan = FocusNode();
   final FocusNode _coName = FocusNode();
-  final FocusNode _coType = FocusNode();
   final FocusNode _coTax = FocusNode();
   final FocusNode _coPan = FocusNode();
   final FocusNode _coWebsite = FocusNode();
@@ -81,7 +80,7 @@ class _EditProfileCompanyState extends State<EditProfileCompany> {
     coPinController.text = widget.userCustomerCompany.coPin;
     coCustomerPanController.text = widget.userCustomerCompany.coPan;
     coNameController.text = widget.userCustomerCompany.coCompanyName;
-    coTypeController.text = widget.userCustomerCompany.coCompanyType;
+    coTypeController = widget.userCustomerCompany.coCompanyType;
     coTaxController.text = widget.userCustomerCompany.coCompanyTax;
     coPanController.text = widget.userCustomerCompany.coCompanyPan;
     coWebsiteController.text = widget.userCustomerCompany.coCompanyWebsite;
@@ -98,7 +97,7 @@ class _EditProfileCompanyState extends State<EditProfileCompany> {
     coCustomerPanController.dispose();
 
     coNameController.dispose();
-    coTypeController.dispose();
+    coTypeController = null;
     coTaxController.dispose();
     coPanController.dispose();
     coWebsiteController.dispose();
@@ -122,7 +121,7 @@ class _EditProfileCompanyState extends State<EditProfileCompany> {
     coCustomerPanController.clear();
 
     coNameController.clear();
-    coTypeController.clear();
+    coTypeController = null;
     coTaxController.clear();
     coPanController.clear();
     coWebsiteController.clear();
@@ -134,10 +133,11 @@ class _EditProfileCompanyState extends State<EditProfileCompany> {
     otpController.clear();
   }
 
-  void postSignUpRequestCompany(BuildContext _context) {
+  void postEditRequestCompany(BuildContext _context) {
     DialogProcessing().showCustomDialog(context,
         title: "Sign Up Request", text: "Processing, Please Wait!");
-    HTTPHandler().registerCustomerIndividual([
+    HTTPHandler().editCustomerCompany([
+      widget.userCustomerCompany.coId,
       coCustomerNameController.text.toString(),
       '91',
       coMobileNumberController.text.toString(),
@@ -147,7 +147,7 @@ class _EditProfileCompanyState extends State<EditProfileCompany> {
       coCustomerPanController.text.toString(),
       coPinController.text.toString(),
       coNameController.text.toString(),
-      coTypeController.text.toString(),
+      coTypeController.toString(),
       coTaxController.text.toString(),
       coPanController.text.toString(),
       coWebsiteController.text.toString()
@@ -156,10 +156,13 @@ class _EditProfileCompanyState extends State<EditProfileCompany> {
       if (value.success) {
         DialogSuccess().showCustomDialog(context, title: "Sign Up");
         await Future.delayed(Duration(seconds: 1), () {});
-        setState(() {
-          selectedWidgetMarker = WidgetMarker.otpVerification;
-        });
         Navigator.pop(context);
+        if (widget.userCustomerCompany.coPhone !=
+            coMobileNumberController.text.toString()) {
+          setState(() {
+            selectedWidgetMarker = WidgetMarker.otpVerification;
+          });
+        }
         Scaffold.of(_context).showSnackBar(SnackBar(
           backgroundColor: Colors.black,
           content: Text(
@@ -188,7 +191,7 @@ class _EditProfileCompanyState extends State<EditProfileCompany> {
     DialogProcessing().showCustomDialog(context,
         title: "OTP Verification", text: "Processing, Please Wait!");
     HTTPHandler()
-        .registerVerifyOtpCustomer([phNumber, otpNumber]).then((value) async {
+        .editVerifyOtpCustomer([widget.userCustomerCompany.coId, phNumber, otpNumber]).then((value) async {
       Navigator.pop(context);
       if (value.success) {
         DialogSuccess().showCustomDialog(context,
@@ -214,7 +217,7 @@ class _EditProfileCompanyState extends State<EditProfileCompany> {
   void postResendOtpRequest(BuildContext _context, String phNumber) {
     DialogProcessing().showCustomDialog(context,
         title: "Resend OTP", text: "Processing, Please Wait!");
-    HTTPHandler().registerResendOtpCustomer([phNumber]).then((value) async {
+    HTTPHandler().editResendOtpCustomer([phNumber]).then((value) async {
       Navigator.pop(context);
       if (value.success) {
         DialogSuccess().showCustomDialog(context, title: "Resend OTP");
@@ -448,6 +451,7 @@ class _EditProfileCompanyState extends State<EditProfileCompany> {
                 height: 16.0,
               ),
               TextFormField(
+                textCapitalization: TextCapitalization.characters,
                 controller: coCustomerPanController,
                 keyboardType: TextInputType.text,
                 textInputAction: TextInputAction.next,
@@ -548,7 +552,7 @@ class _EditProfileCompanyState extends State<EditProfileCompany> {
                 },
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.mail),
-                  labelText: "PIN",
+                  labelText: "ZIP Code",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5.0),
                     borderSide: BorderSide(
@@ -575,41 +579,11 @@ class _EditProfileCompanyState extends State<EditProfileCompany> {
                 focusNode: _coName,
                 onFieldSubmitted: (term) {
                   _coName.unfocus();
-                  FocusScope.of(context).requestFocus(_coType);
+                  FocusScope.of(context).requestFocus(_coTax);
                 },
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.person),
                   labelText: "Company Name",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: BorderSide(
-                      color: Colors.amber,
-                      style: BorderStyle.solid,
-                    ),
-                  ),
-                ),
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return "This Field is Required";
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              TextFormField(
-                controller: coTypeController,
-                keyboardType: TextInputType.emailAddress,
-                textInputAction: TextInputAction.next,
-                focusNode: _coType,
-                onFieldSubmitted: (term) {
-                  _coType.unfocus();
-                  FocusScope.of(context).requestFocus(_coTax);
-                },
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.mail),
-                  labelText: "Type",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5.0),
                     borderSide: BorderSide(
@@ -656,6 +630,7 @@ class _EditProfileCompanyState extends State<EditProfileCompany> {
                 height: 16.0,
               ),
               TextFormField(
+                textCapitalization: TextCapitalization.characters,
                 controller: coPanController,
                 keyboardType: TextInputType.number,
                 textInputAction: TextInputAction.next,
@@ -708,15 +683,80 @@ class _EditProfileCompanyState extends State<EditProfileCompany> {
               SizedBox(
                 height: 16.0,
               ),
+              DropdownButton(
+                isExpanded: true,
+                value: coTypeController,
+                dropdownColor: Colors.white,
+                items: [
+                  DropdownMenuItem(
+                    child: Text("Agro Products Mfg/Supplier"),
+                    value: "Agro Products Mfg/Supplier",
+                  ),
+                  DropdownMenuItem(
+                    child: Text("Builder/Building Material Suppliers"),
+                    value: "Builder/Building Material Suppliers",
+                  ),
+                  DropdownMenuItem(
+                    child: Text("Cement/Coal Plant"),
+                    value: "Cement/Coal Plant",
+                  ),
+                  DropdownMenuItem(
+                    child: Text("Dealer/Commission Agent/Distributor"),
+                    value: "Dealer/Commission Agent/Distributor",
+                  ),
+                  DropdownMenuItem(
+                    child: Text("Export/Import Firm"),
+                    value: "Export/Import Firm",
+                  ),
+                  DropdownMenuItem(
+                    child: Text("Job/Maintenance"),
+                    value: "Job/Maintenance",
+                  ),
+                  DropdownMenuItem(
+                    child: Text("Manufacturing/Traders"),
+                    value: "Manufacturing/Traders",
+                  ),
+                  DropdownMenuItem(
+                    child: Text("Machinery Manufacturing/Suppliers"),
+                    value: "Machinery Manufacturing/Suppliers",
+                  ),
+                  DropdownMenuItem(
+                    child: Text("Print/Media Related"),
+                    value: "Print/Media Related",
+                  ),
+                  DropdownMenuItem(
+                    child: Text("Raw Material Supplier"),
+                    value: "Raw Material Supplier",
+                  ),
+                  DropdownMenuItem(
+                    child: Text("Sales & Services"),
+                    value: "Sales & Services",
+                  ),
+                  DropdownMenuItem(
+                    child: Text("Traders/Shop Keeper/Merchant"),
+                    value: "Traders/Shop Keeper/Merchant",
+                  ),
+                  DropdownMenuItem(
+                      child: Text("Wood Product Mfg/Supplier/Merchant"),
+                      value: "Wood Product Mfg/Supplier/Merchant")
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    coTypeController = value;
+                  });
+                },
+                hint: Text("Select Company Type"),
+              ),
+              SizedBox(
+                height: 16.0,
+              ),
               Material(
                 color: Colors.transparent,
                 child: InkWell(
                   splashColor: Colors.transparent,
                   onTap: () {
                     if (_formKeyCompanyCredentials.currentState.validate()) {
-                      setState(() {
-                        selectedWidgetMarker = WidgetMarker.otpVerification;
-                      });
+                      postEditRequestCompany(context);
                     }
                   },
                   child: Container(
@@ -818,6 +858,7 @@ class _EditProfileCompanyState extends State<EditProfileCompany> {
                 height: 20.0,
               ),
               TextFormField(
+                obscureText: true,
                 controller: otpController,
                 keyboardType: TextInputType.phone,
                 textCapitalization: TextCapitalization.words,
@@ -997,6 +1038,7 @@ class _EditProfileCompanyState extends State<EditProfileCompany> {
                 height: 16.0,
               ),
               TextFormField(
+                  obscureText: true,
                   controller: newPasswordController,
                   keyboardType: TextInputType.visiblePassword,
                   textInputAction: TextInputAction.next,
@@ -1026,6 +1068,7 @@ class _EditProfileCompanyState extends State<EditProfileCompany> {
                 height: 16.0,
               ),
               TextFormField(
+                obscureText: true,
                 controller: confirmPasswordController,
                 keyboardType: TextInputType.visiblePassword,
                 textInputAction: TextInputAction.done,

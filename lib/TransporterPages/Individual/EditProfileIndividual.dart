@@ -26,7 +26,7 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
   WidgetMarker selectedWidgetMarker;
 
   final GlobalKey<FormState> _formKeyIndividualCredentials =
-  GlobalKey<FormState>();
+      GlobalKey<FormState>();
   final GlobalKey<FormState> _formKeyChangePassword = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKeyOtp = GlobalKey<FormState>();
 
@@ -103,10 +103,11 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
     otpController.clear();
   }
 
-  void postSignUpRequestIndividual(BuildContext _context) {
+  void postEditRequestIndividual(BuildContext _context) {
     DialogProcessing().showCustomDialog(context,
-        title: "Sign Up Request", text: "Processing, Please Wait!");
-    HTTPHandler().registerCustomerIndividual([
+        title: "Edit Request", text: "Processing, Please Wait!");
+    HTTPHandler().editCustomerIndividual([
+      widget.userCustomerIndividual.inId,
       inNameController.text.toString(),
       '91',
       inMobileNumberController.text.toString(),
@@ -120,9 +121,12 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
       if (value.success) {
         DialogSuccess().showCustomDialog(context, title: "Sign Up");
         await Future.delayed(Duration(seconds: 1), () {});
-        setState(() {
-          selectedWidgetMarker = WidgetMarker.otpVerification;
-        });
+        if (widget.userCustomerIndividual.inPhone !=
+            inMobileNumberController.text.toString()) {
+          setState(() {
+            selectedWidgetMarker = WidgetMarker.otpVerification;
+          });
+        }
         Navigator.pop(context);
         Scaffold.of(_context).showSnackBar(SnackBar(
           backgroundColor: Colors.black,
@@ -132,27 +136,30 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
           ),
         ));
       } else {
-        DialogFailed()
-            .showCustomDialog(context, title: "Sign Up", text: value.message);
+        DialogFailed().showCustomDialog(context,
+            title: "Edit Profile", text: value.message);
         await Future.delayed(Duration(seconds: 3), () {});
         Navigator.pop(context);
       }
     }).catchError((error) async {
       print(error);
       Navigator.pop(context);
-      DialogFailed()
-          .showCustomDialog(context, title: "Sign Up", text: "Network Error");
+      DialogFailed().showCustomDialog(context,
+          title: "Edit Profile", text: "Network Error");
       await Future.delayed(Duration(seconds: 3), () {});
       Navigator.pop(context);
     });
   }
 
-  void postOtpVerificationRequest(BuildContext _context, String phNumber,
-      String otpNumber) {
+  void postOtpVerificationRequest(
+      BuildContext _context, String phNumber, String otpNumber) {
     DialogProcessing().showCustomDialog(context,
         title: "OTP Verification", text: "Processing, Please Wait!");
-    HTTPHandler()
-        .registerVerifyOtpCustomer([phNumber, otpNumber]).then((value) async {
+    HTTPHandler().editVerifyOtpCustomer([
+      widget.userCustomerIndividual.inId,
+      phNumber,
+      otpNumber
+    ]).then((value) async {
       Navigator.pop(context);
       if (value.success) {
         DialogSuccess().showCustomDialog(context,
@@ -179,7 +186,7 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
   void postResendOtpRequest(BuildContext _context, String phNumber) {
     DialogProcessing().showCustomDialog(context,
         title: "Resend OTP", text: "Processing, Please Wait!");
-    HTTPHandler().registerResendOtpCustomer([phNumber]).then((value) async {
+    HTTPHandler().editResendOtpCustomer([phNumber]).then((value) async {
       Navigator.pop(context);
       if (value.success) {
         DialogSuccess().showCustomDialog(context, title: "Resend OTP");
@@ -238,8 +245,8 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
     });
   }
 
-  Widget getIndividualCredentialsBottomSheetWidget(context,
-      ScrollController scrollController) {
+  Widget getIndividualCredentialsBottomSheetWidget(
+      context, ScrollController scrollController) {
     return ListView(controller: scrollController, children: <Widget>[
       SingleChildScrollView(
         child: Form(
@@ -413,6 +420,7 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
                 height: 16.0,
               ),
               TextFormField(
+                textCapitalization: TextCapitalization.characters,
                 controller: inPanController,
                 keyboardType: TextInputType.text,
                 textInputAction: TextInputAction.next,
@@ -509,7 +517,7 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
                 focusNode: _inPin,
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.dialpad),
-                  labelText: "PIN",
+                  labelText: "ZIP Code",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5.0),
                     borderSide: BorderSide(
@@ -534,18 +542,15 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
                   splashColor: Colors.transparent,
                   onTap: () {
                     if (_formKeyIndividualCredentials.currentState.validate()) {
-                      postSignUpRequestIndividual(context);
+                      postEditRequestIndividual(context);
                     }
                   },
                   child: Container(
-                    width: MediaQuery
-                        .of(context)
-                        .size
-                        .width,
+                    width: MediaQuery.of(context).size.width,
                     height: 50.0,
                     child: Center(
                       child: Text(
-                        "Sign Up",
+                        "Edit Profile",
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 24.0,
@@ -567,8 +572,8 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
     ]);
   }
 
-  Widget getChangePasswordBottomSheetWidget(context,
-      ScrollController scrollController) {
+  Widget getChangePasswordBottomSheetWidget(
+      context, ScrollController scrollController) {
     return ListView(controller: scrollController, children: <Widget>[
       SingleChildScrollView(
         child: Form(
@@ -662,6 +667,7 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
                 height: 16.0,
               ),
               TextFormField(
+                  obscureText: true,
                   controller: newPasswordController,
                   keyboardType: TextInputType.visiblePassword,
                   textInputAction: TextInputAction.next,
@@ -691,6 +697,7 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
                 height: 16.0,
               ),
               TextFormField(
+                obscureText: true,
                 controller: confirmPasswordController,
                 keyboardType: TextInputType.visiblePassword,
                 textInputAction: TextInputAction.done,
@@ -729,10 +736,7 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
                     }
                   },
                   child: Container(
-                    width: MediaQuery
-                        .of(context)
-                        .size
-                        .width,
+                    width: MediaQuery.of(context).size.width,
                     height: 50.0,
                     child: Center(
                       child: Text(
@@ -758,8 +762,8 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
     ]);
   }
 
-  Widget getOtpVerificationBottomSheetWidget(context,
-      ScrollController scrollController) {
+  Widget getOtpVerificationBottomSheetWidget(
+      context, ScrollController scrollController) {
     return ListView(controller: scrollController, children: <Widget>[
       SingleChildScrollView(
         child: Form(
@@ -889,10 +893,7 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
                         otpController.text.toString());
                   },
                   child: Container(
-                    width: MediaQuery
-                        .of(context)
-                        .size
-                        .width,
+                    width: MediaQuery.of(context).size.width,
                     height: 50.0,
                     child: Center(
                       child: Text(
@@ -923,10 +924,7 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
       child: Column(
         children: <Widget>[
           SizedBox(
-            height: MediaQuery
-                .of(context)
-                .size
-                .width * 0.3 - 20,
+            height: MediaQuery.of(context).size.width * 0.3 - 20,
           ),
           Text(
             "Enter",
@@ -953,10 +951,7 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
       child: Column(
         children: <Widget>[
           SizedBox(
-            height: MediaQuery
-                .of(context)
-                .size
-                .width * 0.3 - 20,
+            height: MediaQuery.of(context).size.width * 0.3 - 20,
           ),
           Text(
             "OTP",
@@ -983,10 +978,7 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
       child: Column(
         children: <Widget>[
           SizedBox(
-            height: MediaQuery
-                .of(context)
-                .size
-                .width * 0.3 - 20,
+            height: MediaQuery.of(context).size.width * 0.3 - 20,
           ),
           Text(
             "Reset",
@@ -1020,8 +1012,8 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
     return getIndividualCredentialsWidget(context);
   }
 
-  Widget getCustomBottomSheetWidget(context,
-      ScrollController scrollController) {
+  Widget getCustomBottomSheetWidget(
+      context, ScrollController scrollController) {
     switch (selectedWidgetMarker) {
       case WidgetMarker.individualCredentials:
         return getIndividualCredentialsBottomSheetWidget(
