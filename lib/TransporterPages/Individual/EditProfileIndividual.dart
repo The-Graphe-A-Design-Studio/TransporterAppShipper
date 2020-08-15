@@ -217,7 +217,7 @@ class _EditProfileIndividualState extends State<EditProfileIndividual> {
   void postChangePasswordRequest(BuildContext _context) {
     DialogProcessing().showCustomDialog(context,
         title: "Change Password", text: "Processing, Please Wait!");
-    HTTPHandler().editOwnerInfoChangePassword([
+    HTTPHandler().editChangePasswordCustomer([
       widget.userCustomerIndividual.inId.toString(),
       currPasswordController.text.toString(),
       newPasswordController.text.toString(),

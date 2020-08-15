@@ -527,6 +527,20 @@ class HTTPHandler {
     }
   }
 
+  Future<PostResultOne> editChangePasswordCustomer(List data) async {
+    try {
+      var result = await http.post("$baseURLOwner/profile", body: {
+        'cu_id': data[0],
+        'curr_password': data[1],
+        'new_password': data[2],
+        'cnf_new_password': data[3],
+      });
+      return PostResultOne.fromJson(json.decode(result.body));
+    } catch (error) {
+      throw error;
+    }
+  }
+
   /*-------------------------- Driver API's ---------------------------*/
   Future<PostResultOne> registerDriver(List data) async {
     try {

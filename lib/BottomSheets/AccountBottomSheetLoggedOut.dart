@@ -224,7 +224,7 @@ class _AccountBottomSheetLoggedOutState
                 Material(
                   child: InkWell(
                     onTap: () {
-                      Navigator.pushNamed(context, tripPlannerPage);
+                      Navigator.pushNamed(context, emiCalculatorPage);
                     },
                     child: Container(
                       width: 160,

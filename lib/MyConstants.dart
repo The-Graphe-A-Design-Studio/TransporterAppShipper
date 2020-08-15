@@ -1,3 +1,7 @@
+//API Key
+const GoogleApiKey = "AIzaSyCSdJNFravZ9yjzisUAhLgohy_MWbS41XI";
+const autoCompleteLink = "https://maps.googleapis.com/maps/api/place/autocomplete/json?key=$GoogleApiKey&types=geocode&input=";
+
 //Basic Pages
 const String splashPage = "/";
 const String truckOwnerUser = "TruckOwner";
