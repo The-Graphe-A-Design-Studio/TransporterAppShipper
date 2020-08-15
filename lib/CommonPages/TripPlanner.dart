@@ -18,17 +18,20 @@ class TripPlanner extends StatefulWidget {
 }
 
 class _TripPlannerState extends State<TripPlanner> {
-  final GlobalKey<FormState> _formTripPlanner = GlobalKey<FormState>();
   GlobalKey<AutoCompleteTextFieldState<GooglePlaces>> keyFrom = new GlobalKey();
   GlobalKey<AutoCompleteTextFieldState<GooglePlaces>> keyTo = new GlobalKey();
+  final GlobalKey<FormState> _formTripPlanner = GlobalKey<FormState>();
 
-  AutoCompleteTextField fromCityField;
-  AutoCompleteTextField toCityField;
+  AutoCompleteTextField fromTextField;
+  AutoCompleteTextField toTextField;
   String brandSelected = "Select Brand";
   String modelSelected = "Select Model";
   String fuelSelected = "Select Fuel Type";
   List<GooglePlaces> suggestedCityFrom = [];
   List<GooglePlaces> suggestedCityTo = [];
+
+  final FocusNode _from = FocusNode();
+  final FocusNode _to = FocusNode();
 
   @override
   void initState() {
@@ -43,13 +46,11 @@ class _TripPlannerState extends State<TripPlanner> {
   void getNewCityFrom(String input) async {
     try {
       var result = await http.get(autoCompleteLink + input);
-      suggestedCityFrom = [];
+      suggestedCityFrom.clear();
       for (var i in json.decode(result.body)["predictions"]) {
         suggestedCityFrom.add(GooglePlaces.fromJson(i));
       }
-      setState(() {
-        print("suggfrom");
-      });
+      setState(() {});
     } catch (error) {
       print(error);
     }
@@ -58,10 +59,11 @@ class _TripPlannerState extends State<TripPlanner> {
   void getNewCityTo(String input) async {
     try {
       var result = await http.get(autoCompleteLink + input);
+      suggestedCityTo.clear();
       for (var i in json.decode(result.body)["predictions"]) {
-        print(i);
         suggestedCityTo.add(GooglePlaces.fromJson(i));
       }
+      setState(() {});
     } catch (error) {
       print(error);
     }
@@ -157,15 +159,17 @@ class _TripPlannerState extends State<TripPlanner> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            fromCityField = AutoCompleteTextField<GooglePlaces>(
+                            fromTextField = AutoCompleteTextField<GooglePlaces>(
                               key: keyFrom,
+                              textInputAction: TextInputAction.next,
+                              focusNode: _from,
                               clearOnSubmit: false,
                               textChanged: (value) {
                                 getNewCityFrom(value);
                               },
                               suggestions: suggestedCityFrom,
                               style: TextStyle(
-                                  color: Colors.white, fontSize: 16.0),
+                                  color: Colors.black, fontSize: 16.0),
                               decoration: InputDecoration(
                                 fillColor: Colors.white,
                                 filled: true,
@@ -181,35 +185,35 @@ class _TripPlannerState extends State<TripPlanner> {
                                 ),
                               ),
                               itemFilter: (item, query) {
-                                return item.description
-                                    .toLowerCase()
-                                    .startsWith(query.toLowerCase());
+                                return true;
                               },
                               itemSorter: (a, b) {
                                 return a.description.compareTo(b.description);
                               },
                               itemSubmitted: (item) {
                                 setState(() {
-                                  fromCityField.textField.controller.text =
+                                  fromTextField.textField.controller.text =
                                       item.description;
                                 });
+                                _from.unfocus();
+                                FocusScope.of(context).requestFocus(_to);
                               },
                               itemBuilder: (context, item) {
                                 return row(item);
                               },
                             ),
-                            SizedBox(
-                              height: 16.0,
-                            ),
-                            toCityField = AutoCompleteTextField<GooglePlaces>(
+                            SizedBox(height: 16.0,),
+                            toTextField = AutoCompleteTextField<GooglePlaces>(
                               key: keyTo,
+                              textInputAction: TextInputAction.done,
+                              focusNode: _to,
                               clearOnSubmit: false,
                               textChanged: (value) {
                                 getNewCityTo(value);
                               },
                               suggestions: suggestedCityTo,
                               style: TextStyle(
-                                  color: Colors.white, fontSize: 16.0),
+                                  color: Colors.black, fontSize: 16.0),
                               decoration: InputDecoration(
                                 fillColor: Colors.white,
                                 filled: true,
@@ -225,16 +229,14 @@ class _TripPlannerState extends State<TripPlanner> {
                                 ),
                               ),
                               itemFilter: (item, query) {
-                                return item.description
-                                    .toLowerCase()
-                                    .startsWith(query.toLowerCase());
+                                return true;
                               },
                               itemSorter: (a, b) {
                                 return a.description.compareTo(b.description);
                               },
                               itemSubmitted: (item) {
                                 setState(() {
-                                  toCityField.textField.controller.text =
+                                  toTextField.textField.controller.text =
                                       item.description;
                                 });
                               },
