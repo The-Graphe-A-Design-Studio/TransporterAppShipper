@@ -1,6 +1,12 @@
+import 'dart:convert';
+
+import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/BottomSheets/AccountBottomSheetDummy.dart';
+import 'package:transportationapp/Models/GooglePlaces.dart';
+import 'package:transportationapp/MyConstants.dart';
+import 'package:http/http.dart' as http;
 
 class FreightCalculator extends StatefulWidget {
   FreightCalculator({Key key, this.title}) : super(key: key);
@@ -12,11 +18,15 @@ class FreightCalculator extends StatefulWidget {
 }
 
 class _FreightCalculatorState extends State<FreightCalculator> {
+  GlobalKey<AutoCompleteTextFieldState<GooglePlaces>> keyFrom = new GlobalKey();
+  GlobalKey<AutoCompleteTextFieldState<GooglePlaces>> keyTo = new GlobalKey();
   final GlobalKey<FormState> _formFreightCalculator = GlobalKey<FormState>();
 
-  final fromController = TextEditingController();
-  final toController = TextEditingController();
+  AutoCompleteTextField fromTextField;
+  AutoCompleteTextField toTextField;
   String truckTypeSelected = "Select Truck Type";
+  List<GooglePlaces> suggestedCityFrom = [];
+  List<GooglePlaces> suggestedCityTo = [];
 
   final FocusNode _from = FocusNode();
   final FocusNode _to = FocusNode();
@@ -28,9 +38,49 @@ class _FreightCalculatorState extends State<FreightCalculator> {
 
   @override
   void dispose() {
-    fromController.dispose();
-    toController.dispose();
     super.dispose();
+  }
+
+  void getNewCityFrom(String input) async {
+    try {
+      var result = await http.get(autoCompleteLink + input);
+      suggestedCityFrom.clear();
+      for (var i in json.decode(result.body)["predictions"]) {
+        suggestedCityFrom.add(GooglePlaces.fromJson(i));
+      }
+      setState(() {});
+    } catch (error) {
+      print(error);
+    }
+  }
+
+  void getNewCityTo(String input) async {
+    try {
+      var result = await http.get(autoCompleteLink + input);
+      suggestedCityTo.clear();
+      for (var i in json.decode(result.body)["predictions"]) {
+        suggestedCityTo.add(GooglePlaces.fromJson(i));
+      }
+      setState(() {});
+    } catch (error) {
+      print(error);
+    }
+  }
+
+  Widget row(GooglePlaces gp) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.all(8.0),
+          child: Text(
+            gp.description,
+            style: TextStyle(fontSize: 16.0),
+          ),
+        ),
+        Divider(),
+      ],
+    );
   }
 
   @override
@@ -72,16 +122,17 @@ class _FreightCalculatorState extends State<FreightCalculator> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            TextFormField(
-                              controller: fromController,
-                              keyboardType: TextInputType.text,
-                              textCapitalization: TextCapitalization.words,
+                            fromTextField = AutoCompleteTextField<GooglePlaces>(
+                              key: keyFrom,
                               textInputAction: TextInputAction.next,
                               focusNode: _from,
-                              onFieldSubmitted: (term) {
-                                _from.unfocus();
-                                FocusScope.of(context).requestFocus(_to);
+                              clearOnSubmit: false,
+                              textChanged: (value) {
+                                getNewCityFrom(value);
                               },
+                              suggestions: suggestedCityFrom,
+                              style: TextStyle(
+                                  color: Colors.black, fontSize: 16.0),
                               decoration: InputDecoration(
                                 fillColor: Colors.white,
                                 filled: true,
@@ -96,21 +147,36 @@ class _FreightCalculatorState extends State<FreightCalculator> {
                                   ),
                                 ),
                               ),
-                              validator: (value) {
-                                if (value.isEmpty) {
-                                  return "This Field is Required";
-                                }
-                                return null;
+                              itemFilter: (item, query) {
+                                return true;
+                              },
+                              itemSorter: (a, b) {
+                                return a.description.compareTo(b.description);
+                              },
+                              itemSubmitted: (item) {
+                                setState(() {
+                                  fromTextField.textField.controller.text =
+                                      item.description;
+                                });
+                                _from.unfocus();
+                                FocusScope.of(context).requestFocus(_to);
+                              },
+                              itemBuilder: (context, item) {
+                                return row(item);
                               },
                             ),
-                            SizedBox(
-                              height: 16.0,
-                            ),
-                            TextFormField(
-                              controller: toController,
-                              keyboardType: TextInputType.number,
+                            SizedBox(height: 16.0,),
+                            toTextField = AutoCompleteTextField<GooglePlaces>(
+                              key: keyTo,
                               textInputAction: TextInputAction.done,
                               focusNode: _to,
+                              clearOnSubmit: false,
+                              textChanged: (value) {
+                                getNewCityTo(value);
+                              },
+                              suggestions: suggestedCityTo,
+                              style: TextStyle(
+                                  color: Colors.black, fontSize: 16.0),
                               decoration: InputDecoration(
                                 fillColor: Colors.white,
                                 filled: true,
@@ -125,11 +191,20 @@ class _FreightCalculatorState extends State<FreightCalculator> {
                                   ),
                                 ),
                               ),
-                              validator: (value) {
-                                if (value.isEmpty) {
-                                  return "This Field is Required";
-                                }
-                                return null;
+                              itemFilter: (item, query) {
+                                return true;
+                              },
+                              itemSorter: (a, b) {
+                                return a.description.compareTo(b.description);
+                              },
+                              itemSubmitted: (item) {
+                                setState(() {
+                                  toTextField.textField.controller.text =
+                                      item.description;
+                                });
+                              },
+                              itemBuilder: (context, item) {
+                                return row(item);
                               },
                             ),
                             SizedBox(

@@ -1,6 +1,6 @@
 //API Key
 const GoogleApiKey = "AIzaSyCSdJNFravZ9yjzisUAhLgohy_MWbS41XI";
-const autoCompleteLink = "https://maps.googleapis.com/maps/api/place/autocomplete/json?key=$GoogleApiKey&types=geocode&input=";
+const autoCompleteLink = "https://maps.googleapis.com/maps/api/place/autocomplete/json?key=$GoogleApiKey&components=country:in&types=(cities)&input=";
 
 //Basic Pages
 const String splashPage = "/";

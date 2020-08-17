@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -79,7 +78,8 @@ class _TripPlannerState extends State<TripPlanner> {
             gp.description,
             style: TextStyle(fontSize: 16.0),
           ),
-        )
+        ),
+        Divider(),
       ],
     );
   }
@@ -202,7 +202,9 @@ class _TripPlannerState extends State<TripPlanner> {
                                 return row(item);
                               },
                             ),
-                            SizedBox(height: 16.0,),
+                            SizedBox(
+                              height: 16.0,
+                            ),
                             toTextField = AutoCompleteTextField<GooglePlaces>(
                               key: keyTo,
                               textInputAction: TextInputAction.done,
