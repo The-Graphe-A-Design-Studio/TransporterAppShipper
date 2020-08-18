@@ -276,101 +276,12 @@ class HTTPHandler {
     }
   }
 
-  /*Future<PostResultOne> editTruckRTO(List data) async {
-    try {
-      var url = "$baseURLOwner/trucks";
-      var request = http.MultipartRequest('POST', Uri.parse(url));
-
-      request.fields['trk_id'] = data[0];
-      request.files
-          .add(await http.MultipartFile.fromPath('trk_rto_edit', data[1]));
-      var result = await request.send();
-      var finalResult = await http.Response.fromStream(result);
-      return PostResultOne.fromJson(json.decode(finalResult.body));
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  Future<PostResultOne> editTruckRoadTax(List data) async {
-    try {
-      var url = "$baseURLOwner/trucks";
-      var request = http.MultipartRequest('POST', Uri.parse(url));
-
-      request.fields['trk_id'] = data[0];
-      request.files
-          .add(await http.MultipartFile.fromPath('trk_road_tax_edit', data[1]));
-      var result = await request.send();
-      var finalResult = await http.Response.fromStream(result);
-      return PostResultOne.fromJson(json.decode(finalResult.body));
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  Future<PostResultOne> editTruckInsurance(List data) async {
-    try {
-      var url = "$baseURLOwner/trucks";
-      var request = http.MultipartRequest('POST', Uri.parse(url));
-
-      request.fields['trk_id'] = data[0];
-      request.files.add(
-          await http.MultipartFile.fromPath('trk_insurance_edit', data[1]));
-      var result = await request.send();
-      var finalResult = await http.Response.fromStream(result);
-      return PostResultOne.fromJson(json.decode(finalResult.body));
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  Future<PostResultOne> editTruckRc(List data) async {
-    try {
-      var url = "$baseURLOwner/trucks";
-      var request = http.MultipartRequest('POST', Uri.parse(url));
-
-      request.fields['trk_id'] = data[0];
-      request.files
-          .add(await http.MultipartFile.fromPath('trk_rc_edit', data[1]));
-      var result = await request.send();
-      var finalResult = await http.Response.fromStream(result);
-      return PostResultOne.fromJson(json.decode(finalResult.body));
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  Future<PostResultOne> editTruckDriverLicense(List data) async {
-    try {
-      var url = "$baseURLOwner/trucks";
-      var request = http.MultipartRequest('POST', Uri.parse(url));
-
-      request.fields['trk_id'] = data[0];
-      request.files.add(
-          await http.MultipartFile.fromPath('trk_dr_license_edit', data[1]));
-      var result = await request.send();
-      var finalResult = await http.Response.fromStream(result);
-      return PostResultOne.fromJson(json.decode(finalResult.body));
-    } catch (error) {
-      throw error;
-    }
-  }*/
-
   /*-------------------------- Customer API's ---------------------------*/
-  Future<PostResultOne> registerCustomerIndividual(List data) async {
+  Future<PostResultOne> registerLoginCustomer(List data) async {
     try {
-      var result =
-          await http.post("$baseURLCustomer/individual_register", body: {
-        'in_cu_name': data[0],
-        'in_cu_phone_code': data[1],
-        'in_cu_phone': data[2],
-        'in_cu_email': data[3],
-        'in_cu_address': data[4],
-        'in_cu_city': data[5],
-        'in_cu_password': data[6],
-        'in_cu_cnf_password': data[7],
-        'in_cu_pan': data[8],
-        'in_cu_pin': data[9],
+      var result = await http.post("$baseURLCustomer/register-login-logout", body: {
+        'cu_phone_code': data[0],
+        'cu_phone': data[1],
       });
       return PostResultOne.fromJson(json.decode(result.body));
     } catch (error) {
@@ -378,24 +289,10 @@ class HTTPHandler {
     }
   }
 
-  Future<PostResultOne> registerCustomerCompany(List data) async {
+  Future<PostResultOne> logoutCustomer(List data) async {
     try {
-      var result = await http.post("$baseURLCustomer/company_register", body: {
-        'co_cu_name': data[0],
-        'co_cu_phone_code': data[1],
-        'co_cu_phone': data[2],
-        'co_cu_email': data[3],
-        'co_cu_address': data[4],
-        'co_cu_city': data[5],
-        'co_cu_password': data[6],
-        'co_cu_cnf_password': data[7],
-        'co_cu_pan': data[8],
-        'co_cu_pin': data[9],
-        'co_name': data[7],
-        'co_type': data[8],
-        'co_service_tax': data[9],
-        'co_pan_num': data[7],
-        'co_website': data[8],
+      var result = await http.post("$baseURLCustomer/register-login-logout", body: {
+        'logout_number': data[0],
       });
       return PostResultOne.fromJson(json.decode(result.body));
     } catch (error) {
@@ -416,124 +313,7 @@ class HTTPHandler {
   Future<PostResultOne> registerResendOtpCustomer(List data) async {
     try {
       var result = await http.post("$baseURLCustomer/verification", body: {
-        'resend_otp': data[0],
-      });
-      return PostResultOne.fromJson(json.decode(result.body));
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  Future<List> loginCustomer(List data) async {
-    try {
-      var result = await http.post("$baseURLCustomer/login", body: {
-        'cu_type': data[0],
-        'phone_code': data[1],
-        'phone': data[2],
-        'password': data[3]
-      });
-      var jsonResult = json.decode(result.body);
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      if (jsonResult['success'] == '1') {
-        if (data[0] == "2") {
-          UserCustomerCompany userCustomerCompany =
-              UserCustomerCompany.fromJson(jsonResult);
-          prefs.setBool('rememberMe', data[4]);
-          prefs.setString('userType', transporterUserCompany);
-          prefs.setString('userData', result.body);
-          return [true, userCustomerCompany];
-        } else if (data[0] == "1") {
-          UserCustomerIndividual userCustomerIndividual =
-              UserCustomerIndividual.fromJson(jsonResult);
-          prefs.setBool('rememberMe', data[4]);
-          prefs.setString('userType', transporterUserIndividual);
-          prefs.setString('userData', result.body);
-          return [true, userCustomerIndividual];
-        } else {
-          throw "error";
-        }
-      } else {
-        PostResultOne postResultOne = PostResultOne.fromJson(jsonResult);
-        prefs.setBool('rememberMe', false);
-        return [false, postResultOne];
-      }
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  Future<PostResultOne> editCustomerIndividual(List data) async {
-    try {
-      var result =
-          await http.post("$baseURLCustomer/individual_profile", body: {
-        'cu_id': data[0],
-        'cu_name': data[1],
-        'cu_phone_code': data[2],
-        'cu_phone': data[3],
-        'cu_email': data[4],
-        'cu_address': data[5],
-        'cu_city': data[6],
-        'cu_pan': data[7],
-        'cu_pin': data[8],
-      });
-      return PostResultOne.fromJson(json.decode(result.body));
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  Future<PostResultOne> editCustomerCompany(List data) async {
-    try {
-      var result = await http.post("$baseURLCustomer/company_profile", body: {
-        'cu_id': data[0],
-        'cu_name': data[1],
-        'cu_phone_code': data[2],
-        'cu_phone': data[3],
-        'cu_email': data[4],
-        'cu_address': data[5],
-        'cu_city': data[6],
-        'cu_pan': data[7],
-        'cu_pin': data[8],
-        'cu_co_name': data[9],
-        'cu_co_type': data[10],
-        'cu_co_service_tax': data[11],
-        'cu_co_pan_num': data[12],
-        'cu_co_website': data[13],
-      });
-      return PostResultOne.fromJson(json.decode(result.body));
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  Future<PostResultOne> editVerifyOtpCustomer(List data) async {
-    try {
-      var result = await http.post("$baseURLCustomer/verification",
-          body: {'cu_id': data[0], 'edit_phone_number': data[1], 'edit_otp': data[2]});
-      return PostResultOne.fromJson(json.decode(result.body));
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  Future<PostResultOne> editResendOtpCustomer(List data) async {
-    try {
-      var result = await http.post("$baseURLCustomer/verification", body: {
-        'edit_resend_otp': data[0],
-      });
-      return PostResultOne.fromJson(json.decode(result.body));
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  Future<PostResultOne> editChangePasswordCustomer(List data) async {
-    try {
-      var result = await http.post("$baseURLOwner/profile", body: {
-        'cu_id': data[0],
-        'curr_password': data[1],
-        'new_password': data[2],
-        'cnf_new_password': data[3],
+        'resend_otp_on': data[0],
       });
       return PostResultOne.fromJson(json.decode(result.body));
     } catch (error) {

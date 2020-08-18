@@ -31,10 +31,8 @@ class _SplashScreenState extends State<SplashScreen> {
       } else if (userType == driverUser) {
         userDriver =
             UserDriver.fromJson(json.decode(prefs.getString("userData")));
-      } else if (userType == transporterUserCompany) {
+      } else if (userType == transporterUser) {
         userCustomerCompany = UserCustomerCompany.fromJson(json.decode(prefs.getString("userData")));
-      } else if (userType == transporterUserIndividual) {
-        userCustomerIndividual = UserCustomerIndividual.fromJson(json.decode(prefs.getString("userData")));
       }
     }
     return Future.value(rememberMe);
@@ -51,11 +49,8 @@ class _SplashScreenState extends State<SplashScreen> {
         } else if (userType == driverUser) {
           Navigator.pushReplacementNamed(context, homePageDriver,
               arguments: userDriver);
-        } else if (userType == transporterUserCompany) {
-          Navigator.pushReplacementNamed(context, homePageTransporterCompany, arguments: userCustomerCompany);
-        } else if (userType == transporterUserIndividual) {
-          Navigator.pushReplacementNamed(
-              context, homePageTransporterIndividual, arguments: userCustomerIndividual);
+        } else if (userType == transporterUser) {
+          Navigator.pushReplacementNamed(context, homePageTransporter, arguments: userCustomerCompany);
         } else {
           Navigator.pushReplacementNamed(context, introLoginOptionPage);
         }

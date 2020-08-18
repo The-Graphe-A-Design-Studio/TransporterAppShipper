@@ -1,19 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/BottomSheets/AccountBottomSheetLoggedIn.dart';
-import 'package:transportationapp/Models/User.dart';
-import 'package:transportationapp/MyConstants.dart';
 
-class HomePageCompany extends StatefulWidget {
-  final UserCustomerCompany userCustomerCompany;
+class HomePageTransporter extends StatefulWidget {
 
-  HomePageCompany({Key key, this.userCustomerCompany}) : super(key: key);
+  HomePageTransporter({Key key}) : super(key: key);
 
   @override
-  _HomePageCompanyState createState() => _HomePageCompanyState();
+  _HomePageTransporterState createState() => _HomePageTransporterState();
 }
 
-class _HomePageCompanyState extends State<HomePageCompany> {
+class _HomePageTransporterState extends State<HomePageTransporter> {
   @override
   void initState() {
     super.initState();
@@ -41,7 +38,7 @@ class _HomePageCompanyState extends State<HomePageCompany> {
                           height: 30.0,
                         ),
                         Text(
-                          "Truck Owner - " + widget.userCustomerCompany.coCompanyName,
+                          "Customer Login",
                           style: TextStyle(
                             fontSize: 23.0,
                             fontWeight: FontWeight.bold,
@@ -63,19 +60,6 @@ class _HomePageCompanyState extends State<HomePageCompany> {
                             )),
                         SizedBox(
                           height: 40.0,
-                        ),
-                        FlatButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, editProfileCompany,
-                                arguments: widget.userCustomerCompany);
-                          },
-                          child: Text(
-                            "View My Profile",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20.0),
-                          ),
                         ),
                         SizedBox(
                           height: 100,

@@ -17,13 +17,10 @@ import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/TransporterPages/Ord
 import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/OwnerPages/OwnerOptionsPage.dart';
 import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/TransporterPages/RequestTransport.dart';
 import 'package:transportationapp/SplashScreen.dart';
-import 'package:transportationapp/TransporterPages/Company/EditProfileCompany.dart';
 import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/CommonPages/TollCalculator.dart';
 import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/TransporterPages/TransporterOptionsPage.dart';
 import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/CommonPages/TripPlanner.dart';
-import 'package:transportationapp/TransporterPages/Company/HomePageCompany.dart';
-import 'package:transportationapp/TransporterPages/Individual/EditProfileIndividual.dart';
-import 'package:transportationapp/TransporterPages/Individual/HomePageIndividual.dart';
+import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/TransporterPages/HomePageTransporter.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -61,14 +58,8 @@ class RouteGenerator {
         return FadeRoute(page: DriverUpcomingOrder());
 
     //Pages once the user is LoggedIn - Transporter
-      case homePageTransporterCompany:
-        return FadeRoute(page: HomePageCompany(userCustomerCompany: args,));
-      case homePageTransporterIndividual:
-        return FadeRoute(page: HomePageIndividual(userCustomerIndividual: args,));
-      case editProfileCompany:
-        return FadeRoute(page: EditProfileCompany(userCustomerCompany: args,));
-      case editProfileIndividual:
-        return FadeRoute(page: EditProfileIndividual(userCustomerIndividual: args,));
+      case homePageTransporter:
+        return FadeRoute(page: HomePageTransporter());
       case newTransportingOrderPage:
         return FadeRoute(page: NewTransportingOrder());
       case orderSummaryPage:

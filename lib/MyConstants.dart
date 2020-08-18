@@ -5,8 +5,7 @@ const autoCompleteLink = "https://maps.googleapis.com/maps/api/place/autocomplet
 //Basic Pages
 const String splashPage = "/";
 const String truckOwnerUser = "TruckOwner";
-const String transporterUserCompany = "TransporterCompany";
-const String transporterUserIndividual = "TransporterIndividual";
+const String transporterUser = "Transporter";
 const String driverUser = "Driver";
 
 //Login or SignUp Pages
@@ -26,8 +25,7 @@ const String homePageDriver = "/homePageDriver";
 const String driverUpcomingOrderPage = "/driverUpcomingOrderPage";
 
 //Pages once the user is LoggedIn - Transporter
-const String homePageTransporterCompany = "/homePageTransporterCompany";
-const String homePageTransporterIndividual = "/homePageTransporterIndividual";
+const String homePageTransporter = "/homePageTransporter";
 const String editProfileCompany = "/editProfileCompany";
 const String editProfileIndividual = "/editProfileIndividual";
 const String newTransportingOrderPage = "/newTransportingOrderPage";
