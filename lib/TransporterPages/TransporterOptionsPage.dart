@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pin_code_text_field/pin_code_text_field.dart';
 import 'package:transportationapp/DialogScreens/DialogFailed.dart';
 import 'package:transportationapp/DialogScreens/DialogProcessing.dart';
 import 'package:transportationapp/DialogScreens/DialogSuccess.dart';
@@ -50,8 +51,7 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
   void postSignInRequest(BuildContext _context) {
     DialogProcessing().showCustomDialog(context,
         title: "OTP Verification", text: "Processing, Please Wait!");
-    HTTPHandler().registerLoginCustomer([
-      '91',
+    HTTPHandler().registerVerifyOtpCustomer([
       mobileNumberControllerSignIn.text,
       otpController.text,
     ]).then((value) async {
@@ -76,6 +76,37 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
       Navigator.pop(context);
       DialogFailed().showCustomDialog(context,
           title: "OTP Verification", text: "Network Error");
+      await Future.delayed(Duration(seconds: 3), () {});
+      Navigator.pop(context);
+    });
+  }
+
+  void postOtpRequest(BuildContext _context) {
+    DialogProcessing().showCustomDialog(context,
+        title: "Requesting OTP", text: "Processing, Please Wait!");
+    HTTPHandler().registerLoginCustomer([
+      '91',
+      mobileNumberControllerSignIn.text,
+    ]).then((value) async {
+      if (value.success) {
+        Navigator.pop(context);
+        DialogSuccess().showCustomDialog(context, title: "Requesting OTP");
+        await Future.delayed(Duration(seconds: 1), () {});
+        Navigator.pop(context);
+        setState(() {
+          selectedWidgetMarker = WidgetMarker.otpVerification;
+        });
+      } else {
+        Navigator.pop(context);
+        DialogFailed().showCustomDialog(context,
+            title: "Requesting OTP", text: value.message);
+        await Future.delayed(Duration(seconds: 3), () {});
+        Navigator.pop(context);
+      }
+    }).catchError((error) async {
+      Navigator.pop(context);
+      DialogFailed().showCustomDialog(context,
+          title: "Requesting OTP", text: "Network Error");
       await Future.delayed(Duration(seconds: 3), () {});
       Navigator.pop(context);
     });
@@ -181,29 +212,32 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
               SizedBox(
                 height: 20.0,
               ),
-              TextFormField(
-                obscureText: true,
-                controller: otpController,
-                keyboardType: TextInputType.phone,
-                textCapitalization: TextCapitalization.words,
-                textInputAction: TextInputAction.done,
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.dialpad),
-                  labelText: "Enter OTP",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: BorderSide(
-                      color: Colors.amber,
-                      style: BorderStyle.solid,
-                    ),
-                  ),
+              Align(
+                alignment: Alignment.center,
+                child: PinCodeTextField(
+                  autofocus: true,
+                  controller: otpController,
+                  hideCharacter: true,
+                  highlight: true,
+                  highlightColor: Colors.black,
+                  defaultBorderColor: Colors.grey,
+                  hasTextBorderColor: Colors.black,
+                  maxLength: 6,
+                  maskCharacter: "*",
+                  pinBoxWidth: 50,
+                  pinBoxHeight: 64,
+                  hasUnderline: true,
+                  wrapAlignment: WrapAlignment.spaceAround,
+                  pinBoxDecoration:
+                      ProvidedPinBoxDecoration.defaultPinBoxDecoration,
+                  pinTextStyle: TextStyle(fontSize: 22.0),
+                  pinTextAnimatedSwitcherTransition:
+                      ProvidedPinBoxTextAnimation.scalingTransition,
+                  pinTextAnimatedSwitcherDuration: Duration(milliseconds: 300),
+                  highlightAnimationBeginColor: Colors.black,
+                  highlightAnimationEndColor: Colors.white12,
+                  keyboardType: TextInputType.number,
                 ),
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return "This Field is Required";
-                  }
-                  return null;
-                },
               ),
               SizedBox(
                 height: 16.0,
@@ -307,52 +341,33 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
               SizedBox(
                 height: 20.0,
               ),
-              Row(
-                children: [
-                  SizedBox(
-                    child: TextFormField(
-                      readOnly: true,
-                      decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.dialpad),
-                        hintText: "+91",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5.0),
-                          borderSide: BorderSide(
-                            color: Colors.amber,
-                            style: BorderStyle.solid,
-                          ),
-                        ),
+              Align(
+                alignment: Alignment.center,
+                child: TextFormField(
+                  controller: mobileNumberControllerSignIn,
+                  keyboardType: TextInputType.number,
+                  maxLength: 10,
+                  textInputAction: TextInputAction.done,
+                  decoration: InputDecoration(
+                    labelText: "Mobile Number",
+                    prefixText: "+91     ",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                      borderSide: BorderSide(
+                        color: Colors.amber,
+                        style: BorderStyle.solid,
                       ),
                     ),
-                    width: 97.0,
                   ),
-                  SizedBox(width: 16.0),
-                  Flexible(
-                    child: TextFormField(
-                      controller: mobileNumberControllerSignIn,
-                      keyboardType: TextInputType.number,
-                      textInputAction: TextInputAction.done,
-                      decoration: InputDecoration(
-                        labelText: "Mobile Number",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5.0),
-                          borderSide: BorderSide(
-                            color: Colors.amber,
-                            style: BorderStyle.solid,
-                          ),
-                        ),
-                      ),
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return "This Field is Required";
-                        } else if (value.length != 10) {
-                          return "Enter Valid Mobile Number";
-                        }
-                        return null;
-                      },
-                    ),
-                  )
-                ],
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return "This Field is Required";
+                    } else if (value.length != 10) {
+                      return "Enter Valid Mobile Number";
+                    }
+                    return null;
+                  },
+                ),
               ),
               SizedBox(
                 height: 30.0,
@@ -363,9 +378,7 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                   splashColor: Colors.transparent,
                   onTap: () {
                     if (_formKeySignIn.currentState.validate()) {
-                      setState(() {
-                        selectedWidgetMarker = WidgetMarker.signIn;
-                      });
+                      postOtpRequest(context);
                     }
                   },
                   child: Container(
