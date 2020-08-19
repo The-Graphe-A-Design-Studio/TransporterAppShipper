@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/BottomSheets/AccountBottomSheetLoggedIn.dart';
+import 'package:transportationapp/Models/User.dart';
+import 'package:transportationapp/MyConstants.dart';
 
 class HomePageTransporter extends StatefulWidget {
-
-  HomePageTransporter({Key key}) : super(key: key);
+  UserTransporter userTransporter;
+  HomePageTransporter({Key key, this.userTransporter}) : super(key: key);
 
   @override
   _HomePageTransporterState createState() => _HomePageTransporterState();
@@ -60,6 +62,12 @@ class _HomePageTransporterState extends State<HomePageTransporter> {
                             )),
                         SizedBox(
                           height: 40.0,
+                        ),
+                        FlatButton(
+                          child: Text("Upload"),
+                          onPressed: () {
+                            Navigator.pushNamed(context, uploadDocsTransporter);
+                          },
                         ),
                         SizedBox(
                           height: 100,

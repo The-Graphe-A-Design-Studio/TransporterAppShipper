@@ -21,6 +21,7 @@ import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/CommonPages/TollCalc
 import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/TransporterPages/TransporterOptionsPage.dart';
 import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/CommonPages/TripPlanner.dart';
 import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/TransporterPages/HomePageTransporter.dart';
+import 'package:transportationapp/TransporterPages/UploadDocsTransporter.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -59,7 +60,9 @@ class RouteGenerator {
 
     //Pages once the user is LoggedIn - Transporter
       case homePageTransporter:
-        return FadeRoute(page: HomePageTransporter());
+        return FadeRoute(page: HomePageTransporter(userTransporter: args,));
+      case uploadDocsTransporter:
+        return FadeRoute(page: UploadDocs());
       case newTransportingOrderPage:
         return FadeRoute(page: NewTransportingOrder());
       case orderSummaryPage:

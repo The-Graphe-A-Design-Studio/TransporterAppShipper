@@ -26,8 +26,7 @@ const String driverUpcomingOrderPage = "/driverUpcomingOrderPage";
 
 //Pages once the user is LoggedIn - Transporter
 const String homePageTransporter = "/homePageTransporter";
-const String editProfileCompany = "/editProfileCompany";
-const String editProfileIndividual = "/editProfileIndividual";
+const String uploadDocsTransporter = "/uploadDocsTransporter";
 const String newTransportingOrderPage = "/newTransportingOrderPage";
 const String orderSummaryPage = "/orderSummaryPage";
 const String requestTransportPage = "/requestTransportPage";

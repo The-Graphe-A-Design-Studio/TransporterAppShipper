@@ -128,6 +128,34 @@ class UserDriver {
   }
 }
 
+class UserTransporter {
+  bool success;
+  String message;
+  String verified;
+  String registered;
+
+  UserTransporter({this.success,
+    this.message,
+    this.verified,
+    this.registered});
+
+  factory UserTransporter.fromJson(Map<String, dynamic> parsedJson) {
+    return UserTransporter(
+        success: parsedJson['success'] == '1' ? true : false,
+        message: parsedJson['message'],
+        verified: parsedJson['verified'],
+        registered: parsedJson['registered on']);
+  }
+
+  Map<String, dynamic> toJson() =>
+      {
+        'success': "1",
+        'message': this.message,
+        'verified': this.verified,
+        'registered on': this.registered,
+      };
+}
+
 class UserCustomerIndividual {
   bool success;
   String inId;

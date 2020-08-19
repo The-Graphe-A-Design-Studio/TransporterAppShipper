@@ -1,8 +1,10 @@
 import 'dart:convert';
-
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
+import 'package:transportationapp/BottomSheets/AccountBottomSheetLoggedIn.dart';
 import 'package:transportationapp/DialogScreens/DialogFailed.dart';
 import 'package:transportationapp/DialogScreens/DialogProcessing.dart';
 import 'package:transportationapp/DialogScreens/DialogSuccess.dart';
@@ -10,11 +12,11 @@ import 'package:transportationapp/HttpHandler.dart';
 import 'package:transportationapp/Models/User.dart';
 import 'package:transportationapp/MyConstants.dart';
 
-class TransporterOptionsPage extends StatefulWidget {
-  TransporterOptionsPage({Key key}) : super(key: key);
+class UploadDocs extends StatefulWidget {
+  UploadDocs({Key key}) : super(key: key);
 
   @override
-  _TransporterOptionsPageState createState() => _TransporterOptionsPageState();
+  _UploadDocsState createState() => _UploadDocsState();
 }
 
 enum WidgetMarker {
@@ -22,7 +24,7 @@ enum WidgetMarker {
   signIn,
 }
 
-class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
+class _UploadDocsState extends State<UploadDocs> {
   WidgetMarker selectedWidgetMarker;
 
   final GlobalKey<FormState> _formKeyOtp = GlobalKey<FormState>();
@@ -298,6 +300,24 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
     ]);
   }
 
+  PickedFile pickedFile;
+
+  Future getImageFromCamera() async {
+    var image = await ImagePicker().getImage(source: ImageSource.camera);
+
+    setState(() {
+      pickedFile = image;
+    });
+  }
+
+  Future getImageFromGallery() async {
+    var image = await ImagePicker().getImage(source: ImageSource.gallery);
+
+    setState(() {
+      pickedFile = image;
+    });
+  }
+
   Widget getSignInBottomSheetWidget(
       context, ScrollController scrollController) {
     return ListView(controller: scrollController, children: <Widget>[
@@ -342,33 +362,31 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                 height: 20.0,
               ),
               Align(
-                alignment: Alignment.center,
-                child: TextFormField(
-                  controller: mobileNumberControllerSignIn,
-                  keyboardType: TextInputType.number,
-                  maxLength: 10,
-                  textInputAction: TextInputAction.done,
-                  decoration: InputDecoration(
-                    labelText: "Mobile Number",
-                    prefixText: "+91     ",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0),
-                      borderSide: BorderSide(
-                        color: Colors.amber,
-                        style: BorderStyle.solid,
+                  alignment: Alignment.center,
+                  child: Stack(
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.85,
+                        height: MediaQuery.of(context).size.height * 0.85,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.0),
+                          image: DecorationImage(
+                              image: AssetImage("assets/images/logo_black.png"),
+                              fit: BoxFit.cover),
+                        ),
                       ),
-                    ),
-                  ),
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return "This Field is Required";
-                    } else if (value.length != 10) {
-                      return "Enter Valid Mobile Number";
-                    }
-                    return null;
-                  },
-                ),
-              ),
+                      Positioned(
+                        top: 10,
+                        right: 10,
+                        child: GestureDetector(
+                          onTap: () {
+                            getImageFromCamera();
+                          },
+                          child: Icon(Icons.camera_alt),
+                        ),
+                      )
+                    ],
+                  )),
               SizedBox(
                 height: 30.0,
               ),
@@ -497,34 +515,44 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: onBackPressed,
-      child: Scaffold(
-        backgroundColor: Color(0xff252427),
-        body: Stack(children: <Widget>[
-          getCustomWidget(context),
+    return Scaffold(
+      backgroundColor: Color(0xff252427),
+      body: Stack(
+        children: <Widget>[
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                getCustomWidget(context),
+              ],
+            ),
+          ),
           DraggableScrollableSheet(
             initialChildSize: 0.65,
             minChildSize: 0.4,
             maxChildSize: 0.9,
             builder: (BuildContext context, ScrollController scrollController) {
               return Hero(
-                  tag: 'AnimeBottom',
-                  child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(30.0),
-                            topRight: Radius.circular(30.0)),
+                tag: 'AnimeBottom',
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black,
+                        blurRadius: 10.0,
                       ),
-                      child: Padding(
-                        padding: EdgeInsets.all(16.0),
-                        child: getCustomBottomSheetWidget(
-                            context, scrollController),
-                      )));
+                    ],
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(30.0),
+                        topRight: Radius.circular(30.0)),
+                  ),
+                  child: AccountBottomSheetLoggedIn(
+                      scrollController: scrollController),
+                ),
+              );
             },
           ),
-        ]),
+        ],
       ),
     );
   }

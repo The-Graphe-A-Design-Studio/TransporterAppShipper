@@ -300,11 +300,11 @@ class HTTPHandler {
     }
   }
 
-  Future<PostResultOne> registerVerifyOtpCustomer(List data) async {
+  Future<List<dynamic>> registerVerifyOtpCustomer(List data) async {
     try {
       var result = await http.post("$baseURLCustomer/verification",
           body: {'phone_number': data[0], 'otp': data[1]});
-      return PostResultOne.fromJson(json.decode(result.body));
+      return [PostResultOne.fromJson(json.decode(result.body)), result.body];
     } catch (error) {
       throw error;
     }

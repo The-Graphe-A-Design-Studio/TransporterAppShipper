@@ -16,7 +16,6 @@ class StartApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Transportation App',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
         primaryColor: Color(0xff252427),
         canvasColor: Colors.transparent,
         accentColor: Colors.black12,
