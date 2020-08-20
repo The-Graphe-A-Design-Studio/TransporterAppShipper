@@ -67,9 +67,7 @@ class _IntroPageLoginOptionsState extends State<IntroPageLoginOptions> {
                           GestureDetector(
                             onTap: () {
                               Navigator.pushNamed(
-                                  context,
-                                  /*transporterOptionPage TODO Uncomment this*/
-                                  uploadDocsTransporter);
+                                  context, transporterOptionPage);
                             },
                             child: Container(
                                 decoration: BoxDecoration(

@@ -300,6 +300,37 @@ class HTTPHandler {
     }
   }
 
+  Future<PostResultOne> uploadDocsPic(List data) async {
+    try {
+      var url = "$baseURLOwner/profile";
+      var request = http.MultipartRequest('POST', Uri.parse(url));
+
+      request.fields['cu_phone'] = data[0];
+      request.files.add(await http.MultipartFile.fromPath('${data[1]}', data[2]));
+      var result = await request.send();
+      var finalResult = await http.Response.fromStream(result);
+      return PostResultOne.fromJson(json.decode(finalResult.body));
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<PostResultOne> uploadOfficeAddPic(List data) async {
+    try {
+      var url = "$baseURLOwner/profile";
+      var request = http.MultipartRequest('POST', Uri.parse(url));
+
+      request.fields['cu_phone'] = data[0];
+      request.fields['cu_co_name'] = data[1];
+      request.files.add(await http.MultipartFile.fromPath('co_office_address', data[2]));
+      var result = await request.send();
+      var finalResult = await http.Response.fromStream(result);
+      return PostResultOne.fromJson(json.decode(finalResult.body));
+    } catch (error) {
+      throw error;
+    }
+  }
+
   Future<List<dynamic>> registerVerifyOtpCustomer(List data) async {
     try {
       var result = await http.post("$baseURLCustomer/verification",

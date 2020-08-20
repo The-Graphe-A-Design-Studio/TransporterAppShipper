@@ -1,16 +1,9 @@
-import 'dart:convert';
 import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:pin_code_text_field/pin_code_text_field.dart';
 import 'package:transportationapp/BottomSheets/AccountBottomSheetLoggedIn.dart';
-import 'package:transportationapp/DialogScreens/DialogFailed.dart';
-import 'package:transportationapp/DialogScreens/DialogProcessing.dart';
-import 'package:transportationapp/DialogScreens/DialogSuccess.dart';
-import 'package:transportationapp/HttpHandler.dart';
-import 'package:transportationapp/Models/User.dart';
-import 'package:transportationapp/MyConstants.dart';
 
 class UploadDocs extends StatefulWidget {
   UploadDocs({Key key}) : super(key: key);
@@ -19,496 +12,841 @@ class UploadDocs extends StatefulWidget {
   _UploadDocsState createState() => _UploadDocsState();
 }
 
-enum WidgetMarker {
-  otpVerification,
-  signIn,
-}
+enum WidgetMarker { panCard, selfie, addProof, offAdd }
 
 class _UploadDocsState extends State<UploadDocs> {
   WidgetMarker selectedWidgetMarker;
 
-  final GlobalKey<FormState> _formKeyOtp = GlobalKey<FormState>();
-  final GlobalKey<FormState> _formKeySignIn = GlobalKey<FormState>();
+  PickedFile panCard;
+  PickedFile selfie;
+  PickedFile addFront;
+  PickedFile addBack;
+  PickedFile offAdd;
+  bool panCardDone = false;
+  bool selfieDone = false;
+  bool addFrontDone = false;
+  bool addBackDone = false;
+  bool offAddDone = false;
+  String selectedAddProofType;
 
-  final otpController = TextEditingController();
-  final mobileNumberControllerSignIn = TextEditingController();
-
-  bool rememberMe = true;
+  final companyNameController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    selectedWidgetMarker = WidgetMarker.signIn;
+    selectedWidgetMarker = WidgetMarker.panCard;
   }
 
   @override
   void dispose() {
-    otpController.dispose();
-    mobileNumberControllerSignIn.dispose();
+    companyNameController.dispose();
     super.dispose();
   }
 
-  void clearControllers() {
-    otpController.clear();
-    mobileNumberControllerSignIn.clear();
+  void callUploadAPI(BuildContext context) {
+    return;
   }
 
-  void postSignInRequest(BuildContext _context) {
-    DialogProcessing().showCustomDialog(context,
-        title: "OTP Verification", text: "Processing, Please Wait!");
-    HTTPHandler().registerVerifyOtpCustomer([
-      mobileNumberControllerSignIn.text,
-      otpController.text,
-    ]).then((value) async {
-      if (value[0].success) {
-        Navigator.pop(context);
-        DialogSuccess().showCustomDialog(context, title: "OTP Verification");
-        await Future.delayed(Duration(seconds: 1), () {});
-        Navigator.pop(context);
-        Navigator.pushNamedAndRemoveUntil(
-          _context,
-          homePageTransporter,
-          (route) => false,
-          arguments: UserTransporter.fromJson(json.decode(value[1])),
-        );
-      } else {
-        Navigator.pop(context);
-        DialogFailed().showCustomDialog(context,
-            title: "OTP Verification", text: value[0].message);
-        await Future.delayed(Duration(seconds: 3), () {});
-        Navigator.pop(context);
-      }
-    }).catchError((error) async {
-      Navigator.pop(context);
-      DialogFailed().showCustomDialog(context,
-          title: "OTP Verification", text: "Network Error");
-      await Future.delayed(Duration(seconds: 3), () {});
-      Navigator.pop(context);
-    });
-  }
-
-  void postOtpRequest(BuildContext _context) {
-    DialogProcessing().showCustomDialog(context,
-        title: "Requesting OTP", text: "Processing, Please Wait!");
-    HTTPHandler().registerLoginCustomer([
-      '91',
-      mobileNumberControllerSignIn.text,
-    ]).then((value) async {
-      if (value.success) {
-        Navigator.pop(context);
-        DialogSuccess().showCustomDialog(context, title: "Requesting OTP");
-        await Future.delayed(Duration(seconds: 1), () {});
-        Navigator.pop(context);
-        setState(() {
-          selectedWidgetMarker = WidgetMarker.otpVerification;
-        });
-      } else {
-        Navigator.pop(context);
-        DialogFailed().showCustomDialog(context,
-            title: "Requesting OTP", text: value.message);
-        await Future.delayed(Duration(seconds: 3), () {});
-        Navigator.pop(context);
-      }
-    }).catchError((error) async {
-      Navigator.pop(context);
-      DialogFailed().showCustomDialog(context,
-          title: "Requesting OTP", text: "Network Error");
-      await Future.delayed(Duration(seconds: 3), () {});
-      Navigator.pop(context);
-    });
-  }
-
-  void postResendOtpRequest(BuildContext _context, String phNumber) {
-    DialogProcessing().showCustomDialog(context,
-        title: "Resend OTP", text: "Processing, Please Wait!");
-    HTTPHandler().registerResendOtpCustomer([phNumber]).then((value) async {
-      Navigator.pop(context);
-      if (value.success) {
-        DialogSuccess().showCustomDialog(context, title: "Resend OTP");
-        await Future.delayed(Duration(seconds: 1), () {});
-        Navigator.pop(context);
-        Scaffold.of(_context).showSnackBar(SnackBar(
-          backgroundColor: Colors.black,
-          content: Text(
-            value.message,
-            style: TextStyle(color: Colors.white),
-          ),
-        ));
-      } else {
-        DialogFailed().showCustomDialog(context,
-            title: "Resend OTP", text: value.message);
-        await Future.delayed(Duration(seconds: 3), () {});
-        Navigator.pop(context);
-      }
-    }).catchError((error) async {
-      Navigator.pop(context);
-      DialogFailed().showCustomDialog(context,
-          title: "Resend OTP", text: "Network Error");
-      await Future.delayed(Duration(seconds: 3), () {});
-      Navigator.pop(context);
-    });
-  }
-
-  Widget getOtpVerificationBottomSheetWidget(
-      context, ScrollController scrollController) {
-    return ListView(controller: scrollController, children: <Widget>[
-      SingleChildScrollView(
-        child: Form(
-          key: _formKeyOtp,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        onTap: () {
-                          setState(() {
-                            selectedWidgetMarker = WidgetMarker.signIn;
-                          });
-                        },
-                        child: CircleAvatar(
-                          backgroundColor: Colors.transparent,
-                          child: Icon(
-                            Icons.arrow_back_ios,
-                            color: Color(0xff252427),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Spacer(),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        onTap: () {
-                          setState(() {
-                            clearControllers();
-                            selectedWidgetMarker = WidgetMarker.signIn;
-                          });
-                        },
-                        child: Text(
-                          "Skip",
-                          style: TextStyle(
-                              color: Colors.black12,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 26.0),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 10.0,
-                  ),
-                ],
-              ),
-              Align(
-                alignment: Alignment.center,
-                child: Image(
-                  image: AssetImage('assets/images/logo_black.png'),
-                  height: 145.0,
-                  width: 145.0,
-                ),
-              ),
-              SizedBox(
-                height: 20.0,
-              ),
-              Align(
-                alignment: Alignment.center,
-                child: PinCodeTextField(
-                  autofocus: true,
-                  controller: otpController,
-                  highlight: true,
-                  highlightColor: Colors.black,
-                  defaultBorderColor: Colors.grey,
-                  hasTextBorderColor: Colors.black,
-                  pinBoxWidth: 32,
-                  maxLength: 6,
-                  wrapAlignment: WrapAlignment.center,
-                  pinBoxDecoration:
-                      ProvidedPinBoxDecoration.underlinedPinBoxDecoration,
-                  pinTextStyle: TextStyle(fontSize: 26.0),
-                  pinTextAnimatedSwitcherTransition:
-                      ProvidedPinBoxTextAnimation.scalingTransition,
-                  pinTextAnimatedSwitcherDuration: Duration(milliseconds: 150),
-                  highlightAnimationBeginColor: Colors.black,
-                  highlightAnimationEndColor: Colors.white12,
-                  keyboardType: TextInputType.number,
-                ),
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              Align(
-                alignment: Alignment.centerRight,
-                child: InkWell(
-                  onTap: () {
-                    setState(() {
-                      otpController.clear();
-                    });
-                    postResendOtpRequest(
-                        context, mobileNumberControllerSignIn.text.toString());
-                  },
-                  child: Text(
-                    "Resend OTP",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 16.0,
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 40.0,
-              ),
-              Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  splashColor: Colors.transparent,
-                  onTap: () {
-                    postSignInRequest(context);
-                  },
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 50.0,
-                    child: Center(
-                      child: Text(
-                        "Verify OTP",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 24.0,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    decoration: BoxDecoration(
-                      color: Color(0xff252427),
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(width: 2.0, color: Color(0xff252427)),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    ]);
-  }
-
-  PickedFile pickedFile;
-
-  Future getImageFromCamera() async {
+  Future getImageFromCamera(int i) async {
     var image = await ImagePicker().getImage(source: ImageSource.camera);
-
-    setState(() {
-      pickedFile = image;
-    });
+    switch (i) {
+      case 1:
+        setState(() {
+          if (image != null) {
+            panCard = image;
+            panCardDone = true;
+          }
+        });
+        break;
+      case 2:
+        setState(() {
+          if (image != null) {
+            selfie = image;
+            selfieDone = true;
+          }
+        });
+        break;
+      case 3:
+        setState(() {
+          if (image != null) {
+            addFront = image;
+            addFrontDone = true;
+          }
+        });
+        break;
+      case 4:
+        setState(() {
+          if (image != null) {
+            addBack = image;
+            addBackDone = true;
+          }
+        });
+        break;
+      case 5:
+        setState(() {
+          if (image != null) {
+            offAdd = image;
+            offAddDone = true;
+          }
+        });
+        break;
+    }
   }
 
-  Future getImageFromGallery() async {
+  Future getImageFromGallery(int i) async {
     var image = await ImagePicker().getImage(source: ImageSource.gallery);
-
-    setState(() {
-      pickedFile = image;
-    });
+    switch (i) {
+      case 1:
+        setState(() {
+          if (image != null) {
+            panCard = image;
+            panCardDone = true;
+          }
+        });
+        break;
+      case 2:
+        setState(() {
+          if (image != null) {
+            selfie = image;
+            selfieDone = true;
+          }
+        });
+        break;
+      case 3:
+        setState(() {
+          if (image != null) {
+            addFront = image;
+            addFrontDone = true;
+          }
+        });
+        break;
+      case 4:
+        setState(() {
+          if (image != null) {
+            addBack = image;
+            addBackDone = true;
+          }
+        });
+        break;
+      case 5:
+        setState(() {
+          if (image != null) {
+            offAdd = image;
+            offAddDone = true;
+          }
+        });
+        break;
+    }
   }
 
-  Widget getSignInBottomSheetWidget(
-      context, ScrollController scrollController) {
-    return ListView(controller: scrollController, children: <Widget>[
-      SingleChildScrollView(
-        child: Form(
-          key: _formKeySignIn,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: CircleAvatar(
-                          backgroundColor: Colors.transparent,
-                          child: Icon(
-                            Icons.arrow_back_ios,
-                            color: Color(0xff252427),
+  Widget getPanCardWidget(context) {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            SizedBox(
+              height: 100.0,
+            ),
+            Text(
+              "Upload",
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 30.0,
+                  fontWeight: FontWeight.bold),
+            ),
+            Text(
+              "Pan Card",
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 32.0,
+                  fontWeight: FontWeight.bold),
+            ),
+            SizedBox(
+              height: 60.0,
+            ),
+            Align(
+              alignment: Alignment.center,
+              child: Stack(
+                children: [
+                  panCardDone
+                      ? Container(
+                          width: MediaQuery.of(context).size.width * 0.85,
+                          height: MediaQuery.of(context).size.height * 0.40,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.white, width: 2.0),
+                            borderRadius: BorderRadius.circular(10.0),
+                            image: DecorationImage(
+                                image: FileImage(File(panCard.path)),
+                                fit: BoxFit.cover),
+                          ),
+                        )
+                      : Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height * 0.40,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.white, width: 2.0),
+                            borderRadius: BorderRadius.circular(10.0),
+                            image: DecorationImage(
+                                image:
+                                    AssetImage("assets/images/logo_white.png"),
+                                fit: BoxFit.contain),
                           ),
                         ),
+                  Positioned(
+                    top: 10,
+                    right: 10,
+                    child: GestureDetector(
+                      onTap: () {
+                        getImageFromCamera(1);
+                      },
+                      child: CircleAvatar(
+                        child: Icon(
+                          Icons.camera_alt,
+                          size: 20.0,
+                          color: Colors.black,
+                        ),
+                        backgroundColor: Colors.white,
+                        radius: 18.0,
                       ),
                     ),
                   ),
-                  Spacer(),
+                  Positioned(
+                    top: 56,
+                    right: 10,
+                    child: GestureDetector(
+                      onTap: () {
+                        getImageFromGallery(1);
+                      },
+                      child: CircleAvatar(
+                        child: Icon(
+                          Icons.image,
+                          size: 20.0,
+                          color: Colors.black,
+                        ),
+                        backgroundColor: Colors.white,
+                        radius: 18.0,
+                      ),
+                    ),
+                  )
                 ],
               ),
-              Align(
-                alignment: Alignment.center,
-                child: Image(
-                  image: AssetImage('assets/images/logo_black.png'),
-                  height: 145.0,
-                  width: 145.0,
-                ),
-              ),
-              SizedBox(
-                height: 20.0,
-              ),
-              Align(
-                  alignment: Alignment.center,
-                  child: Stack(
-                    children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.85,
-                        height: MediaQuery.of(context).size.height * 0.85,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10.0),
-                          image: DecorationImage(
-                              image: AssetImage("assets/images/logo_black.png"),
-                              fit: BoxFit.cover),
-                        ),
-                      ),
-                      Positioned(
-                        top: 10,
-                        right: 10,
-                        child: GestureDetector(
-                          onTap: () {
-                            getImageFromCamera();
-                          },
-                          child: Icon(Icons.camera_alt),
-                        ),
-                      )
-                    ],
-                  )),
-              SizedBox(
-                height: 30.0,
-              ),
-              Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  splashColor: Colors.transparent,
-                  onTap: () {
-                    if (_formKeySignIn.currentState.validate()) {
-                      postOtpRequest(context);
-                    }
-                  },
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 50.0,
-                    child: Center(
-                      child: Text(
-                        "Next",
-                        style: TextStyle(
-                            color: Color(0xff252427),
-                            fontSize: 24.0,
-                            fontWeight: FontWeight.bold),
-                      ),
+            ),
+            SizedBox(
+              height: 60.0,
+            ),
+            Material(
+              color: Colors.transparent,
+              child: InkWell(
+                splashColor: Colors.transparent,
+                onTap: () {
+                  if (panCardDone) {
+                    setState(() {
+                      selectedWidgetMarker = WidgetMarker.addProof;
+                    });
+                  }
+                },
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 50.0,
+                  child: Center(
+                    child: Text(
+                      "Next",
+                      style: TextStyle(
+                          color: Color(0xff252427),
+                          fontSize: 24.0,
+                          fontWeight: FontWeight.bold),
                     ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(width: 2.0, color: Color(0xff252427)),
-                    ),
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(width: 2.0, color: Colors.white),
+                    color: Colors.white,
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+            SizedBox(
+              height: 100.0,
+            ),
+          ],
         ),
-      ),
-    ]);
-  }
-
-  Widget getOtpVerificationWidget(context) {
-    return Center(
-      child: Column(
-        children: <Widget>[
-          SizedBox(
-            height: MediaQuery.of(context).size.width * 0.3 - 20,
-          ),
-          Text(
-            "OTP",
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 40.0,
-                fontWeight: FontWeight.bold),
-          ),
-          Text(
-            "Verification",
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 40.0,
-                fontWeight: FontWeight.bold),
-          ),
-          Spacer(),
-        ],
       ),
     );
   }
 
-  Widget getSignInWidget(context) {
-    return Center(
-      child: Column(
-        children: <Widget>[
-          SizedBox(
-            height: MediaQuery.of(context).size.width * 0.3,
-          ),
-          Text(
-            "Enter Your",
-            style: TextStyle(
+  Widget getAddProofWidget(context) {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            SizedBox(
+              height: 100.0,
+            ),
+            Text(
+              "Upload",
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 30.0,
+                  fontWeight: FontWeight.bold),
+            ),
+            Text(
+              "Address Proof",
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 32.0,
+                  fontWeight: FontWeight.bold),
+            ),
+            SizedBox(
+              height: 60.0,
+            ),
+            DropdownButton<String>(
+              isExpanded: true,
+              hint: Text("Select Truck Category", style: TextStyle(color: Colors.white),),
+              dropdownColor: Color(0xff252427),
+              style: TextStyle(color: Colors.white),
+              underline: Container(
+                height: 2,
                 color: Colors.white,
-                fontSize: 30.0,
-                fontWeight: FontWeight.bold),
-          ),
-          Text(
-            "Phone Number",
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 32.0,
-                fontWeight: FontWeight.bold),
-          ),
-          Spacer(),
-        ],
+              ),
+              value: selectedAddProofType,
+              items: <String>[
+                'Aadhar Card',
+                'Voter ID',
+                'Passport',
+                'Driving Licence'
+              ].map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+              onChanged: (String value) {
+                setState(() {
+                  selectedAddProofType = value;
+                  addFrontDone = false;
+                  addBackDone = false;
+                });
+              },
+            ),
+            SizedBox(height: 30.0,),
+            Align(
+              alignment: Alignment.center,
+              child: Stack(
+                children: [
+                  addFrontDone
+                      ? Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height * 0.40,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.white, width: 2.0),
+                            borderRadius: BorderRadius.circular(10.0),
+                            image: DecorationImage(
+                                image: FileImage(File(addFront.path)),
+                                fit: BoxFit.cover),
+                          ),
+                        )
+                      : Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height * 0.40,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.white, width: 2.0),
+                            borderRadius: BorderRadius.circular(10.0),
+                            image: DecorationImage(
+                                image:
+                                    AssetImage("assets/images/logo_white.png"),
+                                fit: BoxFit.contain),
+                          ),
+                        ),
+                  Positioned(
+                    top: 10,
+                    right: 10,
+                    child: GestureDetector(
+                      onTap: () {
+                        getImageFromCamera(3);
+                      },
+                      child: CircleAvatar(
+                        child: Icon(
+                          Icons.camera_alt,
+                          size: 20.0,
+                          color: Colors.black,
+                        ),
+                        backgroundColor: Colors.white,
+                        radius: 18.0,
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: 56,
+                    right: 10,
+                    child: GestureDetector(
+                      onTap: () {
+                        getImageFromGallery(3);
+                      },
+                      child: CircleAvatar(
+                        child: Icon(
+                          Icons.image,
+                          size: 20.0,
+                          color: Colors.black,
+                        ),
+                        backgroundColor: Colors.white,
+                        radius: 18.0,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 30.0,
+            ),
+            Align(
+              alignment: Alignment.center,
+              child: Stack(
+                children: [
+                  addBackDone
+                      ? Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height * 0.40,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.white, width: 2.0),
+                            borderRadius: BorderRadius.circular(10.0),
+                            image: DecorationImage(
+                                image: FileImage(File(addBack.path)),
+                                fit: BoxFit.cover),
+                          ),
+                        )
+                      : Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height * 0.40,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.white, width: 2.0),
+                            borderRadius: BorderRadius.circular(10.0),
+                            image: DecorationImage(
+                                image:
+                                    AssetImage("assets/images/logo_white.png"),
+                                fit: BoxFit.contain),
+                          ),
+                        ),
+                  Positioned(
+                    top: 10,
+                    right: 10,
+                    child: GestureDetector(
+                      onTap: () {
+                        getImageFromCamera(4);
+                      },
+                      child: CircleAvatar(
+                        child: Icon(
+                          Icons.camera_alt,
+                          size: 20.0,
+                          color: Colors.black,
+                        ),
+                        backgroundColor: Colors.white,
+                        radius: 18.0,
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: 56,
+                    right: 10,
+                    child: GestureDetector(
+                      onTap: () {
+                        getImageFromGallery(4);
+                      },
+                      child: CircleAvatar(
+                        child: Icon(
+                          Icons.image,
+                          size: 20.0,
+                          color: Colors.black,
+                        ),
+                        backgroundColor: Colors.white,
+                        radius: 18.0,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 60.0,
+            ),
+            Material(
+              color: Colors.transparent,
+              child: InkWell(
+                splashColor: Colors.transparent,
+                onTap: () {
+                  if (selectedAddProofType.isNotEmpty && addFrontDone && addBackDone) {
+                    setState(() {
+                      selectedWidgetMarker = WidgetMarker.selfie;
+                    });
+                  }
+                },
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 50.0,
+                  child: Center(
+                    child: Text(
+                      "Next",
+                      style: TextStyle(
+                          color: Color(0xff252427),
+                          fontSize: 24.0,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(width: 2.0, color: Colors.white),
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 100.0,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget getSelfieWidget(context) {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            SizedBox(
+              height: 100.0,
+            ),
+            Text(
+              "Upload",
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 30.0,
+                  fontWeight: FontWeight.bold),
+            ),
+            Text(
+              "A Selfie",
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 32.0,
+                  fontWeight: FontWeight.bold),
+            ),
+            SizedBox(
+              height: 60.0,
+            ),
+            Align(
+              alignment: Alignment.center,
+              child: Stack(
+                children: [
+                  selfieDone
+                      ? Container(
+                          width: MediaQuery.of(context).size.width * 0.85,
+                          height: MediaQuery.of(context).size.height * 0.40,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.white, width: 2.0),
+                            borderRadius: BorderRadius.circular(10.0),
+                            image: DecorationImage(
+                                image: FileImage(File(selfie.path)),
+                                fit: BoxFit.cover),
+                          ),
+                        )
+                      : Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height * 0.40,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.white, width: 2.0),
+                            borderRadius: BorderRadius.circular(10.0),
+                            image: DecorationImage(
+                                image:
+                                    AssetImage("assets/images/logo_white.png"),
+                                fit: BoxFit.contain),
+                          ),
+                        ),
+                  Positioned(
+                    top: 10,
+                    right: 10,
+                    child: GestureDetector(
+                      onTap: () {
+                        getImageFromCamera(2);
+                      },
+                      child: CircleAvatar(
+                        child: Icon(
+                          Icons.camera_alt,
+                          size: 20.0,
+                          color: Colors.black,
+                        ),
+                        backgroundColor: Colors.white,
+                        radius: 18.0,
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: 56,
+                    right: 10,
+                    child: GestureDetector(
+                      onTap: () {
+                        getImageFromGallery(2);
+                      },
+                      child: CircleAvatar(
+                        child: Icon(
+                          Icons.image,
+                          size: 20.0,
+                          color: Colors.black,
+                        ),
+                        backgroundColor: Colors.white,
+                        radius: 18.0,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 60.0,
+            ),
+            Material(
+              color: Colors.transparent,
+              child: InkWell(
+                splashColor: Colors.transparent,
+                onTap: () {
+                  if (selfieDone) {
+                    setState(() {
+                      selectedWidgetMarker = WidgetMarker.offAdd;
+                    });
+                  }
+                },
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 50.0,
+                  child: Center(
+                    child: Text(
+                      "Next",
+                      style: TextStyle(
+                          color: Color(0xff252427),
+                          fontSize: 24.0,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(width: 2.0, color: Colors.white),
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 100.0,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget getOffAddWidget(context) {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            SizedBox(
+              height: 100.0,
+            ),
+            Text(
+              "Upload",
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 30.0,
+                  fontWeight: FontWeight.bold),
+            ),
+            Text(
+              "A Selfie",
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 32.0,
+                  fontWeight: FontWeight.bold),
+            ),
+            SizedBox(
+              height: 60.0,
+            ),
+            TextFormField(
+              controller: companyNameController,
+              keyboardType: TextInputType.text,
+              textCapitalization: TextCapitalization.words,
+              textInputAction: TextInputAction.done,
+              style: TextStyle(color: Colors.black, fontSize: 16.0),
+              decoration: InputDecoration(
+                fillColor: Colors.white,
+                filled: true,
+                errorStyle: TextStyle(color: Colors.white),
+                prefixIcon: Icon(Icons.flight_land),
+                hintText: "Company Name",
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(5.0),
+                  borderSide: BorderSide(
+                    color: Colors.amber,
+                    style: BorderStyle.solid,
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 30.0,
+            ),
+            Align(
+              alignment: Alignment.center,
+              child: Stack(
+                children: [
+                  offAddDone
+                      ? Container(
+                          width: MediaQuery.of(context).size.width * 0.85,
+                          height: MediaQuery.of(context).size.height * 0.40,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.white, width: 2.0),
+                            borderRadius: BorderRadius.circular(10.0),
+                            image: DecorationImage(
+                                image: FileImage(File(offAdd.path)),
+                                fit: BoxFit.cover),
+                          ),
+                        )
+                      : Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height * 0.40,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.white, width: 2.0),
+                            borderRadius: BorderRadius.circular(10.0),
+                            image: DecorationImage(
+                                image:
+                                    AssetImage("assets/images/logo_white.png"),
+                                fit: BoxFit.contain),
+                          ),
+                        ),
+                  Positioned(
+                    top: 10,
+                    right: 10,
+                    child: GestureDetector(
+                      onTap: () {
+                        getImageFromCamera(5);
+                      },
+                      child: CircleAvatar(
+                        child: Icon(
+                          Icons.camera_alt,
+                          size: 20.0,
+                          color: Colors.black,
+                        ),
+                        backgroundColor: Colors.white,
+                        radius: 18.0,
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: 56,
+                    right: 10,
+                    child: GestureDetector(
+                      onTap: () {
+                        getImageFromGallery(5);
+                      },
+                      child: CircleAvatar(
+                        child: Icon(
+                          Icons.image,
+                          size: 20.0,
+                          color: Colors.black,
+                        ),
+                        backgroundColor: Colors.white,
+                        radius: 18.0,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 60.0,
+            ),
+            Material(
+              color: Colors.transparent,
+              child: InkWell(
+                splashColor: Colors.transparent,
+                onTap: () {
+                  if (offAddDone && companyNameController.text.isNotEmpty) {
+                    #TODO;
+                    callUploadAPI(context);
+                  }
+                },
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 50.0,
+                  child: Center(
+                    child: Text(
+                      "Upload Documents",
+                      style: TextStyle(
+                          color: Color(0xff252427),
+                          fontSize: 24.0,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(width: 2.0, color: Colors.white),
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 100.0,
+            ),
+          ],
+        ),
       ),
     );
   }
 
   Widget getCustomWidget(context) {
     switch (selectedWidgetMarker) {
-      case WidgetMarker.otpVerification:
-        return getOtpVerificationWidget(context);
-      case WidgetMarker.signIn:
-        return getSignInWidget(context);
+      case WidgetMarker.panCard:
+        return getPanCardWidget(context);
+      case WidgetMarker.addProof:
+        return getAddProofWidget(context);
+      case WidgetMarker.selfie:
+        return getSelfieWidget(context);
+      case WidgetMarker.offAdd:
+        return getOffAddWidget(context);
     }
-    return getSignInWidget(context);
-  }
-
-  Widget getCustomBottomSheetWidget(
-      context, ScrollController scrollController) {
-    switch (selectedWidgetMarker) {
-      case WidgetMarker.otpVerification:
-        return getOtpVerificationBottomSheetWidget(context, scrollController);
-      case WidgetMarker.signIn:
-        return getSignInBottomSheetWidget(context, scrollController);
-    }
-    return getSignInBottomSheetWidget(context, scrollController);
+    return getPanCardWidget(context);
   }
 
   Future<bool> onBackPressed() {
     switch (selectedWidgetMarker) {
-      case WidgetMarker.otpVerification:
+      case WidgetMarker.panCard:
+        return Future.value(true);
+      case WidgetMarker.addProof:
         setState(() {
-          selectedWidgetMarker = WidgetMarker.signIn;
+          selectedWidgetMarker = WidgetMarker.panCard;
         });
         return Future.value(false);
-      case WidgetMarker.signIn:
-        return Future.value(true);
+      case WidgetMarker.selfie:
+        setState(() {
+          selectedWidgetMarker = WidgetMarker.addProof;
+        });
+        return Future.value(false);
+      case WidgetMarker.offAdd:
+        setState(() {
+          selectedWidgetMarker = WidgetMarker.addProof;
+        });
+        return Future.value(false);
     }
     return Future.value(true);
   }
@@ -519,16 +857,10 @@ class _UploadDocsState extends State<UploadDocs> {
       backgroundColor: Color(0xff252427),
       body: Stack(
         children: <Widget>[
-          SingleChildScrollView(
-            child: Column(
-              children: [
-                getCustomWidget(context),
-              ],
-            ),
-          ),
+          getCustomWidget(context),
           DraggableScrollableSheet(
-            initialChildSize: 0.65,
-            minChildSize: 0.4,
+            initialChildSize: 0.08,
+            minChildSize: 0.08,
             maxChildSize: 0.9,
             builder: (BuildContext context, ScrollController scrollController) {
               return Hero(
