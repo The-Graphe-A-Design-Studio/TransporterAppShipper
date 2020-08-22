@@ -3,12 +3,12 @@ import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:transportationapp/CommonPages/LoadingBody.dart';
-import 'package:transportationapp/HttpHandler.dart';
-import 'package:transportationapp/Models/GooglePlaces.dart';
-import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/BottomSheets/AccountBottomSheetDummy.dart';
-import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/Models/TruckCategory.dart';
-import 'package:transportationapp/MyConstants.dart';
+import 'package:shipperapp/BottomSheets/AccountBottomSheetDummy.dart';
+import 'package:shipperapp/CommonPages/LoadingBody.dart';
+import 'package:shipperapp/HttpHandler.dart';
+import 'package:shipperapp/Models/GooglePlaces.dart';
+import 'package:shipperapp/Models/TruckCategory.dart';
+import 'package:shipperapp/MyConstants.dart';
 
 class TripPlanner extends StatefulWidget {
   TripPlanner({Key key, this.title}) : super(key: key);

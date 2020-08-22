@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/BottomSheets/AccountBottomSheetLoggedIn.dart';
-import 'package:transportationapp/Models/User.dart';
-import 'package:transportationapp/MyConstants.dart';
+import 'package:shipperapp/BottomSheets/AccountBottomSheetLoggedIn.dart';
+import 'package:shipperapp/Models/User.dart';
+import 'package:shipperapp/MyConstants.dart';
 
 class HomePageTransporter extends StatefulWidget {
-  UserTransporter userTransporter;
+  final UserTransporter userTransporter;
   HomePageTransporter({Key key, this.userTransporter}) : super(key: key);
 
   @override

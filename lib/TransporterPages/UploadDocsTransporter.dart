@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:transportationapp/BottomSheets/AccountBottomSheetLoggedIn.dart';
+import 'package:shipperapp/BottomSheets/AccountBottomSheetLoggedIn.dart';
 
 class UploadDocs extends StatefulWidget {
   UploadDocs({Key key}) : super(key: key);
@@ -781,7 +781,6 @@ class _UploadDocsState extends State<UploadDocs> {
                 splashColor: Colors.transparent,
                 onTap: () {
                   if (offAddDone && companyNameController.text.isNotEmpty) {
-                    #TODO;
                     callUploadAPI(context);
                   }
                 },

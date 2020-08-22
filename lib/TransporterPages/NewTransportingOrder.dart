@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/BottomSheets/AccountBottomSheetLoggedIn.dart';
+import 'package:shipperapp/BottomSheets/AccountBottomSheetLoggedIn.dart';
 
 class NewTransportingOrder extends StatefulWidget {
   NewTransportingOrder({Key key}) : super(key: key);

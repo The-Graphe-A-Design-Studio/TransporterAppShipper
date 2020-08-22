@@ -3,12 +3,12 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
-import 'package:transportationapp/DialogScreens/DialogFailed.dart';
-import 'package:transportationapp/DialogScreens/DialogProcessing.dart';
-import 'package:transportationapp/DialogScreens/DialogSuccess.dart';
-import 'package:transportationapp/HttpHandler.dart';
-import 'package:transportationapp/Models/User.dart';
-import 'package:transportationapp/MyConstants.dart';
+import 'package:shipperapp/DialogScreens/DialogFailed.dart';
+import 'package:shipperapp/DialogScreens/DialogProcessing.dart';
+import 'package:shipperapp/DialogScreens/DialogSuccess.dart';
+import 'package:shipperapp/HttpHandler.dart';
+import 'package:shipperapp/Models/User.dart';
+import 'package:shipperapp/MyConstants.dart';
 
 class TransporterOptionsPage extends StatefulWidget {
   TransporterOptionsPage({Key key}) : super(key: key);

@@ -1,27 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:transportationapp/DriverPages/DriverUpcomingOrder.dart';
-import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/DriverPages/DriverOptionsPage.dart';
-import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/CommonPages/EmiCalculator.dart';
-import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/CommonPages/FadeTransition.dart';
-import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/CommonPages/FreightCalculator.dart';
-import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/DriverPages/HomePageDriver.dart';
-import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/OwnerPages/HomePageOwner.dart';
-import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/CommonPages/IntroPageLoginOptions.dart';
-import 'package:transportationapp/MyConstants.dart';
-import 'package:transportationapp/OwnerPages/AddTruckFromOwner.dart';
-import 'package:transportationapp/OwnerPages/EditTruckFromOwner.dart';
-import 'package:transportationapp/OwnerPages/ViewProfileOwner.dart';
-import 'package:transportationapp/OwnerPages/ViewTrucksOwner.dart';
-import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/TransporterPages/NewTransportingOrder.dart';
-import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/TransporterPages/OrderSummaryScreen.dart';
-import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/OwnerPages/OwnerOptionsPage.dart';
-import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/TransporterPages/RequestTransport.dart';
-import 'package:transportationapp/SplashScreen.dart';
-import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/CommonPages/TollCalculator.dart';
-import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/TransporterPages/TransporterOptionsPage.dart';
-import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/CommonPages/TripPlanner.dart';
-import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/TransporterPages/HomePageTransporter.dart';
-import 'package:transportationapp/TransporterPages/UploadDocsTransporter.dart';
+import 'package:shipperapp/CommonPages/EmiCalculator.dart';
+import 'package:shipperapp/CommonPages/FadeTransition.dart';
+import 'package:shipperapp/CommonPages/FreightCalculator.dart';
+import 'package:shipperapp/CommonPages/IntroPageLoginOptions.dart';
+import 'package:shipperapp/CommonPages/TollCalculator.dart';
+import 'package:shipperapp/CommonPages/TripPlanner.dart';
+import 'package:shipperapp/MyConstants.dart';
+import 'package:shipperapp/SplashScreen.dart';
+import 'package:shipperapp/TransporterPages/HomePageTransporter.dart';
+import 'package:shipperapp/TransporterPages/NewTransportingOrder.dart';
+import 'package:shipperapp/TransporterPages/OrderSummaryScreen.dart';
+import 'package:shipperapp/TransporterPages/RequestTransport.dart';
+import 'package:shipperapp/TransporterPages/TransporterOptionsPage.dart';
+import 'package:shipperapp/TransporterPages/UploadDocsTransporter.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -35,10 +26,6 @@ class RouteGenerator {
       //Login or Signup Pages
       case introLoginOptionPage:
         return FadeRoute(page: IntroPageLoginOptions());
-      case ownerOptionPage:
-        return FadeRoute(page: OwnerOptionsPage());
-      case driverOptionPage:
-        return FadeRoute(page: DriverOptionsPage());
       case transporterOptionPage:
         return FadeRoute(page: TransporterOptionsPage());
 
@@ -52,12 +39,6 @@ class RouteGenerator {
       case tripPlannerPage:
         return FadeRoute(page: TripPlanner());
 
-    //Pages once the user is LoggedIn - Driver
-      case homePageDriver:
-        return FadeRoute(page: HomePageDriver(userDriver: args));
-      case driverUpcomingOrderPage:
-        return FadeRoute(page: DriverUpcomingOrder());
-
     //Pages once the user is LoggedIn - Transporter
       case homePageTransporter:
         return FadeRoute(page: HomePageTransporter(userTransporter: args,));
@@ -69,27 +50,6 @@ class RouteGenerator {
         return FadeRoute(page: OrderSummaryScreen());
       case requestTransportPage:
         return FadeRoute(page: RequestTransport());
-
-    //Pages once the user is LoggedIn - Owner
-      case homePageOwner:
-        return FadeRoute(page: HomePageOwner(userOwner: args));
-      case addTruckOwner:
-        return FadeRoute(page: AddTruckOwner(userOwner: args));
-      case viewTrucksOwner:
-        return FadeRoute(
-            page: ViewTrucksOwner(
-          userOwner: args,
-        ));
-      case editTrucksOwner:
-        return FadeRoute(
-            page: EditTruckOwner(
-                truck: (args as Map)["truck"],
-                viewTrucksOwnerState: (args as Map)["state"]));
-      case viewProfileOwner:
-        return FadeRoute(
-            page: ViewProfileOwner(
-          userOwner: args,
-        ));
 
       default:
         return _errorRoute();

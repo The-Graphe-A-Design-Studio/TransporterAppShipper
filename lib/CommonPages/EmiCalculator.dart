@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/BottomSheets/AccountBottomSheetDummy.dart';
+import 'package:shipperapp/BottomSheets/AccountBottomSheetDummy.dart';
 
 class EmiCalculator extends StatefulWidget {
   EmiCalculator({Key key, this.title}) : super(key: key);

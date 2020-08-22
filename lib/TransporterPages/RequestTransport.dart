@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'file:///C:/Users/LENOVO/Desktop/transporter-app/lib/BottomSheets/AccountBottomSheetLoggedIn.dart';
+import 'package:shipperapp/BottomSheets/AccountBottomSheetLoggedIn.dart';
 
 class RequestTransport extends StatefulWidget {
   RequestTransport({Key key, this.title}) : super(key: key);
