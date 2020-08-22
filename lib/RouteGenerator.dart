@@ -43,7 +43,7 @@ class RouteGenerator {
       case homePageTransporter:
         return FadeRoute(page: HomePageTransporter(userTransporter: args,));
       case uploadDocsTransporter:
-        return FadeRoute(page: UploadDocs());
+        return FadeRoute(page: UploadDocs(userTransporter: (args as Map)['user'], startFrom: (args as Map)['passValue'],));
       case newTransportingOrderPage:
         return FadeRoute(page: NewTransportingOrder());
       case orderSummaryPage:

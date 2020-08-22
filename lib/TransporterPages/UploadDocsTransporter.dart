@@ -3,16 +3,25 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shipperapp/BottomSheets/AccountBottomSheetLoggedIn.dart';
+import 'package:shipperapp/DialogScreens/DialogFailed.dart';
+import 'package:shipperapp/DialogScreens/DialogProcessing.dart';
+import 'package:shipperapp/DialogScreens/DialogSuccess.dart';
+import 'package:shipperapp/HttpHandler.dart';
+import 'package:shipperapp/Models/User.dart';
 
 class UploadDocs extends StatefulWidget {
-  UploadDocs({Key key}) : super(key: key);
+  final UserTransporter userTransporter;
+  final int startFrom;
+
+  UploadDocs({Key key, this.userTransporter, this.startFrom}) : super(key: key);
 
   @override
   _UploadDocsState createState() => _UploadDocsState();
 }
 
-enum WidgetMarker { panCard, selfie, addProof, offAdd }
+enum WidgetMarker { panCard, addProof, selfie, offAdd }
 
 class _UploadDocsState extends State<UploadDocs> {
   WidgetMarker selectedWidgetMarker;
@@ -28,23 +37,20 @@ class _UploadDocsState extends State<UploadDocs> {
   bool addBackDone = false;
   bool offAddDone = false;
   String selectedAddProofType;
+  List<String> lst = ['Aadhar Card', 'Voter ID', 'Passport', 'Driving Licence'];
 
   final companyNameController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    selectedWidgetMarker = WidgetMarker.panCard;
+    selectedWidgetMarker = WidgetMarker.values[0];
   }
 
   @override
   void dispose() {
     companyNameController.dispose();
     super.dispose();
-  }
-
-  void callUploadAPI(BuildContext context) {
-    return;
   }
 
   Future getImageFromCamera(int i) async {
@@ -243,8 +249,39 @@ class _UploadDocsState extends State<UploadDocs> {
                 splashColor: Colors.transparent,
                 onTap: () {
                   if (panCardDone) {
-                    setState(() {
-                      selectedWidgetMarker = WidgetMarker.addProof;
+                    DialogProcessing().showCustomDialog(context,
+                        title: "Uploading Pan Card",
+                        text: "Processing, Please Wait!");
+                    HTTPHandler().uploadDocsPic([
+                      widget.userTransporter.mobileNumber,
+                      "cu_pan_card",
+                      panCard.path
+                    ]).then((value) async {
+                      if (value.success) {
+                        Navigator.pop(context);
+                        DialogSuccess().showCustomDialog(context,
+                            title: "Uploading Pan Card");
+                        await Future.delayed(Duration(seconds: 1), () {});
+                        Navigator.pop(context);
+                        SharedPreferences.getInstance().then((value) {
+                          value.setString("DocNumber", "1");
+                          setState(() {
+                            selectedWidgetMarker = WidgetMarker.addProof;
+                          });
+                        });
+                      } else {
+                        Navigator.pop(context);
+                        DialogFailed().showCustomDialog(context,
+                            title: "Uploading Pan Card", text: value.message);
+                        await Future.delayed(Duration(seconds: 3), () {});
+                        Navigator.pop(context);
+                      }
+                    }).catchError((error) async {
+                      Navigator.pop(context);
+                      DialogFailed().showCustomDialog(context,
+                          title: "Uploading Pan Card", text: "Network Error");
+                      await Future.delayed(Duration(seconds: 3), () {});
+                      Navigator.pop(context);
                     });
                   }
                 },
@@ -307,7 +344,10 @@ class _UploadDocsState extends State<UploadDocs> {
             ),
             DropdownButton<String>(
               isExpanded: true,
-              hint: Text("Select Truck Category", style: TextStyle(color: Colors.white),),
+              hint: Text(
+                "Select Truck Category",
+                style: TextStyle(color: Colors.white),
+              ),
               dropdownColor: Color(0xff252427),
               style: TextStyle(color: Colors.white),
               underline: Container(
@@ -315,17 +355,12 @@ class _UploadDocsState extends State<UploadDocs> {
                 color: Colors.white,
               ),
               value: selectedAddProofType,
-              items: <String>[
-                'Aadhar Card',
-                'Voter ID',
-                'Passport',
-                'Driving Licence'
-              ].map<DropdownMenuItem<String>>((String value) {
+              items: lst.map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
                   child: Text(value),
                 );
-              }).toList(),
+              }),
               onChanged: (String value) {
                 setState(() {
                   selectedAddProofType = value;
@@ -334,7 +369,9 @@ class _UploadDocsState extends State<UploadDocs> {
                 });
               },
             ),
-            SizedBox(height: 30.0,),
+            SizedBox(
+              height: 30.0,
+            ),
             Align(
               alignment: Alignment.center,
               child: Stack(
@@ -480,9 +517,43 @@ class _UploadDocsState extends State<UploadDocs> {
               child: InkWell(
                 splashColor: Colors.transparent,
                 onTap: () {
-                  if (selectedAddProofType.isNotEmpty && addFrontDone && addBackDone) {
-                    setState(() {
-                      selectedWidgetMarker = WidgetMarker.selfie;
+                  if (selectedAddProofType.isNotEmpty &&
+                      addFrontDone &&
+                      addBackDone) {
+                    DialogProcessing().showCustomDialog(context,
+                        title: "Uploading Address Proof",
+                        text: "Processing, Please Wait!");
+                    HTTPHandler().uploadAddProof([
+                      widget.userTransporter.mobileNumber,
+                      lst.indexOf(selectedAddProofType)+1,
+                      addFront.path,
+                      addBack.path
+                    ]).then((value) async {
+                      if (value.success) {
+                        Navigator.pop(context);
+                        DialogSuccess().showCustomDialog(context,
+                            title: "Uploading Address Proof");
+                        await Future.delayed(Duration(seconds: 1), () {});
+                        Navigator.pop(context);
+                        SharedPreferences.getInstance().then((value) {
+                          value.setString("DocNumber", "2");
+                          setState(() {
+                            selectedWidgetMarker = WidgetMarker.selfie;
+                          });
+                        });
+                      } else {
+                        Navigator.pop(context);
+                        DialogFailed().showCustomDialog(context,
+                            title: "Uploading Address Proof", text: value.message);
+                        await Future.delayed(Duration(seconds: 3), () {});
+                        Navigator.pop(context);
+                      }
+                    }).catchError((error) async {
+                      Navigator.pop(context);
+                      DialogFailed().showCustomDialog(context,
+                          title: "Uploading Address Proof", text: "Network Error");
+                      await Future.delayed(Duration(seconds: 3), () {});
+                      Navigator.pop(context);
                     });
                   }
                 },
@@ -619,8 +690,39 @@ class _UploadDocsState extends State<UploadDocs> {
                 splashColor: Colors.transparent,
                 onTap: () {
                   if (selfieDone) {
-                    setState(() {
-                      selectedWidgetMarker = WidgetMarker.offAdd;
+                    DialogProcessing().showCustomDialog(context,
+                        title: "Uploading Selfie",
+                        text: "Processing, Please Wait!");
+                    HTTPHandler().uploadDocsPic([
+                      widget.userTransporter.mobileNumber,
+                      "cu_selfie",
+                      selfie.path
+                    ]).then((value) async {
+                      if (value.success) {
+                        Navigator.pop(context);
+                        DialogSuccess().showCustomDialog(context,
+                            title: "Uploading Selfie");
+                        await Future.delayed(Duration(seconds: 1), () {});
+                        Navigator.pop(context);
+                        SharedPreferences.getInstance().then((value) {
+                          value.setString("DocNumber", "3");
+                          setState(() {
+                            selectedWidgetMarker = WidgetMarker.offAdd;
+                          });
+                        });
+                      } else {
+                        Navigator.pop(context);
+                        DialogFailed().showCustomDialog(context,
+                            title: "Uploading Selfie", text: value.message);
+                        await Future.delayed(Duration(seconds: 3), () {});
+                        Navigator.pop(context);
+                      }
+                    }).catchError((error) async {
+                      Navigator.pop(context);
+                      DialogFailed().showCustomDialog(context,
+                          title: "Uploading Selfie", text: "Network Error");
+                      await Future.delayed(Duration(seconds: 3), () {});
+                      Navigator.pop(context);
                     });
                   }
                 },
@@ -781,7 +883,40 @@ class _UploadDocsState extends State<UploadDocs> {
                 splashColor: Colors.transparent,
                 onTap: () {
                   if (offAddDone && companyNameController.text.isNotEmpty) {
-                    callUploadAPI(context);
+                    DialogProcessing().showCustomDialog(context,
+                        title: "Uploading Office Address Proof",
+                        text: "Processing, Please Wait!");
+                    HTTPHandler().uploadDocsPic([
+                      widget.userTransporter.mobileNumber,
+                      companyNameController.text.toString(),
+                      offAdd.path
+                    ]).then((value) async {
+                      if (value.success) {
+                        Navigator.pop(context);
+                        DialogSuccess().showCustomDialog(context,
+                            title: "Uploading Office Address Proof");
+                        await Future.delayed(Duration(seconds: 1), () {});
+                        Navigator.pop(context);
+                        SharedPreferences.getInstance().then((value) {
+                          value.setString("DocNumber", "3");
+                          setState(() {
+                            selectedWidgetMarker = WidgetMarker.offAdd;
+                          });
+                        });
+                      } else {
+                        Navigator.pop(context);
+                        DialogFailed().showCustomDialog(context,
+                            title: "Uploading Office Address Proof", text: value.message);
+                        await Future.delayed(Duration(seconds: 3), () {});
+                        Navigator.pop(context);
+                      }
+                    }).catchError((error) async {
+                      Navigator.pop(context);
+                      DialogFailed().showCustomDialog(context,
+                          title: "Uploading Office Address Proof", text: "Network Error");
+                      await Future.delayed(Duration(seconds: 3), () {});
+                      Navigator.pop(context);
+                    });
                   }
                 },
                 child: Container(
@@ -825,29 +960,6 @@ class _UploadDocsState extends State<UploadDocs> {
         return getOffAddWidget(context);
     }
     return getPanCardWidget(context);
-  }
-
-  Future<bool> onBackPressed() {
-    switch (selectedWidgetMarker) {
-      case WidgetMarker.panCard:
-        return Future.value(true);
-      case WidgetMarker.addProof:
-        setState(() {
-          selectedWidgetMarker = WidgetMarker.panCard;
-        });
-        return Future.value(false);
-      case WidgetMarker.selfie:
-        setState(() {
-          selectedWidgetMarker = WidgetMarker.addProof;
-        });
-        return Future.value(false);
-      case WidgetMarker.offAdd:
-        setState(() {
-          selectedWidgetMarker = WidgetMarker.addProof;
-        });
-        return Future.value(false);
-    }
-    return Future.value(true);
   }
 
   @override

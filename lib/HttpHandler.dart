@@ -5,7 +5,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shipperapp/DialogScreens/DialogProcessing.dart';
 import 'package:shipperapp/DialogScreens/DialogSuccess.dart';
 import 'package:shipperapp/Models/TruckCategory.dart';
-import 'package:shipperapp/Models/User.dart';
 import 'package:shipperapp/MyConstants.dart';
 import 'package:shipperapp/PostMethodResult.dart';
 
@@ -26,14 +25,9 @@ class HTTPHandler {
         context, introLoginOptionPage, (route) => false);
   }
 
-  void saveLocalChangesOwner(UserOwner userOwner) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('userData', json.encode(userOwner.toJson()));
-  }
-
   Future<List<TruckCategory>> getTruckCategory() async {
     try {
-      var result = await http.get("https://truckwale.co.in/api/truck_owner/truck_categories");
+      var result = await http.get("https://truckwale.co.in/api/truck_categories");
       var ret = json.decode(result.body);
       List<TruckCategory> list = [];
       for (var i in ret) {
@@ -92,6 +86,23 @@ class HTTPHandler {
       request.fields['cu_phone'] = data[0];
       request.fields['cu_co_name'] = data[1];
       request.files.add(await http.MultipartFile.fromPath('co_office_address', data[2]));
+      var result = await request.send();
+      var finalResult = await http.Response.fromStream(result);
+      return PostResultOne.fromJson(json.decode(finalResult.body));
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<PostResultOne> uploadAddProof(List data) async {
+    try {
+      var url = "$baseURLShipper/profile";
+      var request = http.MultipartRequest('POST', Uri.parse(url));
+
+      request.fields['cu_phone'] = data[0];
+      request.fields['cu_address_type'] = data[1];
+      request.files.add(await http.MultipartFile.fromPath('co_address_front', data[2]));
+      request.files.add(await http.MultipartFile.fromPath('co_address_back', data[3]));
       var result = await request.send();
       var finalResult = await http.Response.fromStream(result);
       return PostResultOne.fromJson(json.decode(finalResult.body));
