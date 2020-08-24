@@ -4,7 +4,9 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shipperapp/DialogScreens/DialogProcessing.dart';
 import 'package:shipperapp/DialogScreens/DialogSuccess.dart';
+import 'package:shipperapp/Models/MaterialType.dart';
 import 'package:shipperapp/Models/TruckCategory.dart';
+import 'package:shipperapp/Models/TruckPref.dart';
 import 'package:shipperapp/MyConstants.dart';
 import 'package:shipperapp/PostMethodResult.dart';
 
@@ -27,7 +29,8 @@ class HTTPHandler {
 
   Future<List<TruckCategory>> getTruckCategory() async {
     try {
-      var result = await http.get("https://truckwale.co.in/api/truck_categories");
+      var result =
+          await http.get("https://truckwale.co.in/api/truck_categories");
       var ret = json.decode(result.body);
       List<TruckCategory> list = [];
       for (var i in ret) {
@@ -39,10 +42,41 @@ class HTTPHandler {
     }
   }
 
+  Future<List<LoadMaterialType>> getMaterialType() async {
+    try {
+      var result = await http.get("https://truckwale.co.in/api/material_types");
+      var ret = json.decode(result.body);
+      List<LoadMaterialType> list = [];
+      for (var i in ret) {
+        list.add(LoadMaterialType.fromJson(i));
+      }
+      return list;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<List<TruckPref>> getTruckPref(List data) async {
+    try {
+      var result = await http.post(
+          "https://truckwale.co.in/api/truck_category_type",
+          body: {"truck_cat_id": data[0]});
+      var ret = json.decode(result.body);
+      List<TruckPref> list = [];
+      for (var i in ret) {
+        list.add(TruckPref.fromJson(i));
+      }
+      return list;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   /*-------------------------- Customer API's ---------------------------*/
   Future<PostResultOne> registerLoginCustomer(List data) async {
     try {
-      var result = await http.post("$baseURLShipper/register-login-logout", body: {
+      var result =
+          await http.post("$baseURLShipper/register-login-logout", body: {
         'cu_phone_code': data[0],
         'cu_phone': data[1],
       });
@@ -54,7 +88,8 @@ class HTTPHandler {
 
   Future<PostResultOne> logoutCustomer(List data) async {
     try {
-      var result = await http.post("$baseURLShipper/register-login-logout", body: {
+      var result =
+          await http.post("$baseURLShipper/register-login-logout", body: {
         'logout_number': data[0],
       });
       return PostResultOne.fromJson(json.decode(result.body));
@@ -69,7 +104,8 @@ class HTTPHandler {
       var request = http.MultipartRequest('POST', Uri.parse(url));
 
       request.fields['cu_phone'] = data[0];
-      request.files.add(await http.MultipartFile.fromPath('${data[1]}', data[2]));
+      request.files
+          .add(await http.MultipartFile.fromPath('${data[1]}', data[2]));
       var result = await request.send();
       var finalResult = await http.Response.fromStream(result);
       return PostResultOne.fromJson(json.decode(finalResult.body));
@@ -85,7 +121,8 @@ class HTTPHandler {
 
       request.fields['cu_phone'] = data[0];
       request.fields['cu_co_name'] = data[1];
-      request.files.add(await http.MultipartFile.fromPath('co_office_address', data[2]));
+      request.files
+          .add(await http.MultipartFile.fromPath('co_office_address', data[2]));
       var result = await request.send();
       var finalResult = await http.Response.fromStream(result);
       return PostResultOne.fromJson(json.decode(finalResult.body));
@@ -101,8 +138,10 @@ class HTTPHandler {
 
       request.fields['cu_phone'] = data[0];
       request.fields['cu_address_type'] = data[1];
-      request.files.add(await http.MultipartFile.fromPath('co_address_front', data[2]));
-      request.files.add(await http.MultipartFile.fromPath('co_address_back', data[3]));
+      request.files
+          .add(await http.MultipartFile.fromPath('co_address_front', data[2]));
+      request.files
+          .add(await http.MultipartFile.fromPath('co_address_back', data[3]));
       var result = await request.send();
       var finalResult = await http.Response.fromStream(result);
       return PostResultOne.fromJson(json.decode(finalResult.body));

@@ -414,23 +414,6 @@ class _AccountBottomSheetLoggedInState extends State<AccountBottomSheetLoggedIn>
           Row(
             children: [
               Text(
-                  "New Transporting Order"
-              ),
-              Spacer(),
-              FlatButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, newTransportingOrderPage);
-                },
-                child: Text("Link"),
-              )
-            ],
-          ),
-          SizedBox(
-            height: 8.0,
-          ),
-          Row(
-            children: [
-              Text(
                   "Order Summary Page"
               ),
               Spacer(),

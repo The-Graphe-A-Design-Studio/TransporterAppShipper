@@ -19,6 +19,6 @@ const String tripPlannerPage = "/tripPlannerPage";
 //Pages once the user is LoggedIn - Transporter
 const String homePageTransporter = "/homePageTransporter";
 const String uploadDocsTransporter = "/uploadDocsTransporter";
-const String newTransportingOrderPage = "/newTransportingOrderPage";
 const String orderSummaryPage = "/orderSummaryPage";
 const String requestTransportPage = "/requestTransportPage";
+const String postLoad = "/postLoad";

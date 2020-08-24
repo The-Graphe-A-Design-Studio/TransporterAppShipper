@@ -41,7 +41,7 @@ class _HomePageTransporterState extends State<HomePageTransporter> {
                           height: 30.0,
                         ),
                         Text(
-                          "Customer Login",
+                          "Let's Post a new Load",
                           style: TextStyle(
                             fontSize: 23.0,
                             fontWeight: FontWeight.bold,
@@ -51,12 +51,12 @@ class _HomePageTransporterState extends State<HomePageTransporter> {
                         SizedBox(
                           height: 30.0,
                         ),
-                        Text("Tap to Add a New Truck",
+                        Text("Tap to post a new load",
                             style: TextStyle(
                               color: Colors.white12,
                               fontSize: 18.0,
                             )),
-                        Text("for Transporting",
+                        Text("for Shipping",
                             style: TextStyle(
                               color: Colors.white12,
                               fontSize: 18.0,
@@ -64,22 +64,19 @@ class _HomePageTransporterState extends State<HomePageTransporter> {
                         SizedBox(
                           height: 40.0,
                         ),
-                        FlatButton(
-                          color: Colors.white,
-                          child: Text("Upload", style: TextStyle(color: Colors.white, fontSize: 22.0, fontWeight: FontWeight.bold),),
-                          onPressed: () {
-                            SharedPreferences.getInstance().then((value) {
-                              String passVal = value.getString("DocNumber");
-                              if (passVal.isEmpty) {
-                                value.setString("DocNumber", "0");
-                                passVal = value.getString("DocNumber");
-                              }
-                              Navigator.pushNamed(context, uploadDocsTransporter, arguments: {"user": uploadDocsTransporter, "passValue": int.parse(passVal)});
-                            });
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(context, postLoad);
                           },
-                        ),
-                        SizedBox(
-                          height: 100,
+                          child: CircleAvatar(
+                            radius: 40.0,
+                            backgroundColor: Colors.white,
+                            child: Icon(
+                              Icons.add,
+                              color: Color(0xff252427),
+                              size: 35.0,
+                            ),
+                          ),
                         ),
                       ],
                     ),

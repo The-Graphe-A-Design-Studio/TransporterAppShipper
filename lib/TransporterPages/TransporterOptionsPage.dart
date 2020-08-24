@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shipperapp/DialogScreens/DialogFailed.dart';
 import 'package:shipperapp/DialogScreens/DialogProcessing.dart';
 import 'package:shipperapp/DialogScreens/DialogSuccess.dart';
@@ -63,6 +64,9 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
         DialogSuccess().showCustomDialog(context, title: "OTP Verification");
         await Future.delayed(Duration(seconds: 1), () {});
         Navigator.pop(context);
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setBool("rememberMe", true);
+        prefs.setString("userData", value[1]);
         Navigator.pushNamedAndRemoveUntil(
           _context,
           homePageTransporter,

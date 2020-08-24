@@ -20,7 +20,6 @@ class _SplashScreenState extends State<SplashScreen> {
     await Future.delayed(Duration(seconds: 2), () {});
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool rememberMe = prefs.getBool("rememberMe");
-    userType = prefs.getString("userType");
     if (rememberMe == true) {
       userTransporter =
           UserTransporter.fromJson(json.decode(prefs.getString("userData")));
