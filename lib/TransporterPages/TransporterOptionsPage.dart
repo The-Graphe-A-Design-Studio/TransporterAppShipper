@@ -67,12 +67,21 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setBool("rememberMe", true);
         prefs.setString("userData", value[1]);
-        Navigator.pushNamedAndRemoveUntil(
-          _context,
-          homePageTransporter,
-          (route) => false,
-          arguments: UserTransporter.fromJson(json.decode(value[1])),
-        );
+        if (json.decode(value[1])['verified'] == "1") {
+          Navigator.pushNamedAndRemoveUntil(
+            _context,
+            homePageTransporter,
+                (route) => false,
+            arguments: UserTransporter.fromJson(json.decode(value[1])),
+          );
+        } else {
+          Navigator.pushNamedAndRemoveUntil(
+            _context,
+            homePageTransporterNotVerified,
+                (route) => false,
+            arguments: UserTransporter.fromJson(json.decode(value[1])),
+          );
+        }
       } else {
         Navigator.pop(context);
         DialogFailed().showCustomDialog(context,

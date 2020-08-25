@@ -8,6 +8,7 @@ import 'package:shipperapp/CommonPages/TripPlanner.dart';
 import 'package:shipperapp/MyConstants.dart';
 import 'package:shipperapp/SplashScreen.dart';
 import 'package:shipperapp/TransporterPages/HomePageTransporter.dart';
+import 'package:shipperapp/TransporterPages/HomePageTransporterNotVerified.dart';
 import 'package:shipperapp/TransporterPages/OrderSummaryScreen.dart';
 import 'package:shipperapp/TransporterPages/PostLoad.dart';
 import 'package:shipperapp/TransporterPages/RequestTransport.dart';
@@ -42,6 +43,8 @@ class RouteGenerator {
     //Pages once the user is LoggedIn - Transporter
       case homePageTransporter:
         return FadeRoute(page: HomePageTransporter(userTransporter: args,));
+      case homePageTransporterNotVerified:
+        return FadeRoute(page: HomePageTransporterNotVerified(userTransporter: args,));
       case uploadDocsTransporter:
         return FadeRoute(page: UploadDocs(userTransporter: (args as Map)['user'], startFrom: (args as Map)['passValue'],));
       case orderSummaryPage:

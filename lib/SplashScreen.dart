@@ -32,8 +32,13 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     doSomeAction().then((value) {
       if (value == true) {
-        Navigator.pushReplacementNamed(context, homePageTransporter,
-            arguments: userTransporter);
+        if (userTransporter.verified=="1") {
+          Navigator.pushReplacementNamed(context, homePageTransporter,
+              arguments: userTransporter);
+        } else {
+          Navigator.pushReplacementNamed(context, homePageTransporterNotVerified,
+              arguments: userTransporter);
+        }
       } else {
         Navigator.pushReplacementNamed(context, introLoginOptionPage);
       }

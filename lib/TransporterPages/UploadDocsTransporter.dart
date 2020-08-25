@@ -1,10 +1,9 @@
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:shipperapp/BottomSheets/AccountBottomSheetLoggedIn.dart';
+import 'package:shipperapp/BottomSheets/AccountBottomSheetUnknown.dart';
 import 'package:shipperapp/DialogScreens/DialogFailed.dart';
 import 'package:shipperapp/DialogScreens/DialogProcessing.dart';
 import 'package:shipperapp/DialogScreens/DialogSuccess.dart';
@@ -44,7 +43,7 @@ class _UploadDocsState extends State<UploadDocs> {
   @override
   void initState() {
     super.initState();
-    selectedWidgetMarker = WidgetMarker.values[0];
+    selectedWidgetMarker = WidgetMarker.values[widget.startFrom];
   }
 
   @override
@@ -355,12 +354,12 @@ class _UploadDocsState extends State<UploadDocs> {
                 color: Colors.white,
               ),
               value: selectedAddProofType,
-              items: lst.map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
+              items: lst.map((String item) {
+                return DropdownMenuItem(
+                  value: item,
+                  child: Text(item),
                 );
-              }),
+              }).toList(),
               onChanged: (String value) {
                 setState(() {
                   selectedAddProofType = value;
@@ -774,7 +773,7 @@ class _UploadDocsState extends State<UploadDocs> {
                   fontWeight: FontWeight.bold),
             ),
             Text(
-              "A Selfie",
+              "Office Address Proof",
               style: TextStyle(
                   color: Colors.white,
                   fontSize: 32.0,
@@ -989,7 +988,7 @@ class _UploadDocsState extends State<UploadDocs> {
                         topLeft: Radius.circular(30.0),
                         topRight: Radius.circular(30.0)),
                   ),
-                  child: AccountBottomSheetLoggedIn(
+                  child: AccountBottomSheetUnknown(
                       scrollController: scrollController),
                 ),
               );

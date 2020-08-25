@@ -135,9 +135,9 @@ class HTTPHandler {
     try {
       var url = "$baseURLShipper/profile";
       var request = http.MultipartRequest('POST', Uri.parse(url));
-
+      print(data);
       request.fields['cu_phone'] = data[0];
-      request.fields['cu_address_type'] = data[1];
+      request.fields['cu_address_type'] = data[1].toString();
       request.files
           .add(await http.MultipartFile.fromPath('co_address_front', data[2]));
       request.files
@@ -146,6 +146,7 @@ class HTTPHandler {
       var finalResult = await http.Response.fromStream(result);
       return PostResultOne.fromJson(json.decode(finalResult.body));
     } catch (error) {
+      print(error);
       throw error;
     }
   }
