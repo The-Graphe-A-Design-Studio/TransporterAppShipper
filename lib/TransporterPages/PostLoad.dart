@@ -30,17 +30,19 @@ class _PostLoadState extends State<PostLoad> {
   final timeController = TextEditingController();
   final contactController = TextEditingController();
   bool tripType = false;
-  List<GooglePlaces> suggestedCityFrom;
-  List<GooglePlaces> suggestedCityTo;
+  List<GooglePlaces> suggestedCityFrom = [];
+  List<GooglePlaces> suggestedCityTo = [];
 
   TruckCategory selectedTruckCategory;
   LoadMaterialType selectedLoadMaterialType;
   TruckPref selectedTruckPref;
   String selectedPriceUnit;
+  String selectedPayTerm;
   List<LoadMaterialType> loadMaterialType=[];
   List<TruckCategory> truckType=[];
   List<TruckPref> truckPref=[];
   List<String> priceUnit = ["Tonnage", "Truck"];
+  List<String> payTerms = ["Negotiable", "Fixed"];
   bool loadData = true;
   bool loadPref = false;
 
@@ -92,13 +94,20 @@ class _PostLoadState extends State<PostLoad> {
     HTTPHandler().getTruckCategory().then((value) {
       setState(() {
         truckType = value;
-        print("1");
       });
     });
     HTTPHandler().getMaterialType().then((value) {
       setState(() {
         loadMaterialType = value;
-        print("2");
+      });
+    });
+  }
+
+  void  getTruckPrefData() async {
+    HTTPHandler().getTruckPref([selectedTruckCategory.truckCatID]).then((value) {
+      setState(() {
+        truckPref = value;
+        loadPref = false;
       });
     });
   }
@@ -128,7 +137,7 @@ class _PostLoadState extends State<PostLoad> {
     }
     return Scaffold(
       backgroundColor: Color(0xff252427),
-      body: (truckType == null || loadMaterialType == null)
+      body: (truckType.isEmpty || loadMaterialType.isEmpty || loadPref)
           ? LoadingBody()
           : Stack(
               children: [
@@ -241,6 +250,7 @@ class _PostLoadState extends State<PostLoad> {
                                 focusNode: _from,
                                 clearOnSubmit: false,
                                 textChanged: (value) {
+                                  print("here" + value);
                                   getNewCityFrom(value);
                                 },
                                 suggestions: suggestedCityFrom,
@@ -342,22 +352,22 @@ class _PostLoadState extends State<PostLoad> {
                                   "Select Material Type",
                                   style: TextStyle(color: Colors.white),
                                 ),
-                                value: selectedTruckCategory,
+                                value: selectedLoadMaterialType,
                                 dropdownColor: Color(0xff252427),
                                 style: TextStyle(color: Colors.white),
                                 underline: Container(
                                   height: 2,
                                   color: Colors.white,
                                 ),
-                                onChanged: (TruckCategory value) {
+                                onChanged: (LoadMaterialType value) {
                                   setState(() {
-                                    selectedTruckCategory = value;
+                                    selectedLoadMaterialType = value;
                                   });
                                 },
-                                items: truckType.map((TruckCategory item) {
+                                items: loadMaterialType.map((LoadMaterialType item) {
                                   return DropdownMenuItem(
                                     value: item,
-                                    child: Text(item.truckCatName),
+                                    child: Text(item.name),
                                   );
                                 }).toList(),
                               ),
@@ -409,8 +419,7 @@ class _PostLoadState extends State<PostLoad> {
                                         filled: true,
                                         errorStyle:
                                             TextStyle(color: Colors.white),
-                                        prefixIcon: Icon(Icons.line_weight),
-                                        hintText: "Weight (In Tons)",
+                                        hintText: "Weight",
                                         border: OutlineInputBorder(
                                           borderRadius:
                                               BorderRadius.circular(5.0),
@@ -449,7 +458,9 @@ class _PostLoadState extends State<PostLoad> {
                                 onChanged: (TruckCategory value) {
                                   setState(() {
                                     selectedTruckCategory = value;
+                                    loadPref = true;
                                   });
+                                  getTruckPrefData();
                                 },
                                 items: truckType.map((TruckCategory item) {
                                   return DropdownMenuItem(
@@ -506,22 +517,22 @@ class _PostLoadState extends State<PostLoad> {
                                   "Select Price & Payment Term",
                                   style: TextStyle(color: Colors.white),
                                 ),
-                                value: selectedTruckPref,
+                                value: selectedPayTerm,
                                 dropdownColor: Color(0xff252427),
                                 style: TextStyle(color: Colors.white),
                                 underline: Container(
                                   height: 2,
                                   color: Colors.white,
                                 ),
-                                onChanged: (TruckPref value) {
+                                onChanged: (String value) {
                                   setState(() {
-                                    selectedTruckPref = value;
+                                    selectedPayTerm = value;
                                   });
                                 },
-                                items: truckPref.map((TruckPref item) {
+                                items: payTerms.map((String item) {
                                   return DropdownMenuItem(
                                     value: item,
-                                    child: Text(item.name),
+                                    child: Text(item),
                                   );
                                 }).toList(),
                               ),

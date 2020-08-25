@@ -26,7 +26,7 @@ class AccountBottomSheetDummyLoading extends StatelessWidget {
             alignment: Alignment.center,
             child: SizedBox(
               width: 200.0,
-              child: LinearProgressIndicator(),
+              child: LinearProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.blueGrey),),
             ),
           ),
         ]),
