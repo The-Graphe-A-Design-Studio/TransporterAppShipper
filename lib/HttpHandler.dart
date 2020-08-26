@@ -122,7 +122,7 @@ class HTTPHandler {
       request.fields['cu_phone'] = data[0];
       request.fields['cu_co_name'] = data[1];
       request.files
-          .add(await http.MultipartFile.fromPath('co_office_address', data[2]));
+          .add(await http.MultipartFile.fromPath('cu_office_address', data[2]));
       var result = await request.send();
       var finalResult = await http.Response.fromStream(result);
       return PostResultOne.fromJson(json.decode(finalResult.body));
@@ -139,9 +139,9 @@ class HTTPHandler {
       request.fields['cu_phone'] = data[0];
       request.fields['cu_address_type'] = data[1].toString();
       request.files
-          .add(await http.MultipartFile.fromPath('co_address_front', data[2]));
+          .add(await http.MultipartFile.fromPath('cu_address_front', data[2]));
       request.files
-          .add(await http.MultipartFile.fromPath('co_address_back', data[3]));
+          .add(await http.MultipartFile.fromPath('cu_address_back', data[3]));
       var result = await request.send();
       var finalResult = await http.Response.fromStream(result);
       return PostResultOne.fromJson(json.decode(finalResult.body));

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shipperapp/HttpHandler.dart';
 import 'package:shipperapp/MyConstants.dart';
 
 class AccountBottomSheetUnknown extends StatefulWidget {
@@ -289,6 +290,23 @@ class _AccountBottomSheetUnknownState
                 ),
               ),
             ),
+          ),
+          SizedBox(
+            height: 20.0,
+          ),
+          Row(
+            children: [
+              Text(
+                  "Sign Out"
+              ),
+              Spacer(),
+              FlatButton(
+                onPressed: () {
+                  HTTPHandler().signOut(context);
+                },
+                child: Text("Link"),
+              )
+            ],
           ),
           SizedBox(
             height: 40.0,

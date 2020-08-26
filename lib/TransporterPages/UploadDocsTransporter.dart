@@ -20,7 +20,7 @@ class UploadDocs extends StatefulWidget {
   _UploadDocsState createState() => _UploadDocsState();
 }
 
-enum WidgetMarker { panCard, addProof, selfie, offAdd }
+enum WidgetMarker { panCard, addProof, selfie, offAdd, underVerification }
 
 class _UploadDocsState extends State<UploadDocs> {
   WidgetMarker selectedWidgetMarker;
@@ -885,7 +885,7 @@ class _UploadDocsState extends State<UploadDocs> {
                     DialogProcessing().showCustomDialog(context,
                         title: "Uploading Office Address Proof",
                         text: "Processing, Please Wait!");
-                    HTTPHandler().uploadDocsPic([
+                    HTTPHandler().uploadOfficeAddPic([
                       widget.userTransporter.mobileNumber,
                       companyNameController.text.toString(),
                       offAdd.path
@@ -897,9 +897,9 @@ class _UploadDocsState extends State<UploadDocs> {
                         await Future.delayed(Duration(seconds: 1), () {});
                         Navigator.pop(context);
                         SharedPreferences.getInstance().then((value) {
-                          value.setString("DocNumber", "3");
+                          value.setString("DocNumber", "4");
                           setState(() {
-                            selectedWidgetMarker = WidgetMarker.offAdd;
+                            selectedWidgetMarker = WidgetMarker.underVerification;
                           });
                         });
                       } else {
@@ -947,6 +947,50 @@ class _UploadDocsState extends State<UploadDocs> {
     );
   }
 
+  Widget getUnderVerificationWidget(context) {
+    return Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            SizedBox(
+              height: 100.0,
+            ),
+            Hero(
+              tag: "WhiteLogo",
+              child: Image(
+                image: AssetImage('assets/images/logo_white.png'),
+                height: 145.0,
+                width: 145.0,
+              ),
+            ),
+            Divider(color: Colors.white, indent: 60.0, endIndent: 60.0,),
+            SizedBox(
+              height: 30,
+            ),
+            Text(
+              "Please Wait while we",
+              style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                  fontSize: 20.0),
+            ),
+            Text(
+              "Verify Your Documents",
+              style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                  fontSize: 24.0),
+            ),
+            SizedBox(
+              height: 100.0,
+            ),
+          ],
+        ),
+      );
+  }
+
   Widget getCustomWidget(context) {
     switch (selectedWidgetMarker) {
       case WidgetMarker.panCard:
@@ -957,6 +1001,8 @@ class _UploadDocsState extends State<UploadDocs> {
         return getSelfieWidget(context);
       case WidgetMarker.offAdd:
         return getOffAddWidget(context);
+      case WidgetMarker.underVerification:
+        return getUnderVerificationWidget(context);
     }
     return getPanCardWidget(context);
   }
