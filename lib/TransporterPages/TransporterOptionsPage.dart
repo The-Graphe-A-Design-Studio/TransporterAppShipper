@@ -526,6 +526,12 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                   child: Container(
                       decoration: BoxDecoration(
                         color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black,
+                            blurRadius: 10.0,
+                          ),
+                        ],
                         borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(30.0),
                             topRight: Radius.circular(30.0)),

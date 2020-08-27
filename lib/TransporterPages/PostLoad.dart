@@ -20,36 +20,61 @@ class PostLoad extends StatefulWidget {
 }
 
 class _PostLoadState extends State<PostLoad> {
-  GlobalKey<AutoCompleteTextFieldState<GooglePlaces>> keyFrom = new GlobalKey();
-  GlobalKey<AutoCompleteTextFieldState<GooglePlaces>> keyTo = new GlobalKey();
+  GlobalKey<AutoCompleteTextFieldState<GooglePlaces>> keyFrom1 =
+      new GlobalKey();
+  GlobalKey<AutoCompleteTextFieldState<GooglePlaces>> keyTo1 = new GlobalKey();
+  GlobalKey<AutoCompleteTextFieldState<GooglePlaces>> keyFrom2 =
+      new GlobalKey();
+  GlobalKey<AutoCompleteTextFieldState<GooglePlaces>> keyTo2 = new GlobalKey();
+  GlobalKey<AutoCompleteTextFieldState<GooglePlaces>> keyFrom3 =
+      new GlobalKey();
+  GlobalKey<AutoCompleteTextFieldState<GooglePlaces>> keyTo3 = new GlobalKey();
   final GlobalKey<FormState> _formPostLoad = GlobalKey<FormState>();
 
-  AutoCompleteTextField fromTextField;
-  AutoCompleteTextField toTextField;
+  AutoCompleteTextField from1TextField;
+  AutoCompleteTextField to1TextField;
+  AutoCompleteTextField from2TextField;
+  AutoCompleteTextField to2TextField;
+  AutoCompleteTextField from3TextField;
+  AutoCompleteTextField to3TextField;
   final truckLoadController = TextEditingController();
+  final expectedPriceController = TextEditingController();
+  final advancePayController = TextEditingController();
   final timeController = TextEditingController();
   final contactController = TextEditingController();
+  final contactPhoneController = TextEditingController();
   bool tripType = false;
   List<GooglePlaces> suggestedCityFrom = [];
   List<GooglePlaces> suggestedCityTo = [];
+  DateTime selectedDate = DateTime.now();
+  TimeOfDay selectedTime = TimeOfDay.now();
 
   TruckCategory selectedTruckCategory;
   LoadMaterialType selectedLoadMaterialType;
   TruckPref selectedTruckPref;
   String selectedPriceUnit;
   String selectedPayTerm;
-  List<LoadMaterialType> loadMaterialType=[];
-  List<TruckCategory> truckType=[];
-  List<TruckPref> truckPref=[];
+  List<LoadMaterialType> loadMaterialType = [];
+  List<TruckCategory> truckType = [];
+  List<TruckPref> truckPref = [];
   List<String> priceUnit = ["Tonnage", "Truck"];
-  List<String> payTerms = ["Negotiable", "Fixed"];
+  List<String> payTerms = [
+    "Negotiable",
+    "Advance",
+    "Full Pay to Driver after Unloading"
+  ];
   bool loadData = true;
   bool loadPref = false;
 
-  final FocusNode _from = FocusNode();
-  final FocusNode _to = FocusNode();
+  final FocusNode _from1 = FocusNode();
+  final FocusNode _to1 = FocusNode();
+  final FocusNode _from2 = FocusNode();
+  final FocusNode _to2 = FocusNode();
+  final FocusNode _from3 = FocusNode();
+  final FocusNode _to3 = FocusNode();
   final FocusNode _time = FocusNode();
   final FocusNode _contact = FocusNode();
+  final FocusNode _contactPhone = FocusNode();
 
   @override
   void initState() {
@@ -66,7 +91,7 @@ class _PostLoadState extends State<PostLoad> {
 
   void getNewCityFrom(String input) async {
     try {
-      var result = await http.get(autoCompleteLink + input);
+      var result = await http.get(autoCompleteLinkFullAdd + input);
       suggestedCityFrom.clear();
       for (var i in json.decode(result.body)["predictions"]) {
         suggestedCityFrom.add(GooglePlaces.fromJson(i));
@@ -79,7 +104,7 @@ class _PostLoadState extends State<PostLoad> {
 
   void getNewCityTo(String input) async {
     try {
-      var result = await http.get(autoCompleteLink + input);
+      var result = await http.get(autoCompleteLinkFullAdd + input);
       suggestedCityTo.clear();
       for (var i in json.decode(result.body)["predictions"]) {
         suggestedCityTo.add(GooglePlaces.fromJson(i));
@@ -103,8 +128,33 @@ class _PostLoadState extends State<PostLoad> {
     });
   }
 
-  void  getTruckPrefData() async {
-    HTTPHandler().getTruckPref([selectedTruckCategory.truckCatID]).then((value) {
+  dataPicker(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(Duration(days: 1000)),
+    );
+    if (picked != null && picked != selectedDate)
+      setState(() {
+        selectedDate = picked;
+      });
+  }
+
+  timePicker(BuildContext context) async {
+    final TimeOfDay picked = await showTimePicker(
+      context: context,
+      initialTime: selectedTime,
+    );
+    if (picked != null && picked != selectedTime)
+      setState(() {
+        selectedTime = picked;
+      });
+  }
+
+  void getTruckPrefData() async {
+    HTTPHandler()
+        .getTruckPref([selectedTruckCategory.truckCatID]).then((value) {
       setState(() {
         truckPref = value;
         loadPref = false;
@@ -113,19 +163,107 @@ class _PostLoadState extends State<PostLoad> {
   }
 
   Widget row(GooglePlaces gp) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Text(
-            gp.description,
-            style: TextStyle(fontSize: 16.0),
+    return Expanded(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text(
+              gp.description,
+              style: TextStyle(fontSize: 16.0),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          Divider(),
+        ],
+      ),
+    );
+  }
+
+  Widget getCustomTextField() {
+    if (!priceUnit.contains(selectedPriceUnit)) {
+      return TextFormField(
+        controller: truckLoadController,
+        readOnly: true,
+        keyboardType: TextInputType.number,
+        textInputAction: TextInputAction.done,
+        style: TextStyle(color: Colors.black, fontSize: 16.0),
+        decoration: InputDecoration(
+          fillColor: Colors.white,
+          filled: true,
+          errorStyle: TextStyle(color: Colors.white),
+          hintText: "Select Unit",
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(5.0),
+            borderSide: BorderSide(
+              color: Colors.amber,
+              style: BorderStyle.solid,
+            ),
           ),
         ),
-        Divider(),
-      ],
-    );
+        validator: (value) {
+          if (value.isEmpty) {
+            return "This Field is Required";
+          }
+          return null;
+        },
+      );
+    } else if (selectedPriceUnit == priceUnit[0]) {
+      return TextFormField(
+        controller: truckLoadController,
+        keyboardType: TextInputType.number,
+        textInputAction: TextInputAction.done,
+        style: TextStyle(color: Colors.black, fontSize: 16.0),
+        decoration: InputDecoration(
+          suffixText: "Tons",
+          fillColor: Colors.white,
+          filled: true,
+          errorStyle: TextStyle(color: Colors.white),
+          hintText: "Weight",
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(5.0),
+            borderSide: BorderSide(
+              color: Colors.amber,
+              style: BorderStyle.solid,
+            ),
+          ),
+        ),
+        validator: (value) {
+          if (value.isEmpty) {
+            return "This Field is Required";
+          }
+          return null;
+        },
+      );
+    } else {
+      return TextFormField(
+        controller: truckLoadController,
+        keyboardType: TextInputType.number,
+        textInputAction: TextInputAction.done,
+        style: TextStyle(color: Colors.black, fontSize: 16.0),
+        decoration: InputDecoration(
+          suffixText: "Truck(s)",
+          fillColor: Colors.white,
+          filled: true,
+          errorStyle: TextStyle(color: Colors.white),
+          hintText: "Trucks",
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(5.0),
+            borderSide: BorderSide(
+              color: Colors.amber,
+              style: BorderStyle.solid,
+            ),
+          ),
+        ),
+        validator: (value) {
+          if (value.isEmpty) {
+            return "This Field is Required";
+          }
+          return null;
+        },
+      );
+    }
   }
 
   @override
@@ -174,7 +312,9 @@ class _PostLoadState extends State<PostLoad> {
                               color: Colors.white,
                               fontSize: 21.0),
                         ),
-                        Divider(color: Colors.white,),
+                        Divider(
+                          color: Colors.white,
+                        ),
                         SizedBox(
                           height: 20.0,
                         ),
@@ -243,14 +383,13 @@ class _PostLoadState extends State<PostLoad> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              fromTextField =
+                              from1TextField =
                                   AutoCompleteTextField<GooglePlaces>(
-                                key: keyFrom,
+                                key: keyFrom1,
                                 textInputAction: TextInputAction.next,
-                                focusNode: _from,
+                                focusNode: _from1,
                                 clearOnSubmit: false,
                                 textChanged: (value) {
-                                  print("here" + value);
                                   getNewCityFrom(value);
                                 },
                                 suggestions: suggestedCityFrom,
@@ -278,11 +417,15 @@ class _PostLoadState extends State<PostLoad> {
                                 },
                                 itemSubmitted: (item) {
                                   setState(() {
-                                    fromTextField.textField.controller.text =
+                                    from1TextField.textField.controller.text =
                                         item.description;
                                   });
-                                  _from.unfocus();
-                                  FocusScope.of(context).requestFocus(_to);
+                                  _from1.unfocus();
+                                  if (tripType) {
+                                    FocusScope.of(context).requestFocus(_from2);
+                                  } else {
+                                    FocusScope.of(context).requestFocus(_to1);
+                                  }
                                 },
                                 itemBuilder: (context, item) {
                                   return row(item);
@@ -291,10 +434,105 @@ class _PostLoadState extends State<PostLoad> {
                               SizedBox(
                                 height: 16.0,
                               ),
-                              toTextField = AutoCompleteTextField<GooglePlaces>(
-                                key: keyTo,
-                                textInputAction: TextInputAction.done,
-                                focusNode: _to,
+                              from2TextField =
+                                  AutoCompleteTextField<GooglePlaces>(
+                                key: keyFrom2,
+                                textInputAction: TextInputAction.next,
+                                focusNode: _from2,
+                                clearOnSubmit: false,
+                                textChanged: (value) {
+                                  getNewCityFrom(value);
+                                },
+                                suggestions: suggestedCityFrom,
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 16.0),
+                                decoration: InputDecoration(
+                                  fillColor: Colors.white,
+                                  filled: true,
+                                  errorStyle: TextStyle(color: Colors.white),
+                                  prefixIcon: Icon(Icons.flight_takeoff),
+                                  hintText: "From",
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5.0),
+                                    borderSide: BorderSide(
+                                      color: Colors.amber,
+                                      style: BorderStyle.solid,
+                                    ),
+                                  ),
+                                ),
+                                itemFilter: (item, query) {
+                                  return true;
+                                },
+                                itemSorter: (a, b) {
+                                  return a.description.compareTo(b.description);
+                                },
+                                itemSubmitted: (item) {
+                                  setState(() {
+                                    from2TextField.textField.controller.text =
+                                        item.description;
+                                  });
+                                  _from2.unfocus();
+                                  FocusScope.of(context).requestFocus(_from3);
+                                },
+                                itemBuilder: (context, item) {
+                                  return row(item);
+                                },
+                              ),
+                              SizedBox(
+                                height: 16.0,
+                              ),
+                              from3TextField =
+                                  AutoCompleteTextField<GooglePlaces>(
+                                key: keyFrom3,
+                                textInputAction: TextInputAction.next,
+                                focusNode: _from3,
+                                clearOnSubmit: false,
+                                textChanged: (value) {
+                                  getNewCityFrom(value);
+                                },
+                                suggestions: suggestedCityFrom,
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 16.0),
+                                decoration: InputDecoration(
+                                  fillColor: Colors.white,
+                                  filled: true,
+                                  errorStyle: TextStyle(color: Colors.white),
+                                  prefixIcon: Icon(Icons.flight_takeoff),
+                                  hintText: "From",
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5.0),
+                                    borderSide: BorderSide(
+                                      color: Colors.amber,
+                                      style: BorderStyle.solid,
+                                    ),
+                                  ),
+                                ),
+                                itemFilter: (item, query) {
+                                  return true;
+                                },
+                                itemSorter: (a, b) {
+                                  return a.description.compareTo(b.description);
+                                },
+                                itemSubmitted: (item) {
+                                  setState(() {
+                                    from3TextField.textField.controller.text =
+                                        item.description;
+                                  });
+                                  _from3.unfocus();
+                                  FocusScope.of(context).requestFocus(_to1);
+                                },
+                                itemBuilder: (context, item) {
+                                  return row(item);
+                                },
+                              ),
+                              SizedBox(
+                                height: 16.0,
+                              ),
+                              to1TextField =
+                                  AutoCompleteTextField<GooglePlaces>(
+                                key: keyTo1,
+                                textInputAction: tripType ? TextInputAction.next : TextInputAction.done,
+                                focusNode: _to1,
                                 clearOnSubmit: false,
                                 textChanged: (value) {
                                   getNewCityTo(value);
@@ -324,7 +562,103 @@ class _PostLoadState extends State<PostLoad> {
                                 },
                                 itemSubmitted: (item) {
                                   setState(() {
-                                    toTextField.textField.controller.text =
+                                    to1TextField.textField.controller.text =
+                                        item.description;
+                                  });
+                                  if (tripType) {
+                                    _to1.unfocus();
+                                    FocusScope.of(context).requestFocus(_to2);
+                                  }
+                                },
+                                itemBuilder: (context, item) {
+                                  return row(item);
+                                },
+                              ),
+                              SizedBox(
+                                height: 16.0,
+                              ),
+                              to2TextField =
+                                  AutoCompleteTextField<GooglePlaces>(
+                                key: keyTo2,
+                                textInputAction: TextInputAction.next,
+                                focusNode: _to2,
+                                clearOnSubmit: false,
+                                textChanged: (value) {
+                                  getNewCityTo(value);
+                                },
+                                suggestions: suggestedCityTo,
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 16.0),
+                                decoration: InputDecoration(
+                                  fillColor: Colors.white,
+                                  filled: true,
+                                  errorStyle: TextStyle(color: Colors.white),
+                                  prefixIcon: Icon(Icons.flight_land),
+                                  hintText: "To",
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5.0),
+                                    borderSide: BorderSide(
+                                      color: Colors.amber,
+                                      style: BorderStyle.solid,
+                                    ),
+                                  ),
+                                ),
+                                itemFilter: (item, query) {
+                                  return true;
+                                },
+                                itemSorter: (a, b) {
+                                  return a.description.compareTo(b.description);
+                                },
+                                itemSubmitted: (item) {
+                                  setState(() {
+                                    to2TextField.textField.controller.text =
+                                        item.description;
+                                  });
+                                  _to2.unfocus();
+                                  FocusScope.of(context).requestFocus(_to3);
+                                },
+                                itemBuilder: (context, item) {
+                                  return row(item);
+                                },
+                              ),
+                              SizedBox(
+                                height: 16.0,
+                              ),
+                              to3TextField =
+                                  AutoCompleteTextField<GooglePlaces>(
+                                key: keyTo3,
+                                textInputAction: TextInputAction.done,
+                                focusNode: _to3,
+                                clearOnSubmit: false,
+                                textChanged: (value) {
+                                  getNewCityTo(value);
+                                },
+                                suggestions: suggestedCityTo,
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 16.0),
+                                decoration: InputDecoration(
+                                  fillColor: Colors.white,
+                                  filled: true,
+                                  errorStyle: TextStyle(color: Colors.white),
+                                  prefixIcon: Icon(Icons.flight_land),
+                                  hintText: "To",
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5.0),
+                                    borderSide: BorderSide(
+                                      color: Colors.amber,
+                                      style: BorderStyle.solid,
+                                    ),
+                                  ),
+                                ),
+                                itemFilter: (item, query) {
+                                  return true;
+                                },
+                                itemSorter: (a, b) {
+                                  return a.description.compareTo(b.description);
+                                },
+                                itemSubmitted: (item) {
+                                  setState(() {
+                                    to3TextField.textField.controller.text =
                                         item.description;
                                   });
                                 },
@@ -342,7 +676,9 @@ class _PostLoadState extends State<PostLoad> {
                                     color: Colors.white,
                                     fontSize: 21.0),
                               ),
-                              Divider(color: Colors.white,),
+                              Divider(
+                                color: Colors.white,
+                              ),
                               SizedBox(
                                 height: 20.0,
                               ),
@@ -364,7 +700,8 @@ class _PostLoadState extends State<PostLoad> {
                                     selectedLoadMaterialType = value;
                                   });
                                 },
-                                items: loadMaterialType.map((LoadMaterialType item) {
+                                items: loadMaterialType
+                                    .map((LoadMaterialType item) {
                                   return DropdownMenuItem(
                                     value: item,
                                     child: Text(item.name),
@@ -407,35 +744,7 @@ class _PostLoadState extends State<PostLoad> {
                                     width: 16.0,
                                   ),
                                   Flexible(
-                                    child: TextFormField(
-                                      controller: truckLoadController,
-                                      keyboardType: TextInputType.number,
-                                      textInputAction: TextInputAction.done,
-                                      style: TextStyle(
-                                          color: Colors.black, fontSize: 16.0),
-                                      decoration: InputDecoration(
-                                        suffixText: "Tons",
-                                        fillColor: Colors.white,
-                                        filled: true,
-                                        errorStyle:
-                                            TextStyle(color: Colors.white),
-                                        hintText: "Weight",
-                                        border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(5.0),
-                                          borderSide: BorderSide(
-                                            color: Colors.amber,
-                                            style: BorderStyle.solid,
-                                          ),
-                                        ),
-                                      ),
-                                      validator: (value) {
-                                        if (value.isEmpty) {
-                                          return "This Field is Required";
-                                        }
-                                        return null;
-                                      },
-                                    ),
+                                    child: getCustomTextField(),
                                   ),
                                 ],
                               ),
@@ -507,9 +816,46 @@ class _PostLoadState extends State<PostLoad> {
                                     color: Colors.white,
                                     fontSize: 21.0),
                               ),
-                              Divider(color: Colors.white,),
+                              Divider(
+                                color: Colors.white,
+                              ),
                               SizedBox(
                                 height: 20.0,
+                              ),
+                              TextFormField(
+                                controller: timeController,
+                                keyboardType: TextInputType.number,
+                                textInputAction: TextInputAction.next,
+                                focusNode: _time,
+                                onFieldSubmitted: (term) {
+                                  _time.unfocus();
+                                  FocusScope.of(context).requestFocus(_contact);
+                                },
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 16.0),
+                                decoration: InputDecoration(
+                                  prefixText: "Rs.  ",
+                                  fillColor: Colors.white,
+                                  filled: true,
+                                  errorStyle: TextStyle(color: Colors.white),
+                                  hintText: "Expected Price",
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5.0),
+                                    borderSide: BorderSide(
+                                      color: Colors.amber,
+                                      style: BorderStyle.solid,
+                                    ),
+                                  ),
+                                ),
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return "This Field is Required";
+                                  }
+                                  return null;
+                                },
+                              ),
+                              SizedBox(
+                                height: 16.0,
                               ),
                               DropdownButton(
                                 isExpanded: true,
@@ -546,28 +892,90 @@ class _PostLoadState extends State<PostLoad> {
                                     color: Colors.white,
                                     fontSize: 21.0),
                               ),
-                              Divider(color: Colors.white,),
+                              Divider(
+                                color: Colors.white,
+                              ),
                               SizedBox(
                                 height: 20.0,
                               ),
+                              Row(
+                                children: [
+                                  Flexible(
+                                    child: TextFormField(
+                                      readOnly: true,
+                                      onTap: () => dataPicker(context),
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 16.0),
+                                      decoration: InputDecoration(
+                                        fillColor: Colors.white,
+                                        filled: true,
+                                        errorStyle:
+                                            TextStyle(color: Colors.white),
+                                        prefixIcon: Icon(Icons.date_range),
+                                        border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(5.0),
+                                          borderSide: BorderSide(
+                                            color: Colors.amber,
+                                            style: BorderStyle.solid,
+                                          ),
+                                        ),
+                                        hintText: selectedDate.day.toString() +
+                                            " / " +
+                                            selectedDate.month.toString() +
+                                            " / " +
+                                            selectedDate.year.toString(),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 16.0,
+                                  ),
+                                  Flexible(
+                                    child: TextFormField(
+                                      readOnly: true,
+                                      onTap: () => timePicker(context),
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 16.0),
+                                      decoration: InputDecoration(
+                                        fillColor: Colors.white,
+                                        filled: true,
+                                        errorStyle:
+                                            TextStyle(color: Colors.white),
+                                        prefixIcon: Icon(Icons.access_time),
+                                        border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(5.0),
+                                          borderSide: BorderSide(
+                                            color: Colors.amber,
+                                            style: BorderStyle.solid,
+                                          ),
+                                        ),
+                                        hintText: selectedTime.hour.toString() +
+                                            " : " +
+                                            selectedTime.minute.toString() +
+                                            " : 00",
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 16.0,
+                              ),
                               TextFormField(
-                                controller: timeController,
-                                keyboardType: TextInputType.number,
-                                textInputAction: TextInputAction.next,
-                                focusNode: _time,
-                                onFieldSubmitted: (term) {
-                                  _time.unfocus();
-                                  FocusScope.of(context).requestFocus(_contact);
-                                },
+                                controller: contactController,
+                                keyboardType: TextInputType.text,
+                                textInputAction: TextInputAction.done,
+                                focusNode: _contact,
                                 style: TextStyle(
                                     color: Colors.black, fontSize: 16.0),
                                 decoration: InputDecoration(
-                                  suffixText: "Days",
                                   fillColor: Colors.white,
                                   filled: true,
                                   errorStyle: TextStyle(color: Colors.white),
-                                  prefixIcon: Icon(Icons.date_range),
-                                  hintText: "Load Expires In",
+                                  prefixIcon: Icon(Icons.contact_phone),
+                                  hintText: "Point of Contact",
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(5.0),
                                     borderSide: BorderSide(
@@ -587,18 +995,18 @@ class _PostLoadState extends State<PostLoad> {
                                 height: 16.0,
                               ),
                               TextFormField(
-                                controller: contactController,
-                                keyboardType: TextInputType.text,
+                                controller: contactPhoneController,
+                                keyboardType: TextInputType.phone,
                                 textInputAction: TextInputAction.done,
-                                focusNode: _contact,
+                                focusNode: _contactPhone,
                                 style: TextStyle(
                                     color: Colors.black, fontSize: 16.0),
                                 decoration: InputDecoration(
                                   fillColor: Colors.white,
                                   filled: true,
                                   errorStyle: TextStyle(color: Colors.white),
-                                  prefixIcon: Icon(Icons.contact_phone),
-                                  hintText: "Point of Contact",
+                                  prefixIcon: Icon(Icons.dialpad),
+                                  hintText: "Phone Number",
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(5.0),
                                     borderSide: BorderSide(
@@ -673,6 +1081,12 @@ class _PostLoadState extends State<PostLoad> {
                         margin: EdgeInsets.only(bottom: 0),
                         decoration: BoxDecoration(
                           color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black,
+                              blurRadius: 10.0,
+                            ),
+                          ],
                           borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(30.0),
                               topRight: Radius.circular(30.0)),

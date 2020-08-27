@@ -2,6 +2,8 @@
 const GoogleApiKey = "AIzaSyCSdJNFravZ9yjzisUAhLgohy_MWbS41XI";
 const autoCompleteLink =
     "https://maps.googleapis.com/maps/api/place/autocomplete/json?key=$GoogleApiKey&components=country:in&types=(cities)&input=";
+const autoCompleteLinkFullAdd =
+    "https://maps.googleapis.com/maps/api/place/autocomplete/json?key=$GoogleApiKey&components=country:in&types=address&input=";
 
 //Basic Pages
 const String splashPage = "/";

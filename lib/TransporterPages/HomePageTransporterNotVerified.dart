@@ -7,13 +7,17 @@ import 'package:shipperapp/MyConstants.dart';
 
 class HomePageTransporterNotVerified extends StatefulWidget {
   final UserTransporter userTransporter;
-  HomePageTransporterNotVerified({Key key, this.userTransporter}) : super(key: key);
+
+  HomePageTransporterNotVerified({Key key, this.userTransporter})
+      : super(key: key);
 
   @override
-  _HomePageTransporterNotVerifiedState createState() => _HomePageTransporterNotVerifiedState();
+  _HomePageTransporterNotVerifiedState createState() =>
+      _HomePageTransporterNotVerifiedState();
 }
 
-class _HomePageTransporterNotVerifiedState extends State<HomePageTransporterNotVerified> {
+class _HomePageTransporterNotVerifiedState
+    extends State<HomePageTransporterNotVerified> {
   @override
   void initState() {
     super.initState();
@@ -71,17 +75,40 @@ class _HomePageTransporterNotVerifiedState extends State<HomePageTransporterNotV
                           child: FlatButton(
                             onPressed: () {
                               SharedPreferences.getInstance().then((value) {
-                                var temp = value.getString("DocNumber");
-                                if (temp==null || temp == "") {
-                                  temp = "0";
+                                var temp = value.getString(
+                                    "DocNumber${widget.userTransporter.id}");
+                                var passval = 0;
+                                if (temp == "4") {
+                                  passval = 4;
                                 }
-                                Navigator.pushNamed(context, uploadDocsTransporter, arguments: {'user': widget.userTransporter, 'passValue':
-                                int.parse(temp)});
+                                Navigator.pushNamed(
+                                    context, uploadDocsTransporter, arguments: {
+                                  'user': widget.userTransporter,
+                                  'passValue': passval
+                                });
                               });
                             },
                             child: Text("Upload Docs to Continue..."),
                             color: Colors.white,
-                          )
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(context, postLoad);
+                          },
+                          child: FlatButton(
+                            onPressed: () {
+                              Navigator.pushNamed(context, postLoad,
+                                  arguments: {
+                                    'user': widget.userTransporter,
+                                  });
+                            },
+                            child: Text("Post Load (Temp)"),
+                            color: Colors.white,
+                          ),
                         ),
                       ],
                     ),
@@ -102,6 +129,12 @@ class _HomePageTransporterNotVerifiedState extends State<HomePageTransporterNotV
                     margin: EdgeInsets.only(bottom: 0),
                     decoration: BoxDecoration(
                       color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black,
+                          blurRadius: 10.0,
+                        ),
+                      ],
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(30.0),
                           topRight: Radius.circular(30.0)),

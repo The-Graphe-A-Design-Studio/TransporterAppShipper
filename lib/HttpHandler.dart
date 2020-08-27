@@ -171,4 +171,35 @@ class HTTPHandler {
       throw error;
     }
   }
+
+  Future<PostResultOne> postNewLoad(List data) async {
+    try {
+      var result =
+      await http.post("$baseURLShipper/create_load", body: {
+        'cust_id': data[0],
+        'source[]': data[1],
+        'source[]': data[2],
+        'source[]': data[3],
+        'destination[]': data[4],
+        'destination[]': data[5],
+        'destination[]': data[6],
+        'material': data[7],
+        'price_unit': data[8],
+        'quantity': data[9],
+        'truck_preference': data[10],
+        'truck_types[]': data[11],
+        'truck_types[]': data[12],
+        'truck_types[]': data[13],
+        'expected_price': data[14],
+        'payment_mode': data[15],
+        'advance_pay': data[16],
+        'expire_date_time': data[17],
+        'contact_person_name': data[18],
+        'contact_person_phone': data[19],
+      });
+      return PostResultOne.fromJson(json.decode(result.body));
+    } catch (error) {
+      throw error;
+    }
+  }
 }

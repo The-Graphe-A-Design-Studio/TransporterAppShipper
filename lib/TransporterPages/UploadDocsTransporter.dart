@@ -262,11 +262,8 @@ class _UploadDocsState extends State<UploadDocs> {
                             title: "Uploading Pan Card");
                         await Future.delayed(Duration(seconds: 1), () {});
                         Navigator.pop(context);
-                        SharedPreferences.getInstance().then((value) {
-                          value.setString("DocNumber", "1");
-                          setState(() {
-                            selectedWidgetMarker = WidgetMarker.addProof;
-                          });
+                        setState(() {
+                          selectedWidgetMarker = WidgetMarker.addProof;
                         });
                       } else {
                         Navigator.pop(context);
@@ -534,11 +531,8 @@ class _UploadDocsState extends State<UploadDocs> {
                             title: "Uploading Address Proof");
                         await Future.delayed(Duration(seconds: 1), () {});
                         Navigator.pop(context);
-                        SharedPreferences.getInstance().then((value) {
-                          value.setString("DocNumber", "2");
-                          setState(() {
-                            selectedWidgetMarker = WidgetMarker.selfie;
-                          });
+                        setState(() {
+                          selectedWidgetMarker = WidgetMarker.selfie;
                         });
                       } else {
                         Navigator.pop(context);
@@ -703,11 +697,8 @@ class _UploadDocsState extends State<UploadDocs> {
                             title: "Uploading Selfie");
                         await Future.delayed(Duration(seconds: 1), () {});
                         Navigator.pop(context);
-                        SharedPreferences.getInstance().then((value) {
-                          value.setString("DocNumber", "3");
-                          setState(() {
-                            selectedWidgetMarker = WidgetMarker.offAdd;
-                          });
+                        setState(() {
+                          selectedWidgetMarker = WidgetMarker.offAdd;
                         });
                       } else {
                         Navigator.pop(context);
@@ -897,7 +888,7 @@ class _UploadDocsState extends State<UploadDocs> {
                         await Future.delayed(Duration(seconds: 1), () {});
                         Navigator.pop(context);
                         SharedPreferences.getInstance().then((value) {
-                          value.setString("DocNumber", "4");
+                          value.setString("DocNumber${widget.userTransporter.id}", "4");
                           setState(() {
                             selectedWidgetMarker = WidgetMarker.underVerification;
                           });
