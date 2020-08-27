@@ -174,6 +174,7 @@ class HTTPHandler {
 
   Future<PostResultOne> postNewLoad(List data) async {
     try {
+      print(data);
       var result =
       await http.post("$baseURLShipper/create_load", body: {
         'cust_id': data[0],

@@ -5,15 +5,21 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shipperapp/BottomSheets/AccountBottomSheetDummy.dart';
 import 'package:shipperapp/CommonPages/LoadingBody.dart';
+import 'package:shipperapp/DialogScreens/DialogFailed.dart';
+import 'package:shipperapp/DialogScreens/DialogProcessing.dart';
+import 'package:shipperapp/DialogScreens/DialogSuccess.dart';
 import 'package:shipperapp/HttpHandler.dart';
 import 'package:shipperapp/Models/GooglePlaces.dart';
 import 'package:shipperapp/Models/MaterialType.dart';
 import 'package:shipperapp/Models/TruckCategory.dart';
 import 'package:shipperapp/Models/TruckPref.dart';
+import 'package:shipperapp/Models/User.dart';
 import 'package:shipperapp/MyConstants.dart';
 
 class PostLoad extends StatefulWidget {
-  PostLoad({Key key}) : super(key: key);
+  UserTransporter userTransporter;
+
+  PostLoad({Key key, this.userTransporter}) : super(key: key);
 
   @override
   _PostLoadState createState() => _PostLoadState();
@@ -115,6 +121,52 @@ class _PostLoadState extends State<PostLoad> {
     }
   }
 
+  void postNewLoad(BuildContext _context) {
+    DialogProcessing().showCustomDialog(context,
+        title: "Post Load", text: "Processing, Please Wait!");
+    HTTPHandler().postNewLoad([
+      widget.userTransporter.id,
+      from1TextField.textField.controller.text,
+      tripType ? from2TextField.textField.controller.text : "",
+      tripType ? from3TextField.textField.controller.text : "",
+      to1TextField.textField.controller.text,
+      tripType ? to2TextField.textField.controller.text : "",
+      tripType ? to3TextField.textField.controller.text : "",
+      selectedLoadMaterialType.name,
+      (priceUnit.indexOf(selectedPriceUnit) + 1).toString(),
+      truckLoadController.text,
+      selectedTruckCategory.truckCatID,
+      selectedTruckPref.name,
+      selectedTruckPref.name,
+      selectedTruckPref.name,
+      expectedPriceController.text,
+      (payTerms.indexOf(selectedPayTerm) + 1).toString(),
+      advancePayController.text,
+      "${selectedDate.year.toString()}-${selectedDate.month.toString().padLeft(2, "0")}-${selectedDate.day.toString().padLeft(2, "0")} ${selectedTime.hour.toString().padLeft(2, "0")}:${selectedTime.minute.toString().padLeft(2, "0")}:00",
+      contactController.text,
+      contactPhoneController.text
+    ]).then((value) async {
+      if (value.success) {
+        Navigator.pop(context);
+        DialogSuccess().showCustomDialog(context, title: "Post Load");
+        await Future.delayed(Duration(seconds: 1), () {});
+        Navigator.pop(context);
+      } else {
+        Navigator.pop(context);
+        DialogFailed()
+            .showCustomDialog(context, title: "Post Load", text: value.message);
+        await Future.delayed(Duration(seconds: 3), () {});
+        Navigator.pop(context);
+      }
+    }).catchError((error) async {
+      Navigator.pop(context);
+      DialogFailed()
+          .showCustomDialog(context, title: "Post Load", text: "Network Error");
+      await Future.delayed(Duration(seconds: 3), () {});
+      Navigator.pop(context);
+    });
+  }
+
   void getData() async {
     HTTPHandler().getTruckCategory().then((value) {
       setState(() {
@@ -155,16 +207,22 @@ class _PostLoadState extends State<PostLoad> {
   void getTruckPrefData() async {
     HTTPHandler()
         .getTruckPref([selectedTruckCategory.truckCatID]).then((value) {
+          truckPref.clear();
+          var temp = [];
+          for (TruckPref i in value) {
+            if (!temp.contains(i.name)) {
+              truckPref.add(i);
+              temp.add(i.name);
+            }
+          }
       setState(() {
-        truckPref = value;
         loadPref = false;
       });
     });
   }
 
   Widget row(GooglePlaces gp) {
-    return Expanded(
-      child: Row(
+    return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           Padding(
@@ -177,8 +235,7 @@ class _PostLoadState extends State<PostLoad> {
           ),
           Divider(),
         ],
-      ),
-    );
+      );
   }
 
   Widget getCustomTextField() {
@@ -400,7 +457,9 @@ class _PostLoadState extends State<PostLoad> {
                                   filled: true,
                                   errorStyle: TextStyle(color: Colors.white),
                                   prefixIcon: Icon(Icons.flight_takeoff),
-                                  hintText: "From",
+                                  hintText: tripType
+                                      ? "Source Address 1"
+                                      : "Source Address",
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(5.0),
                                     borderSide: BorderSide(
@@ -434,104 +493,130 @@ class _PostLoadState extends State<PostLoad> {
                               SizedBox(
                                 height: 16.0,
                               ),
-                              from2TextField =
-                                  AutoCompleteTextField<GooglePlaces>(
-                                key: keyFrom2,
-                                textInputAction: TextInputAction.next,
-                                focusNode: _from2,
-                                clearOnSubmit: false,
-                                textChanged: (value) {
-                                  getNewCityFrom(value);
-                                },
-                                suggestions: suggestedCityFrom,
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 16.0),
-                                decoration: InputDecoration(
-                                  fillColor: Colors.white,
-                                  filled: true,
-                                  errorStyle: TextStyle(color: Colors.white),
-                                  prefixIcon: Icon(Icons.flight_takeoff),
-                                  hintText: "From",
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(5.0),
-                                    borderSide: BorderSide(
-                                      color: Colors.amber,
-                                      style: BorderStyle.solid,
+                              tripType
+                                  ? from2TextField =
+                                      AutoCompleteTextField<GooglePlaces>(
+                                      key: keyFrom2,
+                                      textInputAction: TextInputAction.next,
+                                      focusNode: _from2,
+                                      clearOnSubmit: false,
+                                      textChanged: (value) {
+                                        getNewCityFrom(value);
+                                      },
+                                      suggestions: suggestedCityFrom,
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 16.0),
+                                      decoration: InputDecoration(
+                                        fillColor: Colors.white,
+                                        filled: true,
+                                        errorStyle:
+                                            TextStyle(color: Colors.white),
+                                        prefixIcon: Icon(Icons.flight_takeoff),
+                                        hintText: "Source Address 2",
+                                        border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(5.0),
+                                          borderSide: BorderSide(
+                                            color: Colors.amber,
+                                            style: BorderStyle.solid,
+                                          ),
+                                        ),
+                                      ),
+                                      itemFilter: (item, query) {
+                                        return true;
+                                      },
+                                      itemSorter: (a, b) {
+                                        return a.description
+                                            .compareTo(b.description);
+                                      },
+                                      itemSubmitted: (item) {
+                                        setState(() {
+                                          from2TextField.textField.controller
+                                              .text = item.description;
+                                        });
+                                        _from2.unfocus();
+                                        FocusScope.of(context)
+                                            .requestFocus(_from3);
+                                      },
+                                      itemBuilder: (context, item) {
+                                        return row(item);
+                                      },
+                                    )
+                                  : SizedBox(
+                                      height: 0.0,
                                     ),
-                                  ),
-                                ),
-                                itemFilter: (item, query) {
-                                  return true;
-                                },
-                                itemSorter: (a, b) {
-                                  return a.description.compareTo(b.description);
-                                },
-                                itemSubmitted: (item) {
-                                  setState(() {
-                                    from2TextField.textField.controller.text =
-                                        item.description;
-                                  });
-                                  _from2.unfocus();
-                                  FocusScope.of(context).requestFocus(_from3);
-                                },
-                                itemBuilder: (context, item) {
-                                  return row(item);
-                                },
-                              ),
-                              SizedBox(
-                                height: 16.0,
-                              ),
-                              from3TextField =
-                                  AutoCompleteTextField<GooglePlaces>(
-                                key: keyFrom3,
-                                textInputAction: TextInputAction.next,
-                                focusNode: _from3,
-                                clearOnSubmit: false,
-                                textChanged: (value) {
-                                  getNewCityFrom(value);
-                                },
-                                suggestions: suggestedCityFrom,
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 16.0),
-                                decoration: InputDecoration(
-                                  fillColor: Colors.white,
-                                  filled: true,
-                                  errorStyle: TextStyle(color: Colors.white),
-                                  prefixIcon: Icon(Icons.flight_takeoff),
-                                  hintText: "From",
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(5.0),
-                                    borderSide: BorderSide(
-                                      color: Colors.amber,
-                                      style: BorderStyle.solid,
+                              tripType
+                                  ? SizedBox(
+                                      height: 16.0,
+                                    )
+                                  : SizedBox(
+                                      height: 0.0,
                                     ),
-                                  ),
-                                ),
-                                itemFilter: (item, query) {
-                                  return true;
-                                },
-                                itemSorter: (a, b) {
-                                  return a.description.compareTo(b.description);
-                                },
-                                itemSubmitted: (item) {
-                                  setState(() {
-                                    from3TextField.textField.controller.text =
-                                        item.description;
-                                  });
-                                  _from3.unfocus();
-                                  FocusScope.of(context).requestFocus(_to1);
-                                },
-                                itemBuilder: (context, item) {
-                                  return row(item);
-                                },
-                              ),
-                              SizedBox(
-                                height: 16.0,
-                              ),
+                              tripType
+                                  ? from3TextField =
+                                      AutoCompleteTextField<GooglePlaces>(
+                                      key: keyFrom3,
+                                      textInputAction: TextInputAction.next,
+                                      focusNode: _from3,
+                                      clearOnSubmit: false,
+                                      textChanged: (value) {
+                                        getNewCityFrom(value);
+                                      },
+                                      suggestions: suggestedCityFrom,
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 16.0),
+                                      decoration: InputDecoration(
+                                        fillColor: Colors.white,
+                                        filled: true,
+                                        errorStyle:
+                                            TextStyle(color: Colors.white),
+                                        prefixIcon: Icon(Icons.flight_takeoff),
+                                        hintText: "Source Address 3",
+                                        border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(5.0),
+                                          borderSide: BorderSide(
+                                            color: Colors.amber,
+                                            style: BorderStyle.solid,
+                                          ),
+                                        ),
+                                      ),
+                                      itemFilter: (item, query) {
+                                        return true;
+                                      },
+                                      itemSorter: (a, b) {
+                                        return a.description
+                                            .compareTo(b.description);
+                                      },
+                                      itemSubmitted: (item) {
+                                        setState(() {
+                                          from3TextField.textField.controller
+                                              .text = item.description;
+                                        });
+                                        _from3.unfocus();
+                                        FocusScope.of(context)
+                                            .requestFocus(_to1);
+                                      },
+                                      itemBuilder: (context, item) {
+                                        return row(item);
+                                      },
+                                    )
+                                  : SizedBox(
+                                      height: 0.0,
+                                    ),
+                              tripType
+                                  ? SizedBox(
+                                      height: 16.0,
+                                    )
+                                  : SizedBox(
+                                      height: 0.0,
+                                    ),
                               to1TextField =
                                   AutoCompleteTextField<GooglePlaces>(
                                 key: keyTo1,
-                                textInputAction: tripType ? TextInputAction.next : TextInputAction.done,
+                                textInputAction: tripType
+                                    ? TextInputAction.next
+                                    : TextInputAction.done,
                                 focusNode: _to1,
                                 clearOnSubmit: false,
                                 textChanged: (value) {
@@ -545,7 +630,9 @@ class _PostLoadState extends State<PostLoad> {
                                   filled: true,
                                   errorStyle: TextStyle(color: Colors.white),
                                   prefixIcon: Icon(Icons.flight_land),
-                                  hintText: "To",
+                                  hintText: tripType
+                                      ? "Destination Address 1"
+                                      : "Destination Address",
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(5.0),
                                     borderSide: BorderSide(
@@ -577,95 +664,114 @@ class _PostLoadState extends State<PostLoad> {
                               SizedBox(
                                 height: 16.0,
                               ),
-                              to2TextField =
-                                  AutoCompleteTextField<GooglePlaces>(
-                                key: keyTo2,
-                                textInputAction: TextInputAction.next,
-                                focusNode: _to2,
-                                clearOnSubmit: false,
-                                textChanged: (value) {
-                                  getNewCityTo(value);
-                                },
-                                suggestions: suggestedCityTo,
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 16.0),
-                                decoration: InputDecoration(
-                                  fillColor: Colors.white,
-                                  filled: true,
-                                  errorStyle: TextStyle(color: Colors.white),
-                                  prefixIcon: Icon(Icons.flight_land),
-                                  hintText: "To",
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(5.0),
-                                    borderSide: BorderSide(
-                                      color: Colors.amber,
-                                      style: BorderStyle.solid,
+                              tripType
+                                  ? to2TextField =
+                                      AutoCompleteTextField<GooglePlaces>(
+                                      key: keyTo2,
+                                      textInputAction: TextInputAction.next,
+                                      focusNode: _to2,
+                                      clearOnSubmit: false,
+                                      textChanged: (value) {
+                                        getNewCityTo(value);
+                                      },
+                                      suggestions: suggestedCityTo,
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 16.0),
+                                      decoration: InputDecoration(
+                                        fillColor: Colors.white,
+                                        filled: true,
+                                        errorStyle:
+                                            TextStyle(color: Colors.white),
+                                        prefixIcon: Icon(Icons.flight_land),
+                                        hintText: "Destination Address 2",
+                                        border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(5.0),
+                                          borderSide: BorderSide(
+                                            color: Colors.amber,
+                                            style: BorderStyle.solid,
+                                          ),
+                                        ),
+                                      ),
+                                      itemFilter: (item, query) {
+                                        return true;
+                                      },
+                                      itemSorter: (a, b) {
+                                        return a.description
+                                            .compareTo(b.description);
+                                      },
+                                      itemSubmitted: (item) {
+                                        setState(() {
+                                          to2TextField.textField.controller
+                                              .text = item.description;
+                                        });
+                                        _to2.unfocus();
+                                        FocusScope.of(context)
+                                            .requestFocus(_to3);
+                                      },
+                                      itemBuilder: (context, item) {
+                                        return row(item);
+                                      },
+                                    )
+                                  : SizedBox(
+                                      height: 0.0,
                                     ),
-                                  ),
-                                ),
-                                itemFilter: (item, query) {
-                                  return true;
-                                },
-                                itemSorter: (a, b) {
-                                  return a.description.compareTo(b.description);
-                                },
-                                itemSubmitted: (item) {
-                                  setState(() {
-                                    to2TextField.textField.controller.text =
-                                        item.description;
-                                  });
-                                  _to2.unfocus();
-                                  FocusScope.of(context).requestFocus(_to3);
-                                },
-                                itemBuilder: (context, item) {
-                                  return row(item);
-                                },
-                              ),
-                              SizedBox(
-                                height: 16.0,
-                              ),
-                              to3TextField =
-                                  AutoCompleteTextField<GooglePlaces>(
-                                key: keyTo3,
-                                textInputAction: TextInputAction.done,
-                                focusNode: _to3,
-                                clearOnSubmit: false,
-                                textChanged: (value) {
-                                  getNewCityTo(value);
-                                },
-                                suggestions: suggestedCityTo,
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 16.0),
-                                decoration: InputDecoration(
-                                  fillColor: Colors.white,
-                                  filled: true,
-                                  errorStyle: TextStyle(color: Colors.white),
-                                  prefixIcon: Icon(Icons.flight_land),
-                                  hintText: "To",
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(5.0),
-                                    borderSide: BorderSide(
-                                      color: Colors.amber,
-                                      style: BorderStyle.solid,
+                              tripType
+                                  ? SizedBox(
+                                      height: 16.0,
+                                    )
+                                  : SizedBox(
+                                      height: 0.0,
                                     ),
-                                  ),
-                                ),
-                                itemFilter: (item, query) {
-                                  return true;
-                                },
-                                itemSorter: (a, b) {
-                                  return a.description.compareTo(b.description);
-                                },
-                                itemSubmitted: (item) {
-                                  setState(() {
-                                    to3TextField.textField.controller.text =
-                                        item.description;
-                                  });
-                                },
-                                itemBuilder: (context, item) {
-                                  return row(item);
-                                },
-                              ),
+                              tripType
+                                  ? to3TextField =
+                                      AutoCompleteTextField<GooglePlaces>(
+                                      key: keyTo3,
+                                      textInputAction: TextInputAction.done,
+                                      focusNode: _to3,
+                                      clearOnSubmit: false,
+                                      textChanged: (value) {
+                                        getNewCityTo(value);
+                                      },
+                                      suggestions: suggestedCityTo,
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 16.0),
+                                      decoration: InputDecoration(
+                                        fillColor: Colors.white,
+                                        filled: true,
+                                        errorStyle:
+                                            TextStyle(color: Colors.white),
+                                        prefixIcon: Icon(Icons.flight_land),
+                                        hintText: "Destination Address 3",
+                                        border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(5.0),
+                                          borderSide: BorderSide(
+                                            color: Colors.amber,
+                                            style: BorderStyle.solid,
+                                          ),
+                                        ),
+                                      ),
+                                      itemFilter: (item, query) {
+                                        return true;
+                                      },
+                                      itemSorter: (a, b) {
+                                        return a.description
+                                            .compareTo(b.description);
+                                      },
+                                      itemSubmitted: (item) {
+                                        setState(() {
+                                          to3TextField.textField.controller
+                                              .text = item.description;
+                                        });
+                                      },
+                                      itemBuilder: (context, item) {
+                                        return row(item);
+                                      },
+                                    )
+                                  : SizedBox(
+                                      height: 0.0,
+                                    ),
                               SizedBox(
                                 height: 60.0,
                               ),
@@ -883,6 +989,36 @@ class _PostLoadState extends State<PostLoad> {
                                 }).toList(),
                               ),
                               SizedBox(
+                                height: 16.0,
+                              ),
+                              TextFormField(
+                                controller: advancePayController,
+                                keyboardType: TextInputType.number,
+                                textInputAction: TextInputAction.done,
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 16.0),
+                                decoration: InputDecoration(
+                                  suffixText: "%",
+                                  fillColor: Colors.white,
+                                  filled: true,
+                                  errorStyle: TextStyle(color: Colors.white),
+                                  hintText: "Advance (In %)",
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5.0),
+                                    borderSide: BorderSide(
+                                      color: Colors.amber,
+                                      style: BorderStyle.solid,
+                                    ),
+                                  ),
+                                ),
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return "This Field is Required";
+                                  }
+                                  return null;
+                                },
+                              ),
+                              SizedBox(
                                 height: 60.0,
                               ),
                               Text(
@@ -1031,11 +1167,7 @@ class _PostLoadState extends State<PostLoad> {
                                   splashColor: Colors.transparent,
                                   onTap: () {
                                     if (_formPostLoad.currentState.validate()) {
-                                      final snackBar = SnackBar(
-                                        content: Text('Request Sent'),
-                                      );
-                                      Scaffold.of(context)
-                                          .showSnackBar(snackBar);
+                                      postNewLoad(context);
                                     }
                                   },
                                   child: Container(

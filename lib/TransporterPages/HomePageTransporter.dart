@@ -65,7 +65,7 @@ class _HomePageTransporterState extends State<HomePageTransporter> {
                         ),
                         GestureDetector(
                           onTap: () {
-                            Navigator.pushNamed(context, postLoad);
+                            Navigator.pushNamed(context, postLoad, arguments: widget.userTransporter);
                           },
                           child: CircleAvatar(
                             radius: 40.0,

@@ -101,10 +101,11 @@ class _HomePageTransporterNotVerifiedState
                           },
                           child: FlatButton(
                             onPressed: () {
-                              Navigator.pushNamed(context, postLoad,
-                                  arguments: {
-                                    'user': widget.userTransporter,
-                                  });
+                              Navigator.pushNamed(
+                                context,
+                                postLoad,
+                                arguments: widget.userTransporter,
+                              );
                             },
                             child: Text("Post Load (Temp)"),
                             color: Colors.white,

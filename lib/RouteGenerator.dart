@@ -52,7 +52,7 @@ class RouteGenerator {
       case requestTransportPage:
         return FadeRoute(page: RequestTransport());
       case postLoad:
-        return FadeRoute(page: PostLoad());
+        return FadeRoute(page: PostLoad(userTransporter: args,));
 
       default:
         return _errorRoute();
