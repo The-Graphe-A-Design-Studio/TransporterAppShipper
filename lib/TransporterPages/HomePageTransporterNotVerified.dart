@@ -103,7 +103,7 @@ class _HomePageTransporterNotVerifiedState
                             onPressed: () {
                               Navigator.pushNamed(
                                 context,
-                                postLoad,
+                                homePageTransporter,
                                 arguments: widget.userTransporter,
                               );
                             },

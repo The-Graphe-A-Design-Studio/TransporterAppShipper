@@ -18,7 +18,7 @@ import 'package:shipperapp/Models/User.dart';
 import 'package:shipperapp/MyConstants.dart';
 
 class PostLoad extends StatefulWidget {
-  UserTransporter userTransporter;
+  final UserTransporter userTransporter;
 
   PostLoad({Key key, this.userTransporter}) : super(key: key);
 

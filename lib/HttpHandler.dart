@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shipperapp/DialogScreens/DialogProcessing.dart';
 import 'package:shipperapp/DialogScreens/DialogSuccess.dart';
 import 'package:shipperapp/Models/MaterialType.dart';
+import 'package:shipperapp/Models/PostLoad.dart';
 import 'package:shipperapp/Models/TruckCategory.dart';
 import 'package:shipperapp/Models/TruckPref.dart';
 import 'package:shipperapp/MyConstants.dart';
@@ -172,11 +173,31 @@ class HTTPHandler {
     }
   }
 
+  Future<List<PostLoad>> getPostLoad(List data) async {
+    /*try {*/
+      var result = await http.post("$baseURLShipper/view_all_posts",
+          body: {"customer_id": data[0], "post_status": data[1]});
+      var ret = json.decode(result.body);
+      List<PostLoad> list = [];
+      if (ret == "null" || ret == null) {
+        return list;
+      }
+      print(data[0]);
+      print(ret);
+      for (var i in ret) {
+        print(i.toString().contains("tonnage"));
+        list.add(PostLoad.fromJson(i, i.toString().contains("tonnage")));
+      }
+      return list;
+    /*} catch (error) {
+      throw error;
+    }*/
+  }
+
   Future<PostResultOne> postNewLoad(List data) async {
     try {
       print(data);
-      var result =
-      await http.post("$baseURLShipper/create_load", body: {
+      var result = await http.post("$baseURLShipper/create_load", body: {
         'cust_id': data[0],
         'source[]': data[1],
         'source[]': data[2],
