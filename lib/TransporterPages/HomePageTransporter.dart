@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shipperapp/BottomSheets/AccountBottomSheetLoggedIn.dart';
@@ -122,15 +120,37 @@ class _HomePageTransporterState extends State<HomePageTransporter> {
                       height: 60.0,
                     ),
                     ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: activeLoad.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return ListTile(
-                            title: Text(activeLoad[index].source.toString(), style: TextStyle(color: Colors.white),),
-                            subtitle:
-                                Text(activeLoad[index].destination.toString(), style: TextStyle(color: Colors.white),),
-                          );
-                        })
+                      shrinkWrap: true,
+                      itemCount: activeLoad.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return ListTile(
+                          title: Text(
+                            activeLoad[index].source.toString(),
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          subtitle: Text(
+                            activeLoad[index].destination.toString(),
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        );
+                      },
+                    ),
+                    ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: inactiveLoad.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return ListTile(
+                          title: Text(
+                            inactiveLoad[index].source.toString(),
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          subtitle: Text(
+                            inactiveLoad[index].destination.toString(),
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        );
+                      },
+                    )
                   ],
                 ),
                 DraggableScrollableSheet(

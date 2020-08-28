@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
@@ -31,7 +32,7 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
 
   final otpController = TextEditingController();
   final mobileNumberControllerSignIn = TextEditingController();
-
+  String userToken;
   bool rememberMe = true;
 
   @override
@@ -71,14 +72,14 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
           Navigator.pushNamedAndRemoveUntil(
             _context,
             homePageTransporter,
-                (route) => false,
+            (route) => false,
             arguments: UserTransporter.fromJson(json.decode(value[1])),
           );
         } else {
           Navigator.pushNamedAndRemoveUntil(
             _context,
             homePageTransporterNotVerified,
-                (route) => false,
+            (route) => false,
             arguments: UserTransporter.fromJson(json.decode(value[1])),
           );
         }
@@ -101,31 +102,36 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
   void postOtpRequest(BuildContext _context) {
     DialogProcessing().showCustomDialog(context,
         title: "Requesting OTP", text: "Processing, Please Wait!");
-    HTTPHandler().registerLoginCustomer([
-      '91',
-      mobileNumberControllerSignIn.text,
-    ]).then((value) async {
-      if (value.success) {
-        Navigator.pop(context);
-        DialogSuccess().showCustomDialog(context, title: "Requesting OTP");
-        await Future.delayed(Duration(seconds: 1), () {});
-        Navigator.pop(context);
-        setState(() {
-          selectedWidgetMarker = WidgetMarker.otpVerification;
-        });
-      } else {
+    FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+    _firebaseMessaging.getToken().then((token) {
+      userToken = token;
+      HTTPHandler().registerLoginCustomer([
+        '91',
+        mobileNumberControllerSignIn.text,
+        userToken
+      ]).then((value) async {
+        if (value.success) {
+          Navigator.pop(context);
+          DialogSuccess().showCustomDialog(context, title: "Requesting OTP");
+          await Future.delayed(Duration(seconds: 1), () {});
+          Navigator.pop(context);
+          setState(() {
+            selectedWidgetMarker = WidgetMarker.otpVerification;
+          });
+        } else {
+          Navigator.pop(context);
+          DialogFailed().showCustomDialog(context,
+              title: "Requesting OTP", text: value.message);
+          await Future.delayed(Duration(seconds: 3), () {});
+          Navigator.pop(context);
+        }
+      }).catchError((error) async {
         Navigator.pop(context);
         DialogFailed().showCustomDialog(context,
-            title: "Requesting OTP", text: value.message);
+            title: "Requesting OTP", text: "Network Error");
         await Future.delayed(Duration(seconds: 3), () {});
         Navigator.pop(context);
-      }
-    }).catchError((error) async {
-      Navigator.pop(context);
-      DialogFailed().showCustomDialog(context,
-          title: "Requesting OTP", text: "Network Error");
-      await Future.delayed(Duration(seconds: 3), () {});
-      Navigator.pop(context);
+      });
     });
   }
 

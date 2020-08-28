@@ -76,11 +76,12 @@ class HTTPHandler {
   /*-------------------------- Customer API's ---------------------------*/
   Future<PostResultOne> registerLoginCustomer(List data) async {
     try {
-      var result =
-          await http.post("$baseURLShipper/register-login-logout", body: {
-        'cu_phone_code': data[0],
-        'cu_phone': data[1],
-      });
+      var result = await http.post("$baseURLShipper/register-login-logout",
+          body: {
+            'cu_phone_code': data[0],
+            'cu_phone': data[1],
+            'cu_token': data[2]
+          });
       return PostResultOne.fromJson(json.decode(result.body));
     } catch (error) {
       throw error;
@@ -175,20 +176,20 @@ class HTTPHandler {
 
   Future<List<PostLoad>> getPostLoad(List data) async {
     /*try {*/
-      var result = await http.post("$baseURLShipper/view_all_posts",
-          body: {"customer_id": data[0], "post_status": data[1]});
-      var ret = json.decode(result.body);
-      List<PostLoad> list = [];
-      if (ret == "null" || ret == null) {
-        return list;
-      }
-      print(data[0]);
-      print(ret);
-      for (var i in ret) {
-        print(i.toString().contains("tonnage"));
-        list.add(PostLoad.fromJson(i, i.toString().contains("tonnage")));
-      }
+    var result = await http.post("$baseURLShipper/view_all_posts",
+        body: {"customer_id": data[0], "post_status": data[1]});
+    var ret = json.decode(result.body);
+    List<PostLoad> list = [];
+    if (ret == "null" || ret == null) {
       return list;
+    }
+    print(data[0]);
+    print(ret);
+    for (var i in ret) {
+      print(i.toString().contains("tonnage"));
+      list.add(PostLoad.fromJson(i, i.toString().contains("tonnage")));
+    }
+    return list;
     /*} catch (error) {
       throw error;
     }*/
