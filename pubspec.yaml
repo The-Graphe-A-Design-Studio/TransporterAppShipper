@@ -20,6 +20,9 @@ dependencies:
   autocomplete_textfield: ^1.7.3
   pin_code_text_field: ^1.7.1
   image_picker: ^0.6.7+4
+  firebase_messaging: ^7.0.0
+  flutter_google_places: ^0.2.6
+  google_maps_webservice: ^0.0.18
 
 dev_dependencies:
   flutter_test:

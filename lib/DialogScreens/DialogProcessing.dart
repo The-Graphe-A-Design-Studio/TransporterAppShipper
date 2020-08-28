@@ -11,7 +11,7 @@ class DialogProcessing {
 
   factory DialogProcessing() => _instance;
 
-  void showCustomDialog(BuildContext context, {String title, String text}) {
+  Widget showCustomDialog(BuildContext context, {String title, String text}) {
     this.context = context;
     this.title = title;
     this.text = text;
