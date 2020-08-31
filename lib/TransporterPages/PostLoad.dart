@@ -16,6 +16,7 @@ import 'package:shipperapp/Models/TruckCategory.dart';
 import 'package:shipperapp/Models/TruckPref.dart';
 import 'package:shipperapp/Models/User.dart';
 import 'package:shipperapp/MyConstants.dart';
+import 'package:shipperapp/TransporterPages/TextFieldUI.dart';
 
 class PostLoad extends StatefulWidget {
   final UserTransporter userTransporter;
@@ -29,12 +30,9 @@ class PostLoad extends StatefulWidget {
 class _PostLoadState extends State<PostLoad> {
   final GlobalKey<FormState> _formPostLoad = GlobalKey<FormState>();
 
-  final from1Controller = TextEditingController();
-  final from2Controller = TextEditingController();
-  final from3Controller = TextEditingController();
-  final to1Controller = TextEditingController();
-  final to2Controller = TextEditingController();
-  final to3Controller = TextEditingController();
+  List<DynamicText> fromListText = [new DynamicText("Source Location")];
+  List<DynamicText> toListText = [new DynamicText("Destination Location")];
+  int fromCount = 1, toCount = 1;
   final truckLoadController = TextEditingController();
   final expectedPriceController = TextEditingController();
   final advancePayController = TextEditingController();
@@ -64,24 +62,19 @@ class _PostLoadState extends State<PostLoad> {
   bool loadData = true;
   bool loadPref = false;
 
-  double scrollPosition = 0.0;
-  ScrollController _scrollController = new ScrollController(
-    initialScrollOffset: 0.0,
-    keepScrollOffset: true,
-  );
-  final FocusNode _from1 = FocusNode();
-  final FocusNode _to1 = FocusNode();
-  final FocusNode _from2 = FocusNode();
-  final FocusNode _to2 = FocusNode();
-  final FocusNode _from3 = FocusNode();
-  final FocusNode _to3 = FocusNode();
-  final FocusNode _time = FocusNode();
   final FocusNode _contact = FocusNode();
   final FocusNode _contactPhone = FocusNode();
 
   @override
   void initState() {
     super.initState();
+    setState(() {});
+  }
+
+  void onDelete(TextFieldUI _user) {}
+
+  void update() {
+    setState(() {});
   }
 
   @override
@@ -123,12 +116,6 @@ class _PostLoadState extends State<PostLoad> {
         title: "Post Load", text: "Processing, Please Wait!");
     HTTPHandler().postNewLoad([
       widget.userTransporter.id,
-      from1Controller.text,
-      from2Controller.text,
-      from3Controller.text,
-      to1Controller.text,
-      to2Controller.text,
-      to3Controller.text,
       selectedLoadMaterialType.name,
       (priceUnit.indexOf(selectedPriceUnit) + 1).toString(),
       truckLoadController.text,
@@ -202,7 +189,8 @@ class _PostLoadState extends State<PostLoad> {
   }
 
   void getTruckPrefData() async {
-    DialogProcessing().showCustomDialog(context, title: "Truck Prefs", text: "Please Wait...");
+    DialogProcessing().showCustomDialog(context,
+        title: "Truck Prefs", text: "Please Wait...");
     HTTPHandler()
         .getTruckPref([selectedTruckCategory.truckCatID]).then((value) {
       truckPref.clear();
@@ -335,7 +323,7 @@ class _PostLoadState extends State<PostLoad> {
           : Stack(
               children: [
                 SingleChildScrollView(
-                  controller: _scrollController,
+                  primary: true,
                   child: Padding(
                     padding: EdgeInsets.all(16.0),
                     child: Column(
@@ -439,349 +427,20 @@ class _PostLoadState extends State<PostLoad> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              TextFormField(
-                                controller: from1Controller,
-                                readOnly: true,
-                                onTap: () async {
-                                  Prediction p = await PlacesAutocomplete.show(
-                                      context: context,
-                                      apiKey: GoogleApiKey,
-                                      mode: Mode.overlay,
-                                      language: "en",
-                                      startText: from1Controller.text,
-                                      components: [
-                                        Component(Component.country, "in")
-                                      ],
-                                      types: [
-                                        "address"
-                                      ]);
-                                  if (p != null) {
-                                    setState(() {
-                                      from1Controller.text = p.description;
-                                    });
-                                  }
-                                },
-                                keyboardType: TextInputType.text,
-                                focusNode: _from1,
-                                textInputAction: TextInputAction.done,
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 16.0),
-                                decoration: InputDecoration(
-                                  fillColor: Colors.white,
-                                  filled: true,
-                                  errorStyle: TextStyle(color: Colors.white),
-                                  hintText: "Source Location",
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(5.0),
-                                    borderSide: BorderSide(
-                                      color: Colors.amber,
-                                      style: BorderStyle.solid,
-                                    ),
-                                  ),
-                                ),
-                                validator: (value) {
-                                  if (value.isEmpty) {
-                                    return "This Field is Required";
-                                  }
-                                  return null;
-                                },
+                              ListView.builder(
+                                primary: false,
+                                shrinkWrap: true,
+                                addAutomaticKeepAlives: true,
+                                itemCount: fromListText.length,
+                                itemBuilder: (_, i) => fromListText[i],
                               ),
-                              SizedBox(
-                                height: 16.0,
+                              ListView.builder(
+                                primary: false,
+                                shrinkWrap: true,
+                                addAutomaticKeepAlives: true,
+                                itemCount: toListText.length,
+                                itemBuilder: (_, i) => toListText[i],
                               ),
-                              tripType
-                                  ? TextFormField(
-                                      controller: from2Controller,
-                                      readOnly: true,
-                                      onTap: () async {
-                                        Prediction p =
-                                            await PlacesAutocomplete.show(
-                                                context: context,
-                                                apiKey: GoogleApiKey,
-                                                mode: Mode.overlay,
-                                                language: "en",
-                                                startText: from2Controller.text,
-                                                components: [
-                                              Component(Component.country, "in")
-                                            ],
-                                                types: [
-                                              "address"
-                                            ]);
-                                        if (p != null) {
-                                          setState(() {
-                                            from2Controller.text =
-                                                p.description;
-                                          });
-                                        }
-                                      },
-                                      keyboardType: TextInputType.text,
-                                      focusNode: _from2,
-                                      textInputAction: TextInputAction.done,
-                                      style: TextStyle(
-                                          color: Colors.black, fontSize: 16.0),
-                                      decoration: InputDecoration(
-                                        fillColor: Colors.white,
-                                        filled: true,
-                                        errorStyle:
-                                            TextStyle(color: Colors.white),
-                                        hintText: "Source Location 2",
-                                        border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(5.0),
-                                          borderSide: BorderSide(
-                                            color: Colors.amber,
-                                            style: BorderStyle.solid,
-                                          ),
-                                        ),
-                                      ),
-                                      validator: (value) {
-                                        if (value.isEmpty) {
-                                          return "This Field is Required";
-                                        }
-                                        return null;
-                                      },
-                                    )
-                                  : SizedBox(
-                                      height: 0,
-                                    ),
-                              tripType
-                                  ? SizedBox(
-                                      height: 16.0,
-                                    )
-                                  : SizedBox(
-                                      height: 0,
-                                    ),
-                              tripType
-                                  ? TextFormField(
-                                      controller: from3Controller,
-                                      readOnly: true,
-                                      onTap: () async {
-                                        Prediction p =
-                                            await PlacesAutocomplete.show(
-                                                context: context,
-                                                apiKey: GoogleApiKey,
-                                                mode: Mode.overlay,
-                                                language: "en",
-                                                startText: from3Controller.text,
-                                                components: [
-                                              Component(Component.country, "in")
-                                            ],
-                                                types: [
-                                              "address"
-                                            ]);
-                                        if (p != null) {
-                                          setState(() {
-                                            from3Controller.text =
-                                                p.description;
-                                          });
-                                        }
-                                      },
-                                      keyboardType: TextInputType.text,
-                                      textInputAction: TextInputAction.done,
-                                      focusNode: _from3,
-                                      style: TextStyle(
-                                          color: Colors.black, fontSize: 16.0),
-                                      decoration: InputDecoration(
-                                        fillColor: Colors.white,
-                                        filled: true,
-                                        errorStyle:
-                                            TextStyle(color: Colors.white),
-                                        hintText: "Source Location 3",
-                                        border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(5.0),
-                                          borderSide: BorderSide(
-                                            color: Colors.amber,
-                                            style: BorderStyle.solid,
-                                          ),
-                                        ),
-                                      ),
-                                      validator: (value) {
-                                        if (value.isEmpty) {
-                                          return "This Field is Required";
-                                        }
-                                        return null;
-                                      },
-                                    )
-                                  : SizedBox(
-                                      height: 0,
-                                    ),
-                              tripType
-                                  ? SizedBox(
-                                      height: 16.0,
-                                    )
-                                  : SizedBox(
-                                      height: 0,
-                                    ),
-                              TextFormField(
-                                controller: to1Controller,
-                                readOnly: true,
-                                onTap: () async {
-                                  Prediction p = await PlacesAutocomplete.show(
-                                      context: context,
-                                      apiKey: GoogleApiKey,
-                                      mode: Mode.overlay,
-                                      language: "en",
-                                      startText: to1Controller.text,
-                                      components: [
-                                        Component(Component.country, "in")
-                                      ],
-                                      types: [
-                                        "address"
-                                      ]);
-                                  if (p != null) {
-                                    setState(() {
-                                      to1Controller.text = p.description;
-                                    });
-                                  }
-                                },
-                                keyboardType: TextInputType.text,
-                                focusNode: _to1,
-                                textInputAction: TextInputAction.done,
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 16.0),
-                                decoration: InputDecoration(
-                                  fillColor: Colors.white,
-                                  filled: true,
-                                  errorStyle: TextStyle(color: Colors.white),
-                                  hintText: "Destination Address",
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(5.0),
-                                    borderSide: BorderSide(
-                                      color: Colors.amber,
-                                      style: BorderStyle.solid,
-                                    ),
-                                  ),
-                                ),
-                                validator: (value) {
-                                  if (value.isEmpty) {
-                                    return "This Field is Required";
-                                  }
-                                  return null;
-                                },
-                              ),
-                              tripType
-                                  ? SizedBox(
-                                      height: 16.0,
-                                    )
-                                  : SizedBox(
-                                      height: 0,
-                                    ),
-                              tripType
-                                  ? TextFormField(
-                                      controller: to2Controller,
-                                      readOnly: true,
-                                      onTap: () async {
-                                        Prediction p =
-                                            await PlacesAutocomplete.show(
-                                                context: context,
-                                                apiKey: GoogleApiKey,
-                                                mode: Mode.overlay,
-                                                language: "en",
-                                                startText: to2Controller.text,
-                                                components: [
-                                              Component(Component.country, "in")
-                                            ],
-                                                types: [
-                                              "address"
-                                            ]);
-                                        if (p != null) {
-                                          setState(() {
-                                            to2Controller.text = p.description;
-                                          });
-                                        }
-                                      },
-                                      keyboardType: TextInputType.text,
-                                      focusNode: _to2,
-                                      textInputAction: TextInputAction.done,
-                                      style: TextStyle(
-                                          color: Colors.black, fontSize: 16.0),
-                                      decoration: InputDecoration(
-                                        fillColor: Colors.white,
-                                        filled: true,
-                                        errorStyle:
-                                            TextStyle(color: Colors.white),
-                                        hintText: "Destination Location 2",
-                                        border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(5.0),
-                                          borderSide: BorderSide(
-                                            color: Colors.amber,
-                                            style: BorderStyle.solid,
-                                          ),
-                                        ),
-                                      ),
-                                      validator: (value) {
-                                        if (value.isEmpty) {
-                                          return "This Field is Required";
-                                        }
-                                        return null;
-                                      },
-                                    )
-                                  : SizedBox(
-                                      height: 0,
-                                    ),
-                              tripType
-                                  ? SizedBox(
-                                      height: 16.0,
-                                    )
-                                  : SizedBox(
-                                      height: 0,
-                                    ),
-                              tripType
-                                  ? TextFormField(
-                                      controller: to3Controller,
-                                      readOnly: true,
-                                      onTap: () async {
-                                        Prediction p =
-                                            await PlacesAutocomplete.show(
-                                                context: context,
-                                                apiKey: GoogleApiKey,
-                                                mode: Mode.overlay,
-                                                language: "en",
-                                                startText: to3Controller.text,
-                                                components: [
-                                              Component(Component.country, "in")
-                                            ],
-                                                types: [
-                                              "address"
-                                            ]);
-                                        if (p != null) {
-                                          setState(() {
-                                            to3Controller.text = p.description;
-                                          });
-                                        }
-                                      },
-                                      keyboardType: TextInputType.text,
-                                      focusNode: _to3,
-                                      textInputAction: TextInputAction.done,
-                                      style: TextStyle(
-                                          color: Colors.black, fontSize: 16.0),
-                                      decoration: InputDecoration(
-                                        fillColor: Colors.white,
-                                        filled: true,
-                                        errorStyle:
-                                            TextStyle(color: Colors.white),
-                                        hintText: "Destination Location 3",
-                                        border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(5.0),
-                                          borderSide: BorderSide(
-                                            color: Colors.amber,
-                                            style: BorderStyle.solid,
-                                          ),
-                                        ),
-                                      ),
-                                      validator: (value) {
-                                        if (value.isEmpty) {
-                                          return "This Field is Required";
-                                        }
-                                        return null;
-                                      },
-                                    )
-                                  : SizedBox(
-                                      height: 0,
-                                    ),
                               SizedBox(
                                 height: 60.0,
                               ),
@@ -938,14 +597,9 @@ class _PostLoadState extends State<PostLoad> {
                                 height: 20.0,
                               ),
                               TextFormField(
-                                controller: timeController,
+                                controller: expectedPriceController,
                                 keyboardType: TextInputType.number,
-                                textInputAction: TextInputAction.next,
-                                focusNode: _time,
-                                onFieldSubmitted: (term) {
-                                  _time.unfocus();
-                                  FocusScope.of(context).requestFocus(_contact);
-                                },
+                                textInputAction: TextInputAction.done,
                                 style: TextStyle(
                                     color: Colors.black, fontSize: 16.0),
                                 decoration: InputDecoration(
@@ -1239,6 +893,59 @@ class _PostLoadState extends State<PostLoad> {
                 ),
               ],
             ),
+    );
+  }
+
+  void callMe() {
+    setState(() {});
+  }
+}
+
+class DynamicText extends StatelessWidget {
+  final String hintText;
+  DynamicText(this.hintText);
+  final TextEditingController controller = new TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return new TextFormField(
+      controller: controller,
+      readOnly: true,
+      onTap: () async {
+        Prediction p = await PlacesAutocomplete.show(
+            context: context,
+            apiKey: GoogleApiKey,
+            mode: Mode.overlay,
+            language: "en",
+            startText: controller.text,
+            components: [Component(Component.country, "in")],
+            types: ["address"]);
+        if (p != null) {
+          controller.text = p.description;
+        }
+      },
+      keyboardType: TextInputType.text,
+      textInputAction: TextInputAction.done,
+      style: TextStyle(color: Colors.black, fontSize: 16.0),
+      decoration: InputDecoration(
+        fillColor: Colors.white,
+        filled: true,
+        errorStyle: TextStyle(color: Colors.white),
+        hintText: "Source Location 1",
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(5.0),
+          borderSide: BorderSide(
+            color: Colors.amber,
+            style: BorderStyle.solid,
+          ),
+        ),
+      ),
+      validator: (value) {
+        if (value.isEmpty) {
+          return "This Field is Required";
+        }
+        return null;
+      },
     );
   }
 }

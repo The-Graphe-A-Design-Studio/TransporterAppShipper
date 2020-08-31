@@ -54,6 +54,7 @@ class _HomePageTransporterState extends State<HomePageTransporter> {
           : Stack(
               children: [
                 ListView(
+                  primary: true,
                   children: <Widget>[
                     SizedBox(
                       height: 120.0,
@@ -120,6 +121,7 @@ class _HomePageTransporterState extends State<HomePageTransporter> {
                       height: 60.0,
                     ),
                     ListView.builder(
+                      primary: false,
                       shrinkWrap: true,
                       itemCount: activeLoad.length,
                       itemBuilder: (BuildContext context, int index) {
@@ -136,6 +138,7 @@ class _HomePageTransporterState extends State<HomePageTransporter> {
                       },
                     ),
                     ListView.builder(
+                      primary: false,
                       shrinkWrap: true,
                       itemCount: inactiveLoad.length,
                       itemBuilder: (BuildContext context, int index) {

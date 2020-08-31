@@ -179,6 +179,7 @@ class HTTPHandler {
     var result = await http.post("$baseURLShipper/view_all_posts",
         body: {"customer_id": data[0], "post_status": data[1]});
     var ret = json.decode(result.body);
+    print(ret);
     List<PostLoad> list = [];
     if (ret == "null" || ret == null) {
       return list;
@@ -197,30 +198,32 @@ class HTTPHandler {
 
   Future<PostResultOne> postNewLoad(List data) async {
     try {
+      var url = "$baseURLShipper/create_load";
+      var request = http.MultipartRequest('POST', Uri.parse(url));
       print(data);
-      var result = await http.post("$baseURLShipper/create_load", body: {
-        'cust_id': data[0],
-        'source[]': data[1],
-        'source[]': data[2],
-        'source[]': data[3],
-        'destination[]': data[4],
-        'destination[]': data[5],
-        'destination[]': data[6],
-        'material': data[7],
-        'price_unit': data[8],
-        'quantity': data[9],
-        'truck_preference': data[10],
-        'truck_types[]': data[11],
-        'truck_types[]': data[12],
-        'truck_types[]': data[13],
-        'expected_price': data[14],
-        'payment_mode': data[15],
-        'advance_pay': data[16],
-        'expire_date_time': data[17],
-        'contact_person_name': data[18],
-        'contact_person_phone': data[19],
-      });
-      return PostResultOne.fromJson(json.decode(result.body));
+      request.fields['cust_id'] = data[0];
+      request.fields['source[]'] = data[1];
+      request.fields['source[]'] = data[2];
+      request.fields['source[]'] = data[3];
+      request.fields['destination[]'] = data[4];
+      request.fields['destination[]'] = data[5];
+      request.fields['destination[]'] = data[6];
+      request.fields['material'] = data[7];
+      request.fields['price_unit'] = data[8];
+      request.fields['quantity'] = data[9];
+      request.fields['truck_preference'] = data[10];
+      request.fields['truck_types[]'] = data[11];
+      request.fields['truck_types[]'] = data[12];
+      request.fields['truck_types[]'] = data[13];
+      request.fields['expected_price'] = data[14];
+      request.fields['payment_mode'] = data[15];
+      request.fields['advance_pay'] = data[16];
+      request.fields['expire_date_time'] = data[17];
+      request.fields['contact_person_name'] = data[18];
+      request.fields['contact_person_phone'] = data[19];
+      var result = await request.send();
+      var finalResult = await http.Response.fromStream(result);
+      return PostResultOne.fromJson(json.decode(finalResult.body));
     } catch (error) {
       throw error;
     }
