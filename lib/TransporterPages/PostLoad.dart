@@ -68,6 +68,8 @@ class _PostLoadState extends State<PostLoad> {
   @override
   void initState() {
     super.initState();
+    contactController.text = "Shipper Comp Name";
+    contactPhoneController.text = widget.userTransporter.mobileNumber;
     setState(() {});
   }
 
@@ -389,6 +391,14 @@ class _PostLoadState extends State<PostLoad> {
                               value: tripType,
                               onChanged: (value) {
                                 setState(() {
+                                  fromListText = [
+                                    new DynamicText("Source Location")
+                                  ];
+                                  toListText = [
+                                    new DynamicText("Destination Location")
+                                  ];
+                                  fromCount = 1;
+                                  toCount = 1;
                                   tripType = value;
                                 });
                               },
@@ -427,12 +437,114 @@ class _PostLoadState extends State<PostLoad> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
+                              SizedBox(
+                                height: 20.0,
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    "Choose Source Location",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white,
+                                        fontSize: 18.0),
+                                  ),
+                                  Spacer(),
+                                  tripType
+                                      ? GestureDetector(
+                                          onTap: () {
+                                            if (fromCount > 1) {
+                                              setState(() {
+                                                fromCount--;
+                                                fromListText.removeLast();
+                                              });
+                                            }
+                                          },
+                                          child: Icon(
+                                            Icons.indeterminate_check_box,
+                                            color: Colors.white,
+                                            size: 30,
+                                          ),
+                                        )
+                                      : SizedBox(),
+                                  SizedBox(
+                                    width: 10.0,
+                                  ),
+                                  tripType
+                                      ? GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              fromCount++;
+                                              fromListText.add(new DynamicText(
+                                                  "Source Location $fromCount"));
+                                            });
+                                          },
+                                          child: Icon(
+                                            Icons.add_box,
+                                            color: Colors.white,
+                                            size: 30,
+                                          ),
+                                        )
+                                      : SizedBox(),
+                                ],
+                              ),
                               ListView.builder(
                                 primary: false,
                                 shrinkWrap: true,
                                 addAutomaticKeepAlives: true,
                                 itemCount: fromListText.length,
                                 itemBuilder: (_, i) => fromListText[i],
+                              ),
+                              SizedBox(
+                                height: 20.0,
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    "Choose Destination Location",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white,
+                                        fontSize: 18.0),
+                                  ),
+                                  Spacer(),
+                                  tripType
+                                      ? GestureDetector(
+                                          onTap: () {
+                                            if (toCount > 1) {
+                                              setState(() {
+                                                toCount--;
+                                                toListText.removeLast();
+                                              });
+                                            }
+                                          },
+                                          child: Icon(
+                                            Icons.indeterminate_check_box,
+                                            color: Colors.white,
+                                            size: 30,
+                                          ),
+                                        )
+                                      : SizedBox(),
+                                  SizedBox(
+                                    width: 10.0,
+                                  ),
+                                  tripType
+                                      ? GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              toCount++;
+                                              toListText.add(new DynamicText(
+                                                  "Destination Location $toCount"));
+                                            });
+                                          },
+                                          child: Icon(
+                                            Icons.add_box,
+                                            color: Colors.white,
+                                            size: 30,
+                                          ),
+                                        )
+                                      : SizedBox(),
+                                ],
                               ),
                               ListView.builder(
                                 primary: false,
@@ -654,33 +766,37 @@ class _PostLoadState extends State<PostLoad> {
                               SizedBox(
                                 height: 16.0,
                               ),
-                              TextFormField(
-                                controller: advancePayController,
-                                keyboardType: TextInputType.number,
-                                textInputAction: TextInputAction.done,
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 16.0),
-                                decoration: InputDecoration(
-                                  suffixText: "%",
-                                  fillColor: Colors.white,
-                                  filled: true,
-                                  errorStyle: TextStyle(color: Colors.white),
-                                  hintText: "Advance (In %)",
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(5.0),
-                                    borderSide: BorderSide(
-                                      color: Colors.amber,
-                                      style: BorderStyle.solid,
-                                    ),
-                                  ),
-                                ),
-                                validator: (value) {
-                                  if (value.isEmpty) {
-                                    return "This Field is Required";
-                                  }
-                                  return null;
-                                },
-                              ),
+                              selectedPayTerm == payTerms[1]
+                                  ? TextFormField(
+                                      controller: advancePayController,
+                                      keyboardType: TextInputType.number,
+                                      textInputAction: TextInputAction.done,
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 16.0),
+                                      decoration: InputDecoration(
+                                        suffixText: "%",
+                                        fillColor: Colors.white,
+                                        filled: true,
+                                        errorStyle:
+                                            TextStyle(color: Colors.white),
+                                        hintText: "Advance (In %)",
+                                        border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(5.0),
+                                          borderSide: BorderSide(
+                                            color: Colors.amber,
+                                            style: BorderStyle.solid,
+                                          ),
+                                        ),
+                                      ),
+                                      validator: (value) {
+                                        if (value.isEmpty) {
+                                          return "This Field is Required";
+                                        }
+                                        return null;
+                                      },
+                                    )
+                                  : SizedBox(),
                               SizedBox(
                                 height: 60.0,
                               ),
@@ -895,15 +1011,13 @@ class _PostLoadState extends State<PostLoad> {
             ),
     );
   }
-
-  void callMe() {
-    setState(() {});
-  }
 }
 
 class DynamicText extends StatelessWidget {
   final String hintText;
+
   DynamicText(this.hintText);
+
   final TextEditingController controller = new TextEditingController();
 
   @override
@@ -931,7 +1045,7 @@ class DynamicText extends StatelessWidget {
         fillColor: Colors.white,
         filled: true,
         errorStyle: TextStyle(color: Colors.white),
-        hintText: "Source Location 1",
+        hintText: hintText,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(5.0),
           borderSide: BorderSide(
