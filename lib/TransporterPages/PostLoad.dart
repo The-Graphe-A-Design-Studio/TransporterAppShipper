@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:http/http.dart' as http;
+import 'package:multiselect_formfield/multiselect_formfield.dart';
 import 'package:shipperapp/BottomSheets/AccountBottomSheetDummy.dart';
 import 'package:shipperapp/CommonPages/LoadingBody.dart';
 import 'package:shipperapp/DialogScreens/DialogFailed.dart';
@@ -42,12 +43,12 @@ class _PostLoadState extends State<PostLoad> {
   bool tripType = false;
   List<GooglePlaces> suggestedCityFrom = [];
   List<GooglePlaces> suggestedCityTo = [];
+  List<String> selectedTruckPrefs = [];
   DateTime selectedDate = DateTime.now();
   TimeOfDay selectedTime = TimeOfDay.now();
 
   TruckCategory selectedTruckCategory;
   LoadMaterialType selectedLoadMaterialType;
-  TruckPref selectedTruckPref;
   String selectedPriceUnit;
   String selectedPayTerm;
   List<LoadMaterialType> loadMaterialType = [];
@@ -122,9 +123,6 @@ class _PostLoadState extends State<PostLoad> {
       (priceUnit.indexOf(selectedPriceUnit) + 1).toString(),
       truckLoadController.text,
       selectedTruckCategory.truckCatID,
-      selectedTruckPref.name,
-      selectedTruckPref.name,
-      selectedTruckPref.name,
       expectedPriceController.text,
       (payTerms.indexOf(selectedPayTerm) + 1).toString(),
       advancePayController.text,
@@ -195,16 +193,17 @@ class _PostLoadState extends State<PostLoad> {
         title: "Truck Prefs", text: "Please Wait...");
     HTTPHandler()
         .getTruckPref([selectedTruckCategory.truckCatID]).then((value) {
-      truckPref.clear();
+      List<TruckPref> tempPref = [];
       var temp = [];
       for (TruckPref i in value) {
         if (!temp.contains(i.name)) {
-          truckPref.add(i);
+          tempPref.add(i);
           temp.add(i.name);
         }
       }
       setState(() {
-        selectedTruckPref = truckPref[0];
+        truckPref = tempPref;
+        selectedTruckPrefs = [];
       });
       Navigator.pop(context);
     });
@@ -654,6 +653,7 @@ class _PostLoadState extends State<PostLoad> {
                                 onChanged: (TruckCategory value) {
                                   setState(() {
                                     selectedTruckCategory = value;
+                                    selectedTruckPrefs = [];
                                   });
                                   getTruckPrefData();
                                 },
@@ -667,30 +667,34 @@ class _PostLoadState extends State<PostLoad> {
                               SizedBox(
                                 height: 16.0,
                               ),
-                              DropdownButton(
-                                isExpanded: true,
-                                hint: Text(
-                                  "Select Truck Preferences",
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                                value: selectedTruckPref,
-                                dropdownColor: Color(0xff252427),
-                                style: TextStyle(color: Colors.white),
-                                underline: Container(
-                                  height: 2,
-                                  color: Colors.white,
-                                ),
-                                onChanged: (TruckPref value) {
+                              MultiSelectFormField(
+                                autovalidate: false,
+                                titleText: 'Choose Truck Preferences',
+                                validator: (value) {
+                                  if (value == null || value.length == 0) {
+                                    return 'Please select one or more options';
+                                  }
+                                  return null;
+                                },
+                                fillColor: Colors.white,
+                                border: OutlineInputBorder(),
+                                dataSource: truckPref.map((TruckPref item) {
+                                  return {
+                                    "display": item.name,
+                                    "value": item.name
+                                  };
+                                }).toList(),
+                                textField: 'display',
+                                valueField: 'value',
+                                okButtonLabel: 'OK',
+                                hintText: 'Please choose one or more',
+                                initialValue: selectedTruckPrefs,
+                                onSaved: (value) {
+                                  if (value == null) return;
                                   setState(() {
-                                    selectedTruckPref = value;
+                                    selectedTruckPrefs = value;
                                   });
                                 },
-                                items: truckPref.map((TruckPref item) {
-                                  return DropdownMenuItem(
-                                    value: item,
-                                    child: Text(item.name),
-                                  );
-                                }).toList(),
                               ),
                               SizedBox(
                                 height: 60.0,
