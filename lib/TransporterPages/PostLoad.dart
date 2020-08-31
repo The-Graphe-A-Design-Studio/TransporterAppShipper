@@ -17,7 +17,6 @@ import 'package:shipperapp/Models/TruckCategory.dart';
 import 'package:shipperapp/Models/TruckPref.dart';
 import 'package:shipperapp/Models/User.dart';
 import 'package:shipperapp/MyConstants.dart';
-import 'package:shipperapp/TransporterPages/TextFieldUI.dart';
 
 class PostLoad extends StatefulWidget {
   final UserTransporter userTransporter;
@@ -73,8 +72,6 @@ class _PostLoadState extends State<PostLoad> {
     contactPhoneController.text = widget.userTransporter.mobileNumber;
     setState(() {});
   }
-
-  void onDelete(TextFieldUI _user) {}
 
   void update() {
     setState(() {});
