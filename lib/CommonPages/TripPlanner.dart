@@ -1,7 +1,8 @@
 import 'dart:convert';
-import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_google_places/flutter_google_places.dart';
+import 'package:google_maps_webservice/places.dart';
 import 'package:http/http.dart' as http;
 import 'package:shipperapp/BottomSheets/AccountBottomSheetDummy.dart';
 import 'package:shipperapp/CommonPages/LoadingBody.dart';
@@ -20,12 +21,10 @@ class TripPlanner extends StatefulWidget {
 }
 
 class _TripPlannerState extends State<TripPlanner> {
-  GlobalKey<AutoCompleteTextFieldState<GooglePlaces>> keyFrom = new GlobalKey();
-  GlobalKey<AutoCompleteTextFieldState<GooglePlaces>> keyTo = new GlobalKey();
   final GlobalKey<FormState> _formTripPlanner = GlobalKey<FormState>();
 
-  AutoCompleteTextField fromTextField;
-  AutoCompleteTextField toTextField;
+  final fromTextField = TextEditingController();
+  final toTextField = TextEditingController();
   final materialController = TextEditingController();
   final truckLoadController = TextEditingController();
   final truckQuoteController = TextEditingController();
@@ -37,8 +36,6 @@ class _TripPlannerState extends State<TripPlanner> {
   bool loadCat = true;
   DateTime selectedDate = DateTime.now();
 
-  final FocusNode _from = FocusNode();
-  final FocusNode _to = FocusNode();
   final FocusNode _truckMaterial = FocusNode();
   final FocusNode _truckLoad = FocusNode();
   final FocusNode _truckQuote = FocusNode();
@@ -198,70 +195,35 @@ class _TripPlannerState extends State<TripPlanner> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              fromTextField =
-                                  AutoCompleteTextField<GooglePlaces>(
-                                key: keyFrom,
-                                textInputAction: TextInputAction.next,
-                                focusNode: _from,
-                                clearOnSubmit: false,
-                                textChanged: (value) {
-                                  getNewCityFrom(value);
+                              TextFormField(
+                                controller: fromTextField,
+                                readOnly: true,
+                                onTap: () async {
+                                  Prediction p = await PlacesAutocomplete.show(
+                                      context: context,
+                                      apiKey: GoogleApiKey,
+                                      mode: Mode.overlay,
+                                      language: "en",
+                                      startText: fromTextField.text,
+                                      components: [
+                                        Component(Component.country, "in")
+                                      ],
+                                      types: [
+                                        "address"
+                                      ]);
+                                  if (p != null) {
+                                    fromTextField.text = p.description;
+                                  }
                                 },
-                                suggestions: suggestedCityFrom,
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 16.0),
-                                decoration: InputDecoration(
-                                  fillColor: Colors.white,
-                                  filled: true,
-                                  errorStyle: TextStyle(color: Colors.white),
-                                  prefixIcon: Icon(Icons.flight_takeoff),
-                                  hintText: "From",
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(5.0),
-                                    borderSide: BorderSide(
-                                      color: Colors.amber,
-                                      style: BorderStyle.solid,
-                                    ),
-                                  ),
-                                ),
-                                itemFilter: (item, query) {
-                                  return true;
-                                },
-                                itemSorter: (a, b) {
-                                  return a.description.compareTo(b.description);
-                                },
-                                itemSubmitted: (item) {
-                                  setState(() {
-                                    fromTextField.textField.controller.text =
-                                        item.description;
-                                  });
-                                  _from.unfocus();
-                                  FocusScope.of(context).requestFocus(_to);
-                                },
-                                itemBuilder: (context, item) {
-                                  return row(item);
-                                },
-                              ),
-                              SizedBox(
-                                height: 16.0,
-                              ),
-                              toTextField = AutoCompleteTextField<GooglePlaces>(
-                                key: keyTo,
+                                keyboardType: TextInputType.text,
                                 textInputAction: TextInputAction.done,
-                                focusNode: _to,
-                                clearOnSubmit: false,
-                                textChanged: (value) {
-                                  getNewCityTo(value);
-                                },
-                                suggestions: suggestedCityTo,
                                 style: TextStyle(
                                     color: Colors.black, fontSize: 16.0),
                                 decoration: InputDecoration(
                                   fillColor: Colors.white,
                                   filled: true,
                                   errorStyle: TextStyle(color: Colors.white),
-                                  prefixIcon: Icon(Icons.flight_land),
-                                  hintText: "To",
+                                  hintText: "Source Location",
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(5.0),
                                     borderSide: BorderSide(
@@ -270,20 +232,55 @@ class _TripPlannerState extends State<TripPlanner> {
                                     ),
                                   ),
                                 ),
-                                itemFilter: (item, query) {
-                                  return true;
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return "This Field is Required";
+                                  }
+                                  return null;
                                 },
-                                itemSorter: (a, b) {
-                                  return a.description.compareTo(b.description);
+                              ),
+                              TextFormField(
+                                controller: toTextField,
+                                readOnly: true,
+                                onTap: () async {
+                                  Prediction p = await PlacesAutocomplete.show(
+                                      context: context,
+                                      apiKey: GoogleApiKey,
+                                      mode: Mode.overlay,
+                                      language: "en",
+                                      startText: toTextField.text,
+                                      components: [
+                                        Component(Component.country, "in")
+                                      ],
+                                      types: [
+                                        "address"
+                                      ]);
+                                  if (p != null) {
+                                    toTextField.text = p.description;
+                                  }
                                 },
-                                itemSubmitted: (item) {
-                                  setState(() {
-                                    toTextField.textField.controller.text =
-                                        item.description;
-                                  });
-                                },
-                                itemBuilder: (context, item) {
-                                  return row(item);
+                                keyboardType: TextInputType.text,
+                                textInputAction: TextInputAction.done,
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 16.0),
+                                decoration: InputDecoration(
+                                  fillColor: Colors.white,
+                                  filled: true,
+                                  errorStyle: TextStyle(color: Colors.white),
+                                  hintText: "Destination Location",
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5.0),
+                                    borderSide: BorderSide(
+                                      color: Colors.amber,
+                                      style: BorderStyle.solid,
+                                    ),
+                                  ),
+                                ),
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return "This Field is Required";
+                                  }
+                                  return null;
                                 },
                               ),
                               SizedBox(
@@ -307,7 +304,11 @@ class _TripPlannerState extends State<TripPlanner> {
                                     ),
                                   ),
                                   suffixIcon: Icon(Icons.date_range),
-                                  hintText: selectedDate.day.toString() + " / " + selectedDate.month.toString() + " / " + selectedDate.year.toString(),
+                                  hintText: selectedDate.day.toString() +
+                                      " / " +
+                                      selectedDate.month.toString() +
+                                      " / " +
+                                      selectedDate.year.toString(),
                                 ),
                               ),
                               SizedBox(
@@ -315,7 +316,10 @@ class _TripPlannerState extends State<TripPlanner> {
                               ),
                               DropdownButton(
                                 isExpanded: true,
-                                hint: Text("Select Truck Category", style: TextStyle(color: Colors.white),),
+                                hint: Text(
+                                  "Select Truck Category",
+                                  style: TextStyle(color: Colors.white),
+                                ),
                                 value: selectedTruckCategory,
                                 dropdownColor: Color(0xff252427),
                                 style: TextStyle(color: Colors.white),

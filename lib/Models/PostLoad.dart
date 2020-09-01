@@ -45,7 +45,7 @@ class PostLoad {
     }
     a = 1;
     for (var i in parsedJson['truck types']) {
-      temp3.add(i["truck type $a"]);
+      temp3.add(i["type $a"]);
       a++;
     }
     return PostLoad(

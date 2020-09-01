@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:http/http.dart' as http;
-import 'package:multiselect_formfield/multiselect_formfield.dart';
 import 'package:shipperapp/BottomSheets/AccountBottomSheetDummy.dart';
 import 'package:shipperapp/CommonPages/LoadingBody.dart';
 import 'package:shipperapp/DialogScreens/DialogFailed.dart';
@@ -41,6 +40,7 @@ class _PostLoadState extends State<PostLoad> {
   final contactPhoneController = TextEditingController();
   bool tripType = false;
   List<GooglePlaces> suggestedCityFrom = [];
+  List<FilterChipWidget> filterChipList = [];
   List<GooglePlaces> suggestedCityTo = [];
   List<String> selectedTruckPrefs = [];
   DateTime selectedDate = DateTime.now();
@@ -114,12 +114,45 @@ class _PostLoadState extends State<PostLoad> {
   void postNewLoad(BuildContext _context) {
     DialogProcessing().showCustomDialog(context,
         title: "Post Load", text: "Processing, Please Wait!");
+    String sourceStr = "";
+    String destinationStr = "";
+    String typesStr = "";
+    int ii = 1;
+    for (var i in fromListText) {
+      sourceStr += i.controller.text.toString().trim();
+      if (ii < fromCount) sourceStr += "* ";
+      ii++;
+    }
+    ii = 1;
+    for (var i in toListText) {
+      destinationStr += i.controller.text.toString().trim();
+      if (ii < toCount) destinationStr += "* ";
+      ii++;
+    }
+    ii = 1;
+    List<String> tempId = [];
+    for (var i in filterChipList) {
+      if (i.isSelected) {
+        tempId.add(i.truckPref.id);
+      }
+    }
+    for (var i in tempId) {
+      typesStr += i.toString().trim();
+      if (ii < tempId.length) typesStr += "* ";
+      ii++;
+    }
+    print(sourceStr);
+    print(destinationStr);
+    print(typesStr);
     HTTPHandler().postNewLoad([
       widget.userTransporter.id,
+      sourceStr,
+      destinationStr,
       selectedLoadMaterialType.name,
       (priceUnit.indexOf(selectedPriceUnit) + 1).toString(),
       truckLoadController.text,
       selectedTruckCategory.truckCatID,
+      typesStr,
       expectedPriceController.text,
       (payTerms.indexOf(selectedPayTerm) + 1).toString(),
       advancePayController.text,
@@ -190,17 +223,21 @@ class _PostLoadState extends State<PostLoad> {
         title: "Truck Prefs", text: "Please Wait...");
     HTTPHandler()
         .getTruckPref([selectedTruckCategory.truckCatID]).then((value) {
-      List<TruckPref> tempPref = [];
+      truckPref.clear();
       var temp = [];
       for (TruckPref i in value) {
         if (!temp.contains(i.name)) {
-          tempPref.add(i);
+          truckPref.add(i);
           temp.add(i.name);
         }
       }
       setState(() {
-        truckPref = tempPref;
-        selectedTruckPrefs = [];
+        filterChipList = truckPref.map((TruckPref tpp) {
+          return FilterChipWidget(
+            truckPref: tpp,
+            isSelected: false,
+          );
+        }).toList();
       });
       Navigator.pop(context);
     });
@@ -650,7 +687,7 @@ class _PostLoadState extends State<PostLoad> {
                                 onChanged: (TruckCategory value) {
                                   setState(() {
                                     selectedTruckCategory = value;
-                                    selectedTruckPrefs = [];
+                                    selectedTruckPrefs.clear();
                                   });
                                   getTruckPrefData();
                                 },
@@ -664,34 +701,32 @@ class _PostLoadState extends State<PostLoad> {
                               SizedBox(
                                 height: 16.0,
                               ),
-                              MultiSelectFormField(
-                                autovalidate: false,
-                                titleText: 'Choose Truck Preferences',
-                                validator: (value) {
-                                  if (value == null || value.length == 0) {
-                                    return 'Please select one or more options';
-                                  }
-                                  return null;
-                                },
-                                fillColor: Colors.white,
-                                border: OutlineInputBorder(),
-                                dataSource: truckPref.map((TruckPref item) {
-                                  return {
-                                    "display": item.name,
-                                    "value": item.name
-                                  };
-                                }).toList(),
-                                textField: 'display',
-                                valueField: 'value',
-                                okButtonLabel: 'OK',
-                                hintText: 'Please choose one or more',
-                                initialValue: selectedTruckPrefs,
-                                onSaved: (value) {
-                                  if (value == null) return;
-                                  setState(() {
-                                    selectedTruckPrefs = value;
-                                  });
-                                },
+                              Container(
+                                width: double.maxFinite,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(5.0),
+                                ),
+                                padding: EdgeInsets.all(8.0),
+                                child: Column(
+                                  children: [
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        "Choose Truck Preferences",
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 16.0),
+                                      ),
+                                    ),
+                                    Divider(),
+                                    Wrap(
+                                      spacing: 5.0,
+                                      runSpacing: 5.0,
+                                      children: filterChipList,
+                                    ),
+                                  ],
+                                ),
                               ),
                               SizedBox(
                                 height: 60.0,
@@ -1010,6 +1045,40 @@ class _PostLoadState extends State<PostLoad> {
                 ),
               ],
             ),
+    );
+  }
+}
+
+class FilterChipWidget extends StatefulWidget {
+  final TruckPref truckPref;
+  bool isSelected;
+
+  FilterChipWidget({Key key, this.truckPref, this.isSelected})
+      : super(key: key);
+
+  @override
+  FilterChipWidgetState createState() => FilterChipWidgetState();
+}
+
+class FilterChipWidgetState extends State<FilterChipWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return FilterChip(
+      label: Text(widget.truckPref.name),
+      labelStyle: TextStyle(
+          color: Colors.white, fontSize: 16.0, fontWeight: FontWeight.bold),
+      selected: widget.isSelected,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(30.0),
+      ),
+      backgroundColor: Colors.blue.withOpacity(0.6),
+      onSelected: (selected) {
+        setState(() {
+          widget.isSelected = !widget.isSelected;
+        });
+      },
+      checkmarkColor: Colors.white,
+      selectedColor: Color(0xff252427),
     );
   }
 }

@@ -1,8 +1,9 @@
 import 'dart:convert';
-
-import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_google_places/flutter_google_places.dart';
+import 'package:google_maps_webservice/directions.dart';
+import 'package:google_maps_webservice/places.dart';
 import 'package:shipperapp/BottomSheets/AccountBottomSheetDummy.dart';
 import 'package:shipperapp/Models/GooglePlaces.dart';
 import 'package:shipperapp/MyConstants.dart';
@@ -18,18 +19,13 @@ class FreightCalculator extends StatefulWidget {
 }
 
 class _FreightCalculatorState extends State<FreightCalculator> {
-  GlobalKey<AutoCompleteTextFieldState<GooglePlaces>> keyFrom = new GlobalKey();
-  GlobalKey<AutoCompleteTextFieldState<GooglePlaces>> keyTo = new GlobalKey();
   final GlobalKey<FormState> _formFreightCalculator = GlobalKey<FormState>();
 
-  AutoCompleteTextField fromTextField;
-  AutoCompleteTextField toTextField;
+  final fromTextField = TextEditingController();
+  final toTextField = TextEditingController();
   String truckTypeSelected = "Select Truck Type";
   List<GooglePlaces> suggestedCityFrom = [];
   List<GooglePlaces> suggestedCityTo = [];
-
-  final FocusNode _from = FocusNode();
-  final FocusNode _to = FocusNode();
 
   @override
   void initState() {
@@ -122,23 +118,35 @@ class _FreightCalculatorState extends State<FreightCalculator> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            fromTextField = AutoCompleteTextField<GooglePlaces>(
-                              key: keyFrom,
-                              textInputAction: TextInputAction.next,
-                              focusNode: _from,
-                              clearOnSubmit: false,
-                              textChanged: (value) {
-                                getNewCityFrom(value);
+                            TextFormField(
+                              controller: fromTextField,
+                              readOnly: true,
+                              onTap: () async {
+                                Prediction p = await PlacesAutocomplete.show(
+                                    context: context,
+                                    apiKey: GoogleApiKey,
+                                    mode: Mode.overlay,
+                                    language: "en",
+                                    startText: fromTextField.text,
+                                    components: [
+                                      Component(Component.country, "in")
+                                    ],
+                                    types: [
+                                      "address"
+                                    ]);
+                                if (p != null) {
+                                  fromTextField.text = p.description;
+                                }
                               },
-                              suggestions: suggestedCityFrom,
+                              keyboardType: TextInputType.text,
+                              textInputAction: TextInputAction.done,
                               style: TextStyle(
                                   color: Colors.black, fontSize: 16.0),
                               decoration: InputDecoration(
                                 fillColor: Colors.white,
                                 filled: true,
                                 errorStyle: TextStyle(color: Colors.white),
-                                prefixIcon: Icon(Icons.flight_takeoff),
-                                hintText: "From",
+                                hintText: "Source Location",
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(5.0),
                                   borderSide: BorderSide(
@@ -147,42 +155,42 @@ class _FreightCalculatorState extends State<FreightCalculator> {
                                   ),
                                 ),
                               ),
-                              itemFilter: (item, query) {
-                                return true;
-                              },
-                              itemSorter: (a, b) {
-                                return a.description.compareTo(b.description);
-                              },
-                              itemSubmitted: (item) {
-                                setState(() {
-                                  fromTextField.textField.controller.text =
-                                      item.description;
-                                });
-                                _from.unfocus();
-                                FocusScope.of(context).requestFocus(_to);
-                              },
-                              itemBuilder: (context, item) {
-                                return row(item);
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return "This Field is Required";
+                                }
+                                return null;
                               },
                             ),
-                            SizedBox(height: 16.0,),
-                            toTextField = AutoCompleteTextField<GooglePlaces>(
-                              key: keyTo,
-                              textInputAction: TextInputAction.done,
-                              focusNode: _to,
-                              clearOnSubmit: false,
-                              textChanged: (value) {
-                                getNewCityTo(value);
+                            TextFormField(
+                              controller: toTextField,
+                              readOnly: true,
+                              onTap: () async {
+                                Prediction p = await PlacesAutocomplete.show(
+                                    context: context,
+                                    apiKey: GoogleApiKey,
+                                    mode: Mode.overlay,
+                                    language: "en",
+                                    startText: toTextField.text,
+                                    components: [
+                                      Component(Component.country, "in")
+                                    ],
+                                    types: [
+                                      "address"
+                                    ]);
+                                if (p != null) {
+                                  toTextField.text = p.description;
+                                }
                               },
-                              suggestions: suggestedCityTo,
+                              keyboardType: TextInputType.text,
+                              textInputAction: TextInputAction.done,
                               style: TextStyle(
                                   color: Colors.black, fontSize: 16.0),
                               decoration: InputDecoration(
                                 fillColor: Colors.white,
                                 filled: true,
                                 errorStyle: TextStyle(color: Colors.white),
-                                prefixIcon: Icon(Icons.flight_land),
-                                hintText: "To",
+                                hintText: "Destination Location",
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(5.0),
                                   borderSide: BorderSide(
@@ -191,20 +199,11 @@ class _FreightCalculatorState extends State<FreightCalculator> {
                                   ),
                                 ),
                               ),
-                              itemFilter: (item, query) {
-                                return true;
-                              },
-                              itemSorter: (a, b) {
-                                return a.description.compareTo(b.description);
-                              },
-                              itemSubmitted: (item) {
-                                setState(() {
-                                  toTextField.textField.controller.text =
-                                      item.description;
-                                });
-                              },
-                              itemBuilder: (context, item) {
-                                return row(item);
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return "This Field is Required";
+                                }
+                                return null;
                               },
                             ),
                             SizedBox(
