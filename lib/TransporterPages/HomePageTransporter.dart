@@ -153,7 +153,10 @@ class _HomePageTransporterState extends State<HomePageTransporter> {
                           ),
                         );
                       },
-                    )
+                    ),
+                    SizedBox(
+                      height: 100.0,
+                    ),
                   ],
                 ),
                 DraggableScrollableSheet(
