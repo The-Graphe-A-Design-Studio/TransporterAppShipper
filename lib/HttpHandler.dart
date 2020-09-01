@@ -175,25 +175,25 @@ class HTTPHandler {
   }
 
   Future<List<PostLoad>> getPostLoad(List data) async {
-    /*try {*/
-    var result = await http.post("$baseURLShipper/view_all_posts",
-        body: {"customer_id": data[0], "post_status": data[1]});
-    var ret = json.decode(result.body);
-    print(ret);
-    List<PostLoad> list = [];
-    if (ret == "null" || ret == null) {
+    try {
+      var result = await http.post("$baseURLShipper/view_all_posts",
+          body: {"customer_id": data[0], "post_status": data[1]});
+      var ret = json.decode(result.body);
+      print(ret);
+      List<PostLoad> list = [];
+      if (ret == "null" || ret == null) {
+        return list;
+      }
+      print(data[0]);
+      print(ret);
+      for (var i in ret) {
+        print(i.toString().contains("tonnage"));
+        list.add(PostLoad.fromJson(i, i.toString().contains("tonnage")));
+      }
       return list;
-    }
-    print(data[0]);
-    print(ret);
-    for (var i in ret) {
-      print(i.toString().contains("tonnage"));
-      list.add(PostLoad.fromJson(i, i.toString().contains("tonnage")));
-    }
-    return list;
-    /*} catch (error) {
+    } catch (error) {
       throw error;
-    }*/
+    }
   }
 
   Future<PostResultOne> postNewLoad(List data) async {

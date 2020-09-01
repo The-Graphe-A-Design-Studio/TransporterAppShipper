@@ -239,6 +239,7 @@ class _TripPlannerState extends State<TripPlanner> {
                                   return null;
                                 },
                               ),
+                              SizedBox(height: 16.0,),
                               TextFormField(
                                 controller: toTextField,
                                 readOnly: true,

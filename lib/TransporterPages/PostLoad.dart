@@ -240,7 +240,14 @@ class _PostLoadState extends State<PostLoad> {
         }).toList();
       });
       Navigator.pop(context);
+    }).catchError((error) async {
+      Navigator.pop(context);
+      DialogFailed().showCustomDialog(context,
+          title: "Truck Prefs", text: "Network Error");
+      await Future.delayed(Duration(seconds: 3), () {});
+      Navigator.pop(context);
     });
+    ;
   }
 
   Widget row(GooglePlaces gp) {

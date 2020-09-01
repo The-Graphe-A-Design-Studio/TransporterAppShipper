@@ -162,6 +162,9 @@ class _FreightCalculatorState extends State<FreightCalculator> {
                                 return null;
                               },
                             ),
+                            SizedBox(
+                              height: 16.0,
+                            ),
                             TextFormField(
                               controller: toTextField,
                               readOnly: true,
