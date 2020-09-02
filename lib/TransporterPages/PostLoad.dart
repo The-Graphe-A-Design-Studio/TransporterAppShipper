@@ -68,7 +68,7 @@ class _PostLoadState extends State<PostLoad> {
   @override
   void initState() {
     super.initState();
-    contactController.text = "Shipper Comp Name";
+    contactController.text = widget.userTransporter.compName;
     contactPhoneController.text = widget.userTransporter.mobileNumber;
     setState(() {});
   }

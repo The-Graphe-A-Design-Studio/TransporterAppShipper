@@ -6,16 +6,17 @@ class UserTransporter {
   String registered;
   String mobileNumber;
   String mobileNumberCode;
+  String compName;
 
-  UserTransporter({
-    this.success,
-    this.id,
-    this.message,
-    this.verified,
-    this.mobileNumber,
-    this.mobileNumberCode,
-    this.registered,
-  });
+  UserTransporter(
+      {this.success,
+      this.id,
+      this.message,
+      this.verified,
+      this.mobileNumber,
+      this.mobileNumberCode,
+      this.registered,
+      this.compName});
 
   factory UserTransporter.fromJson(Map<String, dynamic> parsedJson) {
     return UserTransporter(
@@ -25,7 +26,8 @@ class UserTransporter {
         verified: parsedJson['verified'],
         mobileNumber: parsedJson['shipper phone'],
         mobileNumberCode: parsedJson['shipper phone country code'],
-        registered: parsedJson['registered on']);
+        registered: parsedJson['registered on'],
+        compName: parsedJson['shipper company name']);
   }
 
   Map<String, dynamic> toJson() => {
@@ -36,5 +38,6 @@ class UserTransporter {
         'shipper phone': this.mobileNumber,
         'shipper phone country code': this.mobileNumberCode,
         'registered on': this.registered,
+        'shipper company name': this.compName
       };
 }
