@@ -141,9 +141,6 @@ class _PostLoadState extends State<PostLoad> {
       if (ii < tempId.length) typesStr += "* ";
       ii++;
     }
-    print(sourceStr);
-    print(destinationStr);
-    print(typesStr);
     HTTPHandler().postNewLoad([
       widget.userTransporter.id,
       sourceStr,
@@ -165,6 +162,7 @@ class _PostLoadState extends State<PostLoad> {
         DialogSuccess().showCustomDialog(context, title: "Post Load");
         await Future.delayed(Duration(seconds: 1), () {});
         Navigator.pop(context);
+        Navigator.pop(context, true);
       } else {
         Navigator.pop(context);
         DialogFailed()
