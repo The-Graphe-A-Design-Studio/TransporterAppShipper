@@ -8,15 +8,16 @@ class UserTransporter {
   String mobileNumberCode;
   String compName;
 
-  UserTransporter(
-      {this.success,
-      this.id,
-      this.message,
-      this.verified,
-      this.mobileNumber,
-      this.mobileNumberCode,
-      this.registered,
-      this.compName});
+  UserTransporter({
+    this.success,
+    this.id,
+    this.message,
+    this.verified,
+    this.mobileNumber,
+    this.mobileNumberCode,
+    this.registered,
+    this.compName,
+  });
 
   factory UserTransporter.fromJson(Map<String, dynamic> parsedJson) {
     return UserTransporter(

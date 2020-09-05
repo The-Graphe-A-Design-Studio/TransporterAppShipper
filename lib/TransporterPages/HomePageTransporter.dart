@@ -105,14 +105,15 @@ class _HomePageTransporterState extends State<HomePageTransporter> {
                     GestureDetector(
                       onTap: () {
                         Navigator.pushNamed(context, postLoad,
-                            arguments: widget.userTransporter).then((value) {
-                              if (value!=null) {
-                                if (value==true) {
-                                  setState(() {
-                                    loadData = true;
-                                  });
-                                }
-                              }
+                                arguments: widget.userTransporter)
+                            .then((value) {
+                          if (value != null) {
+                            if (value == true) {
+                              setState(() {
+                                loadData = true;
+                              });
+                            }
+                          }
                         });
                       },
                       child: CircleAvatar(
@@ -176,21 +177,24 @@ class _HomePageTransporterState extends State<HomePageTransporter> {
                     return Hero(
                       tag: 'AnimeBottom',
                       child: Container(
-                          margin: EdgeInsets.only(bottom: 0),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black,
-                                blurRadius: 10.0,
-                              ),
-                            ],
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(30.0),
-                                topRight: Radius.circular(30.0)),
-                          ),
-                          child: AccountBottomSheetLoggedIn(
-                              scrollController: scrollController)),
+                        margin: EdgeInsets.only(bottom: 0),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black,
+                              blurRadius: 10.0,
+                            ),
+                          ],
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(30.0),
+                              topRight: Radius.circular(30.0)),
+                        ),
+                        child: AccountBottomSheetLoggedIn(
+                          scrollController: scrollController,
+                          userTransporter: widget.userTransporter,
+                        ),
+                      ),
                     );
                   },
                 ),

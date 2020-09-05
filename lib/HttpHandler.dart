@@ -222,4 +222,20 @@ class HTTPHandler {
       throw error;
     }
   }
+
+  //RISHAV
+
+  Future<Map<dynamic, dynamic>> getUserDocumentsData(String userId) async {
+    try {
+      var response = await http.post(
+        '$baseURLShipper/documents',
+        body: {'customer_id': userId},
+      );
+
+      return json.decode(response.body);
+    } catch (e) {
+      print(e);
+      throw e;
+    }
+  }
 }

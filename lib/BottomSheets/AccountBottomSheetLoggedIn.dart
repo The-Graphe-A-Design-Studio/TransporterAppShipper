@@ -1,32 +1,102 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:shipperapp/HttpHandler.dart';
+import 'package:shipperapp/Models/User.dart';
 import 'package:shipperapp/MyConstants.dart';
 
 class AccountBottomSheetLoggedIn extends StatefulWidget {
   final ScrollController scrollController;
+  final UserTransporter userTransporter;
 
-  AccountBottomSheetLoggedIn({Key key, @required this.scrollController})
-      : super(key: key);
+  AccountBottomSheetLoggedIn({
+    Key key,
+    @required this.scrollController,
+    this.userTransporter,
+  }) : super(key: key);
 
   @override
   _AccountBottomSheetLoggedInState createState() =>
       _AccountBottomSheetLoggedInState();
 }
 
-final List<String> imgList = [
-  'https://images.unsplash.com/photo-1522205408450-add114ad53fe?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=368f45b0888aeb0b7b08e3a1084d3ede&auto=format&fit=crop&w=1950&q=80',
-  'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=94a1e718d89ca60a6337a6008341ca50&auto=format&fit=crop&w=1950&q=80',
-  'https://images.unsplash.com/photo-1523205771623-e0faa4d2813d?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=89719a0d55dd05e2deae4120227e6efc&auto=format&fit=crop&w=1953&q=80',
-  'https://images.unsplash.com/photo-1508704019882-f9cf40e475b4?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=8c6e5e3aba713b17aa1fe71ab4f0ae5b&auto=format&fit=crop&w=1352&q=80',
-  'https://images.unsplash.com/photo-1519985176271-adb1088fa94c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=a0c8d632e977f94e5d312d9893258f59&auto=format&fit=crop&w=1355&q=80'
-];
-
 class _AccountBottomSheetLoggedInState
     extends State<AccountBottomSheetLoggedIn> {
+  Map<dynamic, dynamic> map;
+
+  Widget _listItem(String url, bool verified) => Stack(
+        children: [
+          Container(
+            width: 150.0,
+            margin: const EdgeInsets.symmetric(horizontal: 10.0),
+            decoration: BoxDecoration(
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.circular(5.0),
+              image: DecorationImage(
+                image: NetworkImage('https://truckwale.co.in/$url'),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomLeft,
+            child: Container(
+              margin: const EdgeInsets.only(
+                left: 14.0,
+                bottom: 4.0,
+              ),
+              height: 20.0,
+              width: 20.0,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  width: 1.0,
+                  color: Colors.white,
+                ),
+              ),
+              child: Icon(
+                Icons.done,
+                color: Colors.white,
+                size: 10.0,
+              ),
+            ),
+          ),
+          if (verified)
+            Container(
+              width: 150.0,
+              alignment: Alignment.topRight,
+              margin: const EdgeInsets.only(top: 10.0),
+              child: Container(
+                width: 80.0,
+                height: 30.0,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: Colors.green[600],
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+                child: Text(
+                  'Verified',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 12.0,
+                  ),
+                ),
+              ),
+            )
+        ],
+      );
+
   @override
   void initState() {
     super.initState();
+    HTTPHandler().getUserDocumentsData(widget.userTransporter.id).then((value) {
+      setState(() {
+        this.map = value;
+      });
+    }).catchError((e) {
+      print(e);
+    });
   }
 
   @override
@@ -53,16 +123,17 @@ class _AccountBottomSheetLoggedInState
           ListTile(
             leading: CircleAvatar(
               radius: 30.0,
-              backgroundImage: NetworkImage(imgList[1]),
+              backgroundImage:
+                  NetworkImage('https://truckwale.co.in/${map['selfie']}'),
             ),
             title: Text(
-              'Dwarkadhish Traders',
+              widget.userTransporter.compName,
               style: TextStyle(
                 fontWeight: FontWeight.w600,
               ),
             ),
             subtitle: Text(
-              '1234567890',
+              '+${widget.userTransporter.mobileNumberCode} ${widget.userTransporter.mobileNumber}',
               style: TextStyle(color: Colors.black87),
             ),
           ),
@@ -83,71 +154,30 @@ class _AccountBottomSheetLoggedInState
           Container(
             margin: const EdgeInsets.only(top: 30.0),
             height: 175.0,
-            child: ListView.builder(
+            child: ListView(
               scrollDirection: Axis.horizontal,
-              itemCount: imgList.length,
-              itemBuilder: (BuildContext context, int index) => Stack(
-                children: [
-                  Container(
-                    width: 150.0,
-                    margin: const EdgeInsets.symmetric(horizontal: 10.0),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.rectangle,
-                      borderRadius: BorderRadius.circular(5.0),
-                      image: DecorationImage(
-                        image: NetworkImage(imgList[index]),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.bottomLeft,
-                    child: Container(
-                      margin: const EdgeInsets.only(
-                        left: 14.0,
-                        bottom: 4.0,
-                      ),
-                      height: 20.0,
-                      width: 20.0,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          width: 1.0,
-                          color: Colors.white,
-                        ),
-                      ),
-                      child: Icon(
-                        Icons.done,
-                        color: Colors.white,
-                        size: 10.0,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: 150.0,
-                    alignment: Alignment.topRight,
-                    margin: const EdgeInsets.only(top: 10.0),
-                    child: Container(
-                      width: 80.0,
-                      height: 30.0,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: Colors.green[600],
-                        shape: BoxShape.rectangle,
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                      child: Text(
-                        'Verified',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 12.0,
-                        ),
-                      ),
-                    ),
-                  )
-                ],
-              ),
+              children: [
+                _listItem(
+                  map['pan card'],
+                  (map['pan card verified'].contains('1')) ? true : false,
+                ),
+                _listItem(
+                  map['address front'],
+                  (map['address front verified'].contains('1')) ? true : false,
+                ),
+                _listItem(
+                  map['address back'],
+                  (map['address back verified'].contains('1')) ? true : false,
+                ),
+                _listItem(
+                  map['selfie'],
+                  (map['selfie verified'].contains('1')) ? true : false,
+                ),
+                _listItem(
+                  map['office address'],
+                  (map['office address verified'].contains('1')) ? true : false,
+                ),
+              ],
             ),
           ),
           SizedBox(height: 20.0),
@@ -165,6 +195,9 @@ class _AccountBottomSheetLoggedInState
             ),
           ),
           ListTile(
+            onTap: () {
+              HTTPHandler().signOut(context);
+            },
             leading: Icon(Icons.logout),
             title: Text(
               'Logout',
