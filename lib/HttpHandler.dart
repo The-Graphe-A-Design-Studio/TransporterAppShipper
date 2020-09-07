@@ -231,7 +231,6 @@ class HTTPHandler {
         '$baseURLShipper/documents',
         body: {'customer_id': userId},
       );
-
       return json.decode(response.body);
     } catch (e) {
       print(e);
