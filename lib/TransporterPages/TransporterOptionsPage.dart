@@ -28,7 +28,7 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
   WidgetMarker selectedWidgetMarker;
 
   final GlobalKey<FormState> _formKeyOtp = GlobalKey<FormState>();
-  final GlobalKey<FormState> _formKeySignIn = GlobalKey<FormState>();
+  // final GlobalKey<FormState> _formKeySignIn = GlobalKey<FormState>();
 
   final otpController = TextEditingController();
   final mobileNumberControllerSignIn = TextEditingController();
@@ -319,111 +319,122 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
 
   Widget getSignInBottomSheetWidget(
       context, ScrollController scrollController) {
-    return ListView(controller: scrollController, children: <Widget>[
-      SingleChildScrollView(
-        child: Form(
-          key: _formKeySignIn,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: CircleAvatar(
-                          backgroundColor: Colors.transparent,
-                          child: Icon(
-                            Icons.arrow_back_ios,
-                            color: Color(0xff252427),
+    return ListView(
+      controller: scrollController,
+      children: <Widget>[
+        SingleChildScrollView(
+          child: Form(
+            //key: _formKeySignIn,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: CircleAvatar(
+                            backgroundColor: Colors.transparent,
+                            child: Icon(
+                              Icons.arrow_back_ios,
+                              color: Color(0xff252427),
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  Spacer(),
-                ],
-              ),
-              Align(
-                alignment: Alignment.center,
-                child: Image(
-                  image: AssetImage('assets/images/logo_black.png'),
-                  height: 145.0,
-                  width: 145.0,
+                    Spacer(),
+                  ],
                 ),
-              ),
-              SizedBox(
-                height: 20.0,
-              ),
-              Align(
-                alignment: Alignment.center,
-                child: TextFormField(
-                  controller: mobileNumberControllerSignIn,
-                  keyboardType: TextInputType.number,
-                  maxLength: 10,
-                  textInputAction: TextInputAction.done,
-                  decoration: InputDecoration(
-                    labelText: "Mobile Number",
-                    prefixText: "+91     ",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0),
-                      borderSide: BorderSide(
-                        color: Colors.amber,
-                        style: BorderStyle.solid,
+                Align(
+                  alignment: Alignment.center,
+                  child: Image(
+                    image: AssetImage('assets/images/logo_black.png'),
+                    height: 145.0,
+                    width: 145.0,
+                  ),
+                ),
+                SizedBox(
+                  height: 20.0,
+                ),
+                Align(
+                  alignment: Alignment.center,
+                  child: Material(
+                    child: TextFormField(
+                      controller: mobileNumberControllerSignIn,
+                      keyboardType: TextInputType.number,
+                      maxLength: 10,
+                      textInputAction: TextInputAction.done,
+                      decoration: InputDecoration(
+                        labelText: "Mobile Number",
+                        prefixText: "+91     ",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5.0),
+                          borderSide: BorderSide(
+                            color: Colors.amber,
+                            style: BorderStyle.solid,
+                          ),
+                        ),
                       ),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return "This Field is Required";
+                        } else if (value.length != 10) {
+                          return "Enter Valid Mobile Number";
+                        }
+                        return null;
+                      },
                     ),
                   ),
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return "This Field is Required";
-                    } else if (value.length != 10) {
-                      return "Enter Valid Mobile Number";
-                    }
-                    return null;
-                  },
                 ),
-              ),
-              SizedBox(
-                height: 30.0,
-              ),
-              Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  splashColor: Colors.transparent,
-                  onTap: () {
-                    if (_formKeySignIn.currentState.validate()) {
-                      postOtpRequest(context);
-                    }
-                  },
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 50.0,
-                    child: Center(
-                      child: Text(
-                        "Next",
-                        style: TextStyle(
+                SizedBox(
+                  height: 30.0,
+                ),
+                Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    splashColor: Colors.transparent,
+                    onTap: () {
+                      // if (_formKeySignIn.currentState.validate()) {
+                      //   postOtpRequest(context);
+                      // }
+                      if (mobileNumberControllerSignIn.text.length == 10)
+                        postOtpRequest(context);
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 50.0,
+                      child: Center(
+                        child: Text(
+                          "Next",
+                          style: TextStyle(
                             color: Color(0xff252427),
                             fontSize: 24.0,
-                            fontWeight: FontWeight.bold),
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(width: 2.0, color: Color(0xff252427)),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          width: 2.0,
+                          color: Color(0xff252427),
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
-      ),
-    ]);
+      ],
+    );
   }
 
   Widget getOtpVerificationWidget(context) {
@@ -436,16 +447,18 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
           Text(
             "OTP",
             style: TextStyle(
-                color: Colors.white,
-                fontSize: 40.0,
-                fontWeight: FontWeight.bold),
+              color: Colors.white,
+              fontSize: 40.0,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           Text(
             "Verification",
             style: TextStyle(
-                color: Colors.white,
-                fontSize: 40.0,
-                fontWeight: FontWeight.bold),
+              color: Colors.white,
+              fontSize: 40.0,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           Spacer(),
         ],
@@ -463,16 +476,18 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
           Text(
             "Enter Your",
             style: TextStyle(
-                color: Colors.white,
-                fontSize: 30.0,
-                fontWeight: FontWeight.bold),
+              color: Colors.white,
+              fontSize: 30.0,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           Text(
             "Phone Number",
             style: TextStyle(
-                color: Colors.white,
-                fontSize: 32.0,
-                fontWeight: FontWeight.bold),
+              color: Colors.white,
+              fontSize: 32.0,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           Spacer(),
         ],
@@ -520,36 +535,44 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
       onWillPop: onBackPressed,
       child: Scaffold(
         backgroundColor: Color(0xff252427),
-        body: Stack(children: <Widget>[
-          getCustomWidget(context),
-          DraggableScrollableSheet(
-            initialChildSize: 0.65,
-            minChildSize: 0.4,
-            maxChildSize: 0.9,
-            builder: (BuildContext context, ScrollController scrollController) {
-              return Hero(
+        body: Stack(
+          children: <Widget>[
+            getCustomWidget(context),
+            DraggableScrollableSheet(
+              initialChildSize: 0.65,
+              minChildSize: 0.4,
+              maxChildSize: 0.9,
+              builder:
+                  (BuildContext context, ScrollController scrollController) {
+                return Hero(
                   tag: 'AnimeBottom',
                   child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black,
-                            blurRadius: 10.0,
-                          ),
-                        ],
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(30.0),
-                            topRight: Radius.circular(30.0)),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black,
+                          blurRadius: 10.0,
+                        ),
+                      ],
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(30.0),
+                        topRight: Radius.circular(30.0),
                       ),
-                      child: Padding(
-                        padding: EdgeInsets.all(16.0),
-                        child: getCustomBottomSheetWidget(
-                            context, scrollController),
-                      )));
-            },
-          ),
-        ]),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: getCustomBottomSheetWidget(
+                        context,
+                        scrollController,
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
