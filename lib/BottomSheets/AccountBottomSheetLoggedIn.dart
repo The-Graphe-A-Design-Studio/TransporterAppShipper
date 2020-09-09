@@ -1,6 +1,4 @@
 import 'dart:io';
-
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:shipperapp/HttpHandler.dart';
 import 'package:shipperapp/Models/User.dart';
@@ -363,7 +361,11 @@ class _AccountBottomSheetLoggedInState
                 SizedBox(height: 20.0),
                 ListTile(
                   onTap: () {
-                    Navigator.pushNamed(context, subscription);
+                    Navigator.pushNamed(
+                      context,
+                      subscription,
+                      arguments: widget.userTransporter,
+                    );
                   },
                   leading: Icon(Icons.toc),
                   title: Text(

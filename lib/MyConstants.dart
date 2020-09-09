@@ -5,6 +5,9 @@ const autoCompleteLink =
 const autoCompleteLinkFullAdd =
     "https://maps.googleapis.com/maps/api/place/autocomplete/json?key=$GoogleApiKey&components=country:in&types=address&input=";
 
+const RAZORPAY_ID = "rzp_test_Ox9H2BWMViEG65";
+const RAZORPAY_SECRET = "2rOaeIWZt4iOJUjMJGXRk5dw";
+
 //Basic Pages
 const String splashPage = "/";
 

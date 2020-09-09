@@ -72,7 +72,9 @@ class RouteGenerator {
           ),
         );
       case subscription:
-        return FadeRoute(page: SubsriptionPage());
+        return FadeRoute(page: SubsriptionPage(
+          userTransporter: args,
+        ));
 
       default:
         return _errorRoute();

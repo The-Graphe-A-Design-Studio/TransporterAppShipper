@@ -1,18 +1,25 @@
 import 'dart:convert';
+import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shipperapp/DialogScreens/DialogProcessing.dart';
 import 'package:shipperapp/DialogScreens/DialogSuccess.dart';
 import 'package:shipperapp/Models/MaterialType.dart';
 import 'package:shipperapp/Models/PostLoad.dart';
+import 'package:shipperapp/Models/SubscriptionPlan.dart';
 import 'package:shipperapp/Models/TruckCategory.dart';
 import 'package:shipperapp/Models/TruckPref.dart';
+import 'package:shipperapp/Models/User.dart';
 import 'package:shipperapp/MyConstants.dart';
 import 'package:shipperapp/PostMethodResult.dart';
 
 class HTTPHandler {
+  String baseURL = 'https://truckwale.co.in/api';
   String baseURLShipper = 'https://truckwale.co.in/api/customer';
+
+  final _random = new Random();
 
   void signOut(BuildContext context, {String userMobile}) async {
     DialogProcessing().showCustomDialog(context,
@@ -70,6 +77,23 @@ class HTTPHandler {
       List<TruckPref> list = [];
       for (var i in ret) {
         list.add(TruckPref.fromJson(i));
+      }
+      return list;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  //Rishav
+
+  Future<List<SubscriptionPlan>> getSubscriptionPlans() async {
+    try {
+      var result = await http.get('$baseURL/shipper_subscription_plan');
+
+      var ret = json.decode(result.body);
+      List<SubscriptionPlan> list = [];
+      for (var i in ret) {
+        list.add(SubscriptionPlan.fromJson(i));
       }
       return list;
     } catch (error) {
@@ -248,6 +272,68 @@ class HTTPHandler {
         body: {'customer_id': userId},
       );
       return json.decode(response.body);
+    } catch (e) {
+      print(e);
+      throw e;
+    }
+  }
+
+  Future<String> generateRazorpayOrderId(int amount) async {
+    try {
+      String basicAuth =
+          'Basic ' + base64Encode(utf8.encode('$RAZORPAY_ID:$RAZORPAY_SECRET'));
+
+      Map<String, dynamic> orderData = {
+        'amount': amount,
+        'currency': 'INR',
+        'receipt': 'AATA_${1000 + _random.nextInt(9999 - 1000)}',
+        'payment_capture': 1,
+        'notes': {
+          'notes_key_1': 'Aatawala is developed by Graphe',
+        },
+      };
+
+      print(1000 + _random.nextInt(9999 - 1000));
+
+      http.Response response = await http.post(
+        'https://api.razorpay.com/v1/orders',
+        headers: <String, String>{
+          'Authorization': basicAuth,
+          'Content-Type': 'application/json'
+        },
+        body: json.encode(orderData),
+      );
+
+      print(json.decode(response.body));
+
+      if ((json.decode(response.body)).containsKey('error')) {
+        return null;
+      } else {
+        return (json.decode(response.body))['id'];
+      }
+    } catch (e) {
+      print(e);
+      throw e;
+    }
+  }
+
+  Future<PostResultOne> storeData(
+    UserTransporter user,
+    SubscriptionPlan plan,
+    PaymentSuccessResponse paymentResponse,
+  ) async {
+    try {
+      var response = await http.post('$baseURL/subscription_payment', body: {
+        'user_type': '1',
+        'user_id': user.id,
+        'amount': plan.planSellingPrice.toString(),
+        'duration': plan.duration[0],
+        'razorpay_order_id': paymentResponse.orderId ?? 'graphe123',
+        'razorpay_payment_id': paymentResponse.paymentId,
+        'razorpay_signature': paymentResponse.signature ?? 'graphe123',
+      });
+
+      return PostResultOne.fromJson(json.decode(response.body));
     } catch (e) {
       print(e);
       throw e;
