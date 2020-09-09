@@ -362,6 +362,9 @@ class _AccountBottomSheetLoggedInState
                 ),
                 SizedBox(height: 20.0),
                 ListTile(
+                  onTap: () {
+                    Navigator.pushNamed(context, subscription);
+                  },
                   leading: Icon(Icons.toc),
                   title: Text(
                     'Your Subscription',

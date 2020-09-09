@@ -12,6 +12,7 @@ import 'package:shipperapp/TransporterPages/HomePageTransporterNotVerified.dart'
 import 'package:shipperapp/TransporterPages/OrderSummaryScreen.dart';
 import 'package:shipperapp/TransporterPages/PostLoad.dart';
 import 'package:shipperapp/TransporterPages/RequestTransport.dart';
+import 'package:shipperapp/TransporterPages/SubscriptionPage.dart';
 import 'package:shipperapp/TransporterPages/TransporterOptionsPage.dart';
 import 'package:shipperapp/TransporterPages/UploadDocsTransporter.dart';
 
@@ -30,7 +31,7 @@ class RouteGenerator {
       case transporterOptionPage:
         return FadeRoute(page: TransporterOptionsPage());
 
-    //Pages which don't need LoggedIn User
+      //Pages which don't need LoggedIn User
       case emiCalculatorPage:
         return FadeRoute(page: EmiCalculator());
       case freightCalculatorPage:
@@ -40,19 +41,38 @@ class RouteGenerator {
       case tripPlannerPage:
         return FadeRoute(page: TripPlanner());
 
-    //Pages once the user is LoggedIn - Transporter
+      //Pages once the user is LoggedIn - Transporter
       case homePageTransporter:
-        return FadeRoute(page: HomePageTransporter(userTransporter: args,));
+        return FadeRoute(
+          page: HomePageTransporter(
+            userTransporter: args,
+          ),
+        );
       case homePageTransporterNotVerified:
-        return FadeRoute(page: HomePageTransporterNotVerified(userTransporter: args,));
+        return FadeRoute(
+          page: HomePageTransporterNotVerified(
+            userTransporter: args,
+          ),
+        );
       case uploadDocsTransporter:
-        return FadeRoute(page: UploadDocs(userTransporter: (args as Map)['user'], startFrom: (args as Map)['passValue'],));
+        return FadeRoute(
+          page: UploadDocs(
+            userTransporter: (args as Map)['user'],
+            startFrom: (args as Map)['passValue'],
+          ),
+        );
       case orderSummaryPage:
         return FadeRoute(page: OrderSummaryScreen());
       case requestTransportPage:
         return FadeRoute(page: RequestTransport());
       case postLoad:
-        return FadeRoute(page: PostLoad(userTransporter: args,));
+        return FadeRoute(
+          page: PostLoad(
+            userTransporter: args,
+          ),
+        );
+      case subscription:
+        return FadeRoute(page: SubsriptionPage());
 
       default:
         return _errorRoute();

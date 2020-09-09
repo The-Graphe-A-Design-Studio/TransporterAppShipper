@@ -25,3 +25,4 @@ const String uploadDocsTransporter = "/uploadDocsTransporter";
 const String orderSummaryPage = "/orderSummaryPage";
 const String requestTransportPage = "/requestTransportPage";
 const String postLoad = "/postLoad";
+const String subscription = "/subscription";
