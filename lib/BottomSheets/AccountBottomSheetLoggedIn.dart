@@ -379,7 +379,10 @@ class _AccountBottomSheetLoggedInState
                 ),
                 ListTile(
                   onTap: () {
-                    HTTPHandler().signOut(context);
+                    HTTPHandler().signOut(
+                      context,
+                      userMobile: widget.userTransporter.mobileNumber,
+                    );
                   },
                   leading: Icon(Icons.logout),
                   title: Text(

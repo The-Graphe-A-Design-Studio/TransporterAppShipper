@@ -14,9 +14,13 @@ import 'package:shipperapp/PostMethodResult.dart';
 class HTTPHandler {
   String baseURLShipper = 'https://truckwale.co.in/api/customer';
 
-  void signOut(BuildContext context) async {
+  void signOut(BuildContext context, {String userMobile}) async {
     DialogProcessing().showCustomDialog(context,
         title: "Sign Out", text: "Processing, Please Wait!");
+    await http.post(
+      '$baseURLShipper//register-login-logout',
+      body: {'logout_number': userMobile},
+    );
     await SharedPreferences.getInstance()
         .then((value) => value.setBool("rememberMe", false));
     await Future.delayed(Duration(seconds: 1), () {});
