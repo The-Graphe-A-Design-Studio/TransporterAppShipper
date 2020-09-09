@@ -161,6 +161,18 @@ class HTTPHandler {
     try {
       var result = await http.post("$baseURLShipper/verification",
           body: {'phone_number': data[0], 'otp': data[1]});
+      SharedPreferences.getInstance().then((value) async {
+        await value.setString('trial_period_status',
+            (json.decode(result.body))['trial period status']);
+        value
+            .setString('trial_period_upto',
+                (json.decode(result.body))['trial period upto'])
+            .then((value1) {
+          print((json.decode(result.body))['trial period status']);
+          print(value.getString('trial_period_upto'));
+          print('data stored');
+        });
+      });
       return [PostResultOne.fromJson(json.decode(result.body)), result.body];
     } catch (error) {
       throw error;
