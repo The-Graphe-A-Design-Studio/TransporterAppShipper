@@ -1103,7 +1103,7 @@ class DynamicText extends StatelessWidget {
       onTap: () async {
         Prediction p = await PlacesAutocomplete.show(
             context: context,
-            apiKey: GoogleApiKey,
+            apiKey: GoogleMapsKey,
             mode: Mode.overlay,
             language: "en",
             startText: controller.text,

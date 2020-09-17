@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shipperapp/BottomSheets/AccountBottomSheetLoggedIn.dart';
@@ -23,7 +24,11 @@ class _HomePageTransporterState extends State<HomePageTransporter> {
 
   @override
   void initState() {
+    final fcm = FirebaseMessaging();
+    fcm.requestNotificationPermissions();
+    fcm.configure();
     super.initState();
+    fcm.getToken().then((value) => print(value));
   }
 
   void getData() {

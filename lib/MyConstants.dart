@@ -1,5 +1,6 @@
 //API Key
 const GoogleApiKey = "AIzaSyCSdJNFravZ9yjzisUAhLgohy_MWbS41XI";
+const GoogleMapsKey = "AIzaSyDH8iEIWiHLIRcSsJWm8Fh1qbgwt0JRAc0";
 const autoCompleteLink =
     "https://maps.googleapis.com/maps/api/place/autocomplete/json?key=$GoogleApiKey&components=country:in&types=(cities)&input=";
 const autoCompleteLinkFullAdd =
