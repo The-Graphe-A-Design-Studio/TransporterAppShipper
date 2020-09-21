@@ -141,7 +141,44 @@ class _ViewBidsPerLoadScreenState extends State<ViewBidsPerLoadScreen> {
                                     ),
                                     RaisedButton.icon(
                                       onPressed: () {
-                                        print('accept');
+                                        print('reject');
+                                        DialogProcessing().showCustomDialog(
+                                            context,
+                                            title: "Rejecting Bid",
+                                            text: "Processing, Please Wait!");
+                                        HTTPHandler()
+                                            .rejectBid(e.bidId)
+                                            .then((value) async {
+                                          Navigator.of(context).pop();
+                                          if (value.success) {
+                                            Navigator.pop(context);
+                                            DialogSuccess().showCustomDialog(
+                                                context,
+                                                title: "Rejecting Bid");
+                                            await Future.delayed(
+                                                Duration(seconds: 1), () {});
+                                            Navigator.pop(context);
+                                          } else {
+                                            Navigator.pop(context);
+                                            DialogFailed().showCustomDialog(
+                                                context,
+                                                title: "Rejecting Bid",
+                                                text: value.message);
+                                            await Future.delayed(
+                                                Duration(seconds: 3), () {});
+                                            Navigator.pop(context);
+                                            Navigator.pop(context);
+                                          }
+                                        }).catchError((error) async {
+                                          Navigator.pop(context);
+                                          DialogFailed().showCustomDialog(
+                                              context,
+                                              title: "Rejecting Bid",
+                                              text: "Network Error");
+                                          await Future.delayed(
+                                              Duration(seconds: 3), () {});
+                                          Navigator.pop(context);
+                                        });
                                       },
                                       icon: Icon(
                                         Icons.cancel,
@@ -152,6 +189,43 @@ class _ViewBidsPerLoadScreenState extends State<ViewBidsPerLoadScreen> {
                                     RaisedButton.icon(
                                       onPressed: () {
                                         print('delete');
+                                        DialogProcessing().showCustomDialog(
+                                            context,
+                                            title: "Deleting Bid",
+                                            text: "Processing, Please Wait!");
+                                        HTTPHandler()
+                                            .deleteBid(e.bidId)
+                                            .then((value) async {
+                                          Navigator.of(context).pop();
+                                          if (value.success) {
+                                            Navigator.pop(context);
+                                            DialogSuccess().showCustomDialog(
+                                                context,
+                                                title: "Deleting Bid");
+                                            await Future.delayed(
+                                                Duration(seconds: 1), () {});
+                                            Navigator.pop(context);
+                                          } else {
+                                            Navigator.pop(context);
+                                            DialogFailed().showCustomDialog(
+                                                context,
+                                                title: "Deleting Bid",
+                                                text: value.message);
+                                            await Future.delayed(
+                                                Duration(seconds: 3), () {});
+                                            Navigator.pop(context);
+                                            Navigator.pop(context);
+                                          }
+                                        }).catchError((error) async {
+                                          Navigator.pop(context);
+                                          DialogFailed().showCustomDialog(
+                                              context,
+                                              title: "Deleting Bid",
+                                              text: "Network Error");
+                                          await Future.delayed(
+                                              Duration(seconds: 3), () {});
+                                          Navigator.pop(context);
+                                        });
                                       },
                                       icon: Icon(
                                         Icons.delete_forever,

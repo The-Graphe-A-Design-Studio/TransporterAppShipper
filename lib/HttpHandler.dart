@@ -379,4 +379,32 @@ class HTTPHandler {
       throw e;
     }
   }
+
+  /// Reject bid
+  Future<PostResultOne> rejectBid(String bidId) async {
+    try {
+      var response = await http.post('$baseURLShipper/bidders', body: {
+        'bid_id_for_rejecting': bidId,
+      });
+
+      return PostResultOne.fromJson(json.decode(response.body));
+    } catch (e) {
+      print(e);
+      throw e;
+    }
+  }
+
+  /// Delete bid
+  Future<PostResultOne> deleteBid(String bidId) async {
+    try {
+      var response = await http.post('$baseURLShipper/bidders', body: {
+        'bid_id_for_removing': bidId,
+      });
+
+      return PostResultOne.fromJson(json.decode(response.body));
+    } catch (e) {
+      print(e);
+      throw e;
+    }
+  }
 }
