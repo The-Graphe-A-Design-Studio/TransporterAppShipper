@@ -25,7 +25,7 @@ class HTTPHandler {
     DialogProcessing().showCustomDialog(context,
         title: "Sign Out", text: "Processing, Please Wait!");
     await http.post(
-      '$baseURLShipper//register-login-logout',
+      '$baseURLShipper/shipper_enter_exit',
       body: {'logout_number': userMobile},
     );
     await SharedPreferences.getInstance()
@@ -104,7 +104,7 @@ class HTTPHandler {
   /*-------------------------- Customer API's ---------------------------*/
   Future<PostResultOne> registerLoginCustomer(List data) async {
     try {
-      var result = await http.post("$baseURLShipper/register-login-logout",
+      var result = await http.post("$baseURLShipper/shipper_enter_exit",
           body: {
             'cu_phone_code': data[0],
             'cu_phone': data[1],
@@ -119,7 +119,7 @@ class HTTPHandler {
   Future<PostResultOne> logoutCustomer(List data) async {
     try {
       var result =
-          await http.post("$baseURLShipper/register-login-logout", body: {
+          await http.post("$baseURLShipper/shipper_enter_exit", body: {
         'logout_number': data[0],
       });
       return PostResultOne.fromJson(json.decode(result.body));
@@ -183,7 +183,7 @@ class HTTPHandler {
 
   Future<List<dynamic>> registerVerifyOtpCustomer(List data) async {
     try {
-      var result = await http.post("$baseURLShipper/verification",
+      var result = await http.post("$baseURLShipper/shipper_verification",
           body: {'phone_number': data[0], 'otp': data[1]});
       SharedPreferences.getInstance().then((value) async {
         await value.setString('trial_period_status',
@@ -205,7 +205,7 @@ class HTTPHandler {
 
   Future<PostResultOne> registerResendOtpCustomer(List data) async {
     try {
-      var result = await http.post("$baseURLShipper/verification", body: {
+      var result = await http.post("$baseURLShipper/shipper_verification", body: {
         'resend_otp_on': data[0],
       });
       return PostResultOne.fromJson(json.decode(result.body));
