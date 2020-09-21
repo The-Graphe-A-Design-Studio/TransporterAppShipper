@@ -265,6 +265,7 @@ class HTTPHandler {
 
   //RISHAV
 
+  /// Getting user documents
   Future<Map<dynamic, dynamic>> getUserDocumentsData(String userId) async {
     try {
       var response = await http.post(
@@ -278,6 +279,7 @@ class HTTPHandler {
     }
   }
 
+  /// Generating Razorpay payment ID
   Future<String> generateRazorpayOrderId(int amount) async {
     try {
       String basicAuth =
@@ -317,6 +319,7 @@ class HTTPHandler {
     }
   }
 
+  /// Storing payment data
   Future<PostResultOne> storeData(
     UserTransporter user,
     SubscriptionPlan plan,

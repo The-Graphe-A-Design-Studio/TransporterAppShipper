@@ -198,6 +198,8 @@ class _HomePageTransporterState extends State<HomePageTransporter> {
                         child: AccountBottomSheetLoggedIn(
                           scrollController: scrollController,
                           userTransporter: widget.userTransporter,
+                          activeLoads: activeLoad,
+                          inactiveLoads: inactiveLoad,
                         ),
                       ),
                     );

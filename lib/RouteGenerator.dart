@@ -15,6 +15,7 @@ import 'package:shipperapp/TransporterPages/RequestTransport.dart';
 import 'package:shipperapp/TransporterPages/SubscriptionPage.dart';
 import 'package:shipperapp/TransporterPages/TransporterOptionsPage.dart';
 import 'package:shipperapp/TransporterPages/UploadDocsTransporter.dart';
+import 'package:shipperapp/TransporterPages/ViewLoadsScreen.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -72,8 +73,16 @@ class RouteGenerator {
           ),
         );
       case subscription:
-        return FadeRoute(page: SubsriptionPage(
+        return FadeRoute(
+            page: SubsriptionPage(
           userTransporter: args,
+        ));
+
+      case viewLoads:
+        return FadeRoute(
+            page: ViewLoadsScreen(
+          activeLoads: (args as List)[0],
+          inactiveLoads: (args as List)[1],
         ));
 
       default:

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:shipperapp/HttpHandler.dart';
+import 'package:shipperapp/Models/PostLoad.dart';
 import 'package:shipperapp/Models/User.dart';
 import 'package:shipperapp/MyConstants.dart';
 import 'package:image_picker/image_picker.dart';
@@ -12,11 +13,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AccountBottomSheetLoggedIn extends StatefulWidget {
   final ScrollController scrollController;
   final UserTransporter userTransporter;
+  final List<PostLoad> activeLoads;
+  final List<PostLoad> inactiveLoads;
 
   AccountBottomSheetLoggedIn({
     Key key,
     @required this.scrollController,
     this.userTransporter,
+    this.activeLoads,
+    this.inactiveLoads,
   }) : super(key: key);
 
   @override
@@ -376,6 +381,29 @@ class _AccountBottomSheetLoggedInState
                   ),
                   subtitle: Text(
                     'View Plan',
+                    style: TextStyle(color: Colors.black87),
+                  ),
+                ),
+                ListTile(
+                  onTap: () {
+                    Navigator.pushNamed(
+                      context,
+                      viewLoads,
+                      arguments: [
+                        widget.activeLoads,
+                        widget.inactiveLoads,
+                      ],
+                    );
+                  },
+                  leading: Icon(Icons.ac_unit),
+                  title: Text(
+                    'Your Loads',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  subtitle: Text(
+                    'Lorem Ipsum',
                     style: TextStyle(color: Colors.black87),
                   ),
                 ),
