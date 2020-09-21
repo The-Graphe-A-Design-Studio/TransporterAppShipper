@@ -6,6 +6,7 @@ import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shipperapp/DialogScreens/DialogProcessing.dart';
 import 'package:shipperapp/DialogScreens/DialogSuccess.dart';
+import 'package:shipperapp/Models/Bidder.dart';
 import 'package:shipperapp/Models/MaterialType.dart';
 import 'package:shipperapp/Models/PostLoad.dart';
 import 'package:shipperapp/Models/SubscriptionPlan.dart';
@@ -104,12 +105,11 @@ class HTTPHandler {
   /*-------------------------- Customer API's ---------------------------*/
   Future<PostResultOne> registerLoginCustomer(List data) async {
     try {
-      var result = await http.post("$baseURLShipper/shipper_enter_exit",
-          body: {
-            'cu_phone_code': data[0],
-            'cu_phone': data[1],
-            'cu_token': data[2]
-          });
+      var result = await http.post("$baseURLShipper/shipper_enter_exit", body: {
+        'cu_phone_code': data[0],
+        'cu_phone': data[1],
+        'cu_token': data[2]
+      });
       return PostResultOne.fromJson(json.decode(result.body));
     } catch (error) {
       throw error;
@@ -118,8 +118,7 @@ class HTTPHandler {
 
   Future<PostResultOne> logoutCustomer(List data) async {
     try {
-      var result =
-          await http.post("$baseURLShipper/shipper_enter_exit", body: {
+      var result = await http.post("$baseURLShipper/shipper_enter_exit", body: {
         'logout_number': data[0],
       });
       return PostResultOne.fromJson(json.decode(result.body));
@@ -205,7 +204,8 @@ class HTTPHandler {
 
   Future<PostResultOne> registerResendOtpCustomer(List data) async {
     try {
-      var result = await http.post("$baseURLShipper/shipper_verification", body: {
+      var result =
+          await http.post("$baseURLShipper/shipper_verification", body: {
         'resend_otp_on': data[0],
       });
       return PostResultOne.fromJson(json.decode(result.body));
@@ -334,6 +334,43 @@ class HTTPHandler {
         'razorpay_order_id': paymentResponse.orderId ?? 'graphe123',
         'razorpay_payment_id': paymentResponse.paymentId,
         'razorpay_signature': paymentResponse.signature ?? 'graphe123',
+      });
+
+      return PostResultOne.fromJson(json.decode(response.body));
+    } catch (e) {
+      print(e);
+      throw e;
+    }
+  }
+
+  ///Get bids per load
+  Future<List<Bidder>> getBids(String loadId) async {
+    try {
+      var response =
+          await http.post('$baseURLShipper/bidders', body: {'load_id': loadId});
+
+      if (json.decode(response.body)['success'] == '0') {
+        return [];
+      }
+      List<Bidder> bids = [];
+
+      for (var i = 0; i < json.decode(response.body).length; i++)
+        bids.add(Bidder.fromJson(json.decode(response.body)[i]));
+
+      print(bids.toString());
+      return bids;
+    } catch (e) {
+      print(e);
+      throw e;
+    }
+  }
+
+  /// Accept Bid
+  Future<PostResultOne> acceptBid(String loadId, String bidId) async {
+    try {
+      var response = await http.post('$baseURLShipper/bidders', body: {
+        'load_id_for_accepting': loadId,
+        'bid_id_for_accepting': bidId,
       });
 
       return PostResultOne.fromJson(json.decode(response.body));

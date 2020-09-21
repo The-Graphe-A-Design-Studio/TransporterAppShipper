@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shipperapp/Models/PostLoad.dart';
+import 'package:shipperapp/MyConstants.dart';
 
 class ViewLoadsScreen extends StatefulWidget {
   final List<PostLoad> activeLoads;
@@ -76,19 +77,24 @@ class _ViewLoadsScreenState extends State<ViewLoadsScreen> {
                             Container(
                               width: double.infinity,
                               alignment: Alignment.centerRight,
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 8.0,
-                                  horizontal: 40.0,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.black87,
-                                  shape: BoxShape.rectangle,
-                                  borderRadius: BorderRadius.circular(5.0),
-                                ),
-                                child: Text(
-                                  'Bid',
-                                  style: TextStyle(color: Colors.white),
+                              child: GestureDetector(
+                                onTap: () => Navigator.pushNamed(
+                                    context, viewBids,
+                                    arguments: e),
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 8.0,
+                                    horizontal: 40.0,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.black87,
+                                    shape: BoxShape.rectangle,
+                                    borderRadius: BorderRadius.circular(5.0),
+                                  ),
+                                  child: Text(
+                                    'View Bid',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
                                 ),
                               ),
                             ),
@@ -145,7 +151,7 @@ class _ViewLoadsScreenState extends State<ViewLoadsScreen> {
                                       borderRadius: BorderRadius.circular(5.0),
                                     ),
                                     child: Text(
-                                      'Bid',
+                                      'View Bid',
                                       style: TextStyle(color: Colors.white),
                                     ),
                                   ),

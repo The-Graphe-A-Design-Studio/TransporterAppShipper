@@ -15,6 +15,7 @@ import 'package:shipperapp/TransporterPages/RequestTransport.dart';
 import 'package:shipperapp/TransporterPages/SubscriptionPage.dart';
 import 'package:shipperapp/TransporterPages/TransporterOptionsPage.dart';
 import 'package:shipperapp/TransporterPages/UploadDocsTransporter.dart';
+import 'package:shipperapp/TransporterPages/ViewBidsPerLoadScreen.dart';
 import 'package:shipperapp/TransporterPages/ViewLoadsScreen.dart';
 
 class RouteGenerator {
@@ -83,6 +84,12 @@ class RouteGenerator {
             page: ViewLoadsScreen(
           activeLoads: (args as List)[0],
           inactiveLoads: (args as List)[1],
+        ));
+
+      case viewBids:
+        return FadeRoute(
+            page: ViewBidsPerLoadScreen(
+          load: args,
         ));
 
       default:
