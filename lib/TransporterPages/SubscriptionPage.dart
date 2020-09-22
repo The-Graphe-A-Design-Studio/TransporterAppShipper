@@ -29,8 +29,14 @@ class _SubsriptionPageState extends State<SubsriptionPage> {
   getData() async {
     subscriptionController = true;
     await SharedPreferences.getInstance().then((value) {
-      subscriptionEnd = DateTime.parse(value.getString('trial_period_upto'));
-      subscriptionStatus = value.getString('trial_period_status');
+      if (value.getString('plan_type') == '1') {
+        subscriptionEnd = DateTime.parse(value.getString('trial_period_upto'));
+        subscriptionStatus = value.getString('trial_period_status');
+      } else {
+        subscriptionEnd =
+            DateTime.parse(value.getString('subscription_period_upto'));
+        subscriptionStatus = value.getString('subscription_period_status');
+      }
     });
     await HTTPHandler()
         .getSubscriptionPlans()
@@ -143,22 +149,17 @@ class _SubsriptionPageState extends State<SubsriptionPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Container(
-                              width: 100.0,
+                              // width: 100.0,
                               height: 30.0,
                               alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                color: Colors.green,
-                                shape: BoxShape.rectangle,
-                                borderRadius: BorderRadius.circular(20.0),
-                              ),
                               child: Text(
                                 subscriptionStatus,
-                                style: TextStyle(color: Colors.white),
+                                style: TextStyle(color: Colors.grey),
                               ),
                             ),
                             SizedBox(height: 5.0),
                             Text(
-                              '7 days free trial',
+                              '${subscriptionEnd.difference(DateTime.now()).inDays} days left',
                               style: TextStyle(fontWeight: FontWeight.w500),
                             )
                           ],
