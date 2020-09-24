@@ -3,6 +3,7 @@ class Bidder {
   String bidderId;
   String price;
   String type;
+  String bidStatus;
   String bidderName;
   String bidderContact;
 
@@ -11,6 +12,7 @@ class Bidder {
     this.bidderId,
     this.price,
     this.type,
+    this.bidStatus,
     this.bidderName,
     this.bidderContact,
   });
@@ -21,6 +23,7 @@ class Bidder {
       bidderId: parsedJson['bidder details'][0]['bidder id'],
       price: parsedJson['bidder price'],
       type: parsedJson['bidder type'],
+      bidStatus: parsedJson['bid status'],
       bidderName: parsedJson['bidder details'][0]['bidder name'],
       bidderContact: parsedJson['bidder details'][0]['bidder phone'],
     );

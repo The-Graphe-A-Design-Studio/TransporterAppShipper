@@ -358,19 +358,28 @@ class HTTPHandler {
   ///Get bids per load
   Future<List<Bidder>> getBids(String loadId) async {
     try {
+      print('bid => $loadId');
       var response =
           await http.post('$baseURLShipper/bidders', body: {'load_id': loadId});
 
-      if (json.decode(response.body)['success'] == '0') {
+      if (response.body == 'null') {
         return [];
       }
-      List<Bidder> bids = [];
 
-      for (var i = 0; i < json.decode(response.body).length; i++)
-        bids.add(Bidder.fromJson(json.decode(response.body)[i]));
+      // else if (json.decode(response.body)['success'] == '0') {
+      //   return [];
+      // }
 
-      print(bids.toString());
-      return bids;
+      else {
+        List<Bidder> bids = [];
+        print(json.decode(response.body));
+
+        for (var i = 0; i < json.decode(response.body).length; i++)
+          bids.add(Bidder.fromJson(json.decode(response.body)[i]));
+
+        print(bids.toString());
+        return bids;
+      }
     } catch (e) {
       print(e);
       throw e;
