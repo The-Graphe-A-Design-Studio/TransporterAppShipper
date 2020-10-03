@@ -55,7 +55,7 @@ class _PostLoadState extends State<PostLoad> {
   List<TruckPref> truckPref = [];
   List<String> priceUnit = ["Tonnage", "Truck"];
   List<String> payTerms = [
-    "Negotiable",
+    // "Negotiable",
     "Advance",
     "Full Pay to Driver after Unloading"
   ];
@@ -151,7 +151,7 @@ class _PostLoadState extends State<PostLoad> {
       selectedTruckCategory.truckCatID,
       typesStr,
       expectedPriceController.text,
-      (payTerms.indexOf(selectedPayTerm) + 1).toString(),
+      (payTerms.indexOf(selectedPayTerm) + 2).toString(),
       advancePayController.text,
       "${selectedDate.year.toString()}-${selectedDate.month.toString().padLeft(2, "0")}-${selectedDate.day.toString().padLeft(2, "0")} ${selectedTime.hour.toString().padLeft(2, "0")}:${selectedTime.minute.toString().padLeft(2, "0")}:00",
       contactController.text,
@@ -797,12 +797,19 @@ class _PostLoadState extends State<PostLoad> {
                                     selectedPayTerm = value;
                                   });
                                 },
-                                items: payTerms.map((String item) {
-                                  return DropdownMenuItem(
-                                    value: item,
-                                    child: Text(item),
-                                  );
-                                }).toList(),
+                                items: (widget.userTransporter.planType == '1')
+                                    ? [
+                                        DropdownMenuItem(
+                                          value: payTerms[0],
+                                          child: Text(payTerms[0]),
+                                        )
+                                      ]
+                                    : payTerms.map((String item) {
+                                        return DropdownMenuItem(
+                                          value: item,
+                                          child: Text(item),
+                                        );
+                                      }).toList(),
                               ),
                               SizedBox(
                                 height: 16.0,

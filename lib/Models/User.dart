@@ -2,6 +2,7 @@ class UserTransporter {
   bool success;
   String id;
   String message;
+  String planType;
   String verified;
   String registered;
   String mobileNumber;
@@ -11,6 +12,7 @@ class UserTransporter {
   UserTransporter({
     this.success,
     this.id,
+    this.planType,
     this.message,
     this.verified,
     this.mobileNumber,
@@ -23,6 +25,7 @@ class UserTransporter {
     return UserTransporter(
         success: parsedJson['success'] == '1' ? true : false,
         id: parsedJson['shipper id'],
+        planType: parsedJson['plan type'],
         message: parsedJson['message'],
         verified: parsedJson['verified'],
         mobileNumber: parsedJson['shipper phone'],
