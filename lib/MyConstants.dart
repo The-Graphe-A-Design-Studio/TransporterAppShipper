@@ -32,3 +32,4 @@ const String postLoad = "/postLoad";
 const String subscription = "/subscription";
 const String viewLoads = "/viewLoadsPage";
 const String viewBids = "/viewBidsPerLoadScreen";
+const String myDel = '/myDeliveries';

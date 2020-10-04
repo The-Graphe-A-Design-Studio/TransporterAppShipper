@@ -9,6 +9,7 @@ import 'package:shipperapp/MyConstants.dart';
 import 'package:shipperapp/SplashScreen.dart';
 import 'package:shipperapp/TransporterPages/HomePageTransporter.dart';
 import 'package:shipperapp/TransporterPages/HomePageTransporterNotVerified.dart';
+import 'package:shipperapp/TransporterPages/MyDeliveryPage.dart';
 import 'package:shipperapp/TransporterPages/OrderSummaryScreen.dart';
 import 'package:shipperapp/TransporterPages/PostLoad.dart';
 import 'package:shipperapp/TransporterPages/RequestTransport.dart';
@@ -91,6 +92,8 @@ class RouteGenerator {
             page: ViewBidsPerLoadScreen(
           load: args,
         ));
+      case myDel:
+        return FadeRoute(page: MyDeliveryPage(user: args));
 
       default:
         return _errorRoute();

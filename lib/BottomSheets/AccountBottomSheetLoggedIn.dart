@@ -409,6 +409,26 @@ class _AccountBottomSheetLoggedInState
                 ),
                 ListTile(
                   onTap: () {
+                    Navigator.pushNamed(
+                      context,
+                      myDel,
+                      arguments: widget.userTransporter,
+                    );
+                  },
+                  leading: Icon(Icons.ac_unit),
+                  title: Text(
+                    'My Deliveries',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  subtitle: Text(
+                    'Lorem Ipsum',
+                    style: TextStyle(color: Colors.black87),
+                  ),
+                ),
+                ListTile(
+                  onTap: () {
                     HTTPHandler().signOut(
                       context,
                       userMobile: widget.userTransporter.mobileNumber,

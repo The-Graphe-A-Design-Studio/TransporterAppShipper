@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shipperapp/DialogScreens/DialogProcessing.dart';
 import 'package:shipperapp/DialogScreens/DialogSuccess.dart';
 import 'package:shipperapp/Models/Bidder.dart';
+import 'package:shipperapp/Models/Delivery.dart';
 import 'package:shipperapp/Models/MaterialType.dart';
 import 'package:shipperapp/Models/PostLoad.dart';
 import 'package:shipperapp/Models/SubscriptionPlan.dart';
@@ -423,6 +424,25 @@ class HTTPHandler {
       });
 
       return PostResultOne.fromJson(json.decode(response.body));
+    } catch (e) {
+      print(e);
+      throw e;
+    }
+  }
+
+  Future<List<Delivery>> myDel(List data) async {
+    try {
+      var response = await http
+          .post('$baseURLShipper/my_deliveries', body: {'shipper_id': data[0]});
+
+      List<Delivery> dels = [];
+      print(json.decode(response.body).length);
+      for (int i = 0; i < json.decode(response.body).length; i++) {
+        dels.add(Delivery.fromJson(json.decode(response.body)[i]));
+      }
+      print(dels);
+
+      return dels;
     } catch (e) {
       print(e);
       throw e;
