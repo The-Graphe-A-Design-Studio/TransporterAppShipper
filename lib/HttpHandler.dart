@@ -435,6 +435,10 @@ class HTTPHandler {
       var response = await http
           .post('$baseURLShipper/my_deliveries', body: {'shipper_id': data[0]});
 
+      print(response.body);
+
+      if (json.decode(response.body).containsKey('success')) return null;
+
       List<Delivery> dels = [];
       print(json.decode(response.body).length);
       for (int i = 0; i < json.decode(response.body).length; i++) {
@@ -474,20 +478,19 @@ class HTTPHandler {
     String payId,
   ) async {
     try {
+      print(payId);
 
-    print(payId);
+      var response = await http.post('$baseURLShipper/load_payment', body: {
+        'pay_id': payId,
+        'razorpay_order_id': '',
+        'razorpay_payment_id': '',
+        'razorpay_signature': '',
+        'pay_method': '2',
+      });
 
-    var response = await http.post('$baseURLShipper/load_payment', body: {
-      'pay_id': payId,
-      'razorpay_order_id': '',
-      'razorpay_payment_id': '',
-      'razorpay_signature': '',
-      'pay_method': '2',
-    });
+      print(response.body);
 
-    print(response.body);
-
-    return PostResultOne.fromJson(json.decode(response.body));
+      return PostResultOne.fromJson(json.decode(response.body));
     } catch (e) {
       print(e);
       throw e;
