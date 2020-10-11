@@ -521,7 +521,7 @@ class _UploadDocsState extends State<UploadDocs> {
                         text: "Processing, Please Wait!");
                     HTTPHandler().uploadAddProof([
                       widget.userTransporter.mobileNumber,
-                      lst.indexOf(selectedAddProofType)+1,
+                      lst.indexOf(selectedAddProofType) + 1,
                       addFront.path,
                       addBack.path
                     ]).then((value) async {
@@ -537,14 +537,16 @@ class _UploadDocsState extends State<UploadDocs> {
                       } else {
                         Navigator.pop(context);
                         DialogFailed().showCustomDialog(context,
-                            title: "Uploading Address Proof", text: value.message);
+                            title: "Uploading Address Proof",
+                            text: value.message);
                         await Future.delayed(Duration(seconds: 3), () {});
                         Navigator.pop(context);
                       }
                     }).catchError((error) async {
                       Navigator.pop(context);
                       DialogFailed().showCustomDialog(context,
-                          title: "Uploading Address Proof", text: "Network Error");
+                          title: "Uploading Address Proof",
+                          text: "Network Error");
                       await Future.delayed(Duration(seconds: 3), () {});
                       Navigator.pop(context);
                     });
@@ -888,22 +890,26 @@ class _UploadDocsState extends State<UploadDocs> {
                         await Future.delayed(Duration(seconds: 1), () {});
                         Navigator.pop(context);
                         SharedPreferences.getInstance().then((value) {
-                          value.setString("DocNumber${widget.userTransporter.id}", "4");
+                          value.setString(
+                              "DocNumber${widget.userTransporter.id}", "4");
                           setState(() {
-                            selectedWidgetMarker = WidgetMarker.underVerification;
+                            selectedWidgetMarker =
+                                WidgetMarker.underVerification;
                           });
                         });
                       } else {
                         Navigator.pop(context);
                         DialogFailed().showCustomDialog(context,
-                            title: "Uploading Office Address Proof", text: value.message);
+                            title: "Uploading Office Address Proof",
+                            text: value.message);
                         await Future.delayed(Duration(seconds: 3), () {});
                         Navigator.pop(context);
                       }
                     }).catchError((error) async {
                       Navigator.pop(context);
                       DialogFailed().showCustomDialog(context,
-                          title: "Uploading Office Address Proof", text: "Network Error");
+                          title: "Uploading Office Address Proof",
+                          text: "Network Error");
                       await Future.delayed(Duration(seconds: 3), () {});
                       Navigator.pop(context);
                     });
@@ -940,46 +946,50 @@ class _UploadDocsState extends State<UploadDocs> {
 
   Widget getUnderVerificationWidget(context) {
     return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            SizedBox(
-              height: 100.0,
+      padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          SizedBox(
+            height: 100.0,
+          ),
+          Hero(
+            tag: "WhiteLogo",
+            child: Image(
+              image: AssetImage('assets/images/logo_white.png'),
+              height: 145.0,
+              width: 145.0,
             ),
-            Hero(
-              tag: "WhiteLogo",
-              child: Image(
-                image: AssetImage('assets/images/logo_white.png'),
-                height: 145.0,
-                width: 145.0,
-              ),
-            ),
-            Divider(color: Colors.white, indent: 60.0, endIndent: 60.0,),
-            SizedBox(
-              height: 30,
-            ),
-            Text(
-              "Please Wait while we",
-              style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                  fontSize: 20.0),
-            ),
-            Text(
-              "Verify Your Documents",
-              style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                  fontSize: 24.0),
-            ),
-            SizedBox(
-              height: 100.0,
-            ),
-          ],
-        ),
-      );
+          ),
+          Divider(
+            color: Colors.white,
+            indent: 60.0,
+            endIndent: 60.0,
+          ),
+          SizedBox(
+            height: 30,
+          ),
+          Text(
+            "Please Wait while we",
+            style: TextStyle(
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+                fontSize: 20.0),
+          ),
+          Text(
+            "Verify Your Documents",
+            style: TextStyle(
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+                fontSize: 24.0),
+          ),
+          SizedBox(
+            height: 100.0,
+          ),
+        ],
+      ),
+    );
   }
 
   Widget getCustomWidget(context) {
@@ -1026,7 +1036,9 @@ class _UploadDocsState extends State<UploadDocs> {
                         topRight: Radius.circular(30.0)),
                   ),
                   child: AccountBottomSheetUnknown(
-                      scrollController: scrollController),
+                    scrollController: scrollController,
+                    userTransporter: widget.userTransporter,
+                  ),
                 ),
               );
             },

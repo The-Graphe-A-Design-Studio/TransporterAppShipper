@@ -141,7 +141,9 @@ class _HomePageTransporterNotVerifiedState
                           topRight: Radius.circular(30.0)),
                     ),
                     child: AccountBottomSheetUnknown(
-                        scrollController: scrollController)),
+                      scrollController: scrollController,
+                      userTransporter: widget.userTransporter,
+                    )),
               );
             },
           ),

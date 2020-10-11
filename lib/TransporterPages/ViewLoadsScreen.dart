@@ -76,13 +76,13 @@ class _ViewLoadsScreenState extends State<ViewLoadsScreen> {
                                   ),
                                 ),
                                 SizedBox(width: 10.0),
-                                Text(
-                                  (e.source[0].length >= 40)
-                                      ? '${e.source[0].substring(0, 40)}...'
-                                      : '${e.source[0]}',
-                                  style: TextStyle(
-                                    fontSize: 15.0,
-                                    fontWeight: FontWeight.w500,
+                                Flexible(
+                                  child: Text(
+                                    '${e.source[0]}',
+                                    style: TextStyle(
+                                      fontSize: 15.0,
+                                      fontWeight: FontWeight.w500,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -92,16 +92,7 @@ class _ViewLoadsScreenState extends State<ViewLoadsScreen> {
                                 horizontal: 5.0,
                                 vertical: 3.0,
                               ),
-                              height: 5.0,
-                              width: 1.5,
-                              color: Colors.grey,
-                            ),
-                            Container(
-                              margin: const EdgeInsets.symmetric(
-                                horizontal: 5.0,
-                                vertical: 3.0,
-                              ),
-                              height: 5.0,
+                              height: 16.0,
                               width: 1.5,
                               color: Colors.grey,
                             ),
@@ -121,13 +112,13 @@ class _ViewLoadsScreenState extends State<ViewLoadsScreen> {
                                   ),
                                 ),
                                 SizedBox(width: 10.0),
-                                Text(
-                                  (e.destination[0].length >= 40)
-                                      ? '${e.destination[0].substring(0, 40)}...'
-                                      : '${e.destination[0]}',
-                                  style: TextStyle(
-                                    fontSize: 15.0,
-                                    fontWeight: FontWeight.w500,
+                                Flexible(
+                                  child: Text(
+                                    '${e.destination[0]}',
+                                    style: TextStyle(
+                                      fontSize: 15.0,
+                                      fontWeight: FontWeight.w500,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -165,19 +156,141 @@ class _ViewLoadsScreenState extends State<ViewLoadsScreen> {
                               ],
                             ),
                             SizedBox(height: 20.0),
-                            Text(
-                              'Products',
-                              style: TextStyle(
-                                fontSize: 13.0,
-                                color: Colors.black54,
-                              ),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Products',
+                                      style: TextStyle(
+                                        fontSize: 13.0,
+                                        color: Colors.black54,
+                                      ),
+                                    ),
+                                    SizedBox(height: 8.0),
+                                    Text(
+                                      '${e.material}',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(width: 30.0),
+                                if (e.exPrice.contains('truck'))
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Quantity',
+                                        style: TextStyle(
+                                          fontSize: 13.0,
+                                          color: Colors.black54,
+                                        ),
+                                      ),
+                                      SizedBox(height: 8.0),
+                                      Text(
+                                        '${e.noTruck}',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                              ],
                             ),
-                            SizedBox(height: 8.0),
-                            Text(
-                              '${e.material}',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w700,
-                              ),
+                            SizedBox(height: 20.0),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Expected Price',
+                                      style: TextStyle(
+                                        fontSize: 13.0,
+                                        color: Colors.black54,
+                                      ),
+                                    ),
+                                    SizedBox(height: 8.0),
+                                    Text(
+                                      '${e.exPrice}',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(width: 30.0),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Payment Mode',
+                                      style: TextStyle(
+                                        fontSize: 13.0,
+                                        color: Colors.black54,
+                                      ),
+                                    ),
+                                    SizedBox(height: 8.0),
+                                    Text(
+                                      '${e.payMode}',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 20.0),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Created On',
+                                      style: TextStyle(
+                                        fontSize: 13.0,
+                                        color: Colors.black54,
+                                      ),
+                                    ),
+                                    SizedBox(height: 8.0),
+                                    Text(
+                                      '${e.createdOn}',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(width: 30.0),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Expires On',
+                                      style: TextStyle(
+                                        fontSize: 13.0,
+                                        color: Colors.black54,
+                                      ),
+                                    ),
+                                    SizedBox(height: 8.0),
+                                    Text(
+                                      '${e.expiresOn}',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                             Divider(),
                             Container(
