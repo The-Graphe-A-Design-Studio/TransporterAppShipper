@@ -448,4 +448,49 @@ class HTTPHandler {
       throw e;
     }
   }
+
+  /// Load payment
+  Future<PostResultOne> storeLoadPaymentData(
+      UserTransporter user, String payId, bool online,
+      {PaymentSuccessResponse paymentResponse}) async {
+    try {
+      var response = await http.post('$baseURLShipper/load_payment', body: {
+        'pay_id': payId,
+        'razorpay_order_id': (online) ? paymentResponse.orderId : null,
+        'razorpay_payment_id': (online) ? paymentResponse.paymentId : null,
+        'razorpay_signature': (online) ? paymentResponse.signature : null,
+        'pay_method': (online) ? '1' : '2',
+      });
+
+      return PostResultOne.fromJson(json.decode(response.body));
+    } catch (e) {
+      print(e);
+      throw e;
+    }
+  }
+
+  /// Load payment Cadr
+  Future<PostResultOne> storeLoadPaymentDataCash(
+    String payId,
+  ) async {
+    try {
+
+    print(payId);
+
+    var response = await http.post('$baseURLShipper/load_payment', body: {
+      'pay_id': payId,
+      'razorpay_order_id': '',
+      'razorpay_payment_id': '',
+      'razorpay_signature': '',
+      'pay_method': '2',
+    });
+
+    print(response.body);
+
+    return PostResultOne.fromJson(json.decode(response.body));
+    } catch (e) {
+      print(e);
+      throw e;
+    }
+  }
 }

@@ -52,8 +52,12 @@ class _ViewBidsPerLoadScreenState extends State<ViewBidsPerLoadScreen> {
       ),
       body: (bids == null)
           ? Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              child: Text(
+                'No Bids Yet',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20.0,
+                ),
               ),
             )
           : (bids.length == 0)

@@ -190,63 +190,77 @@ class _SubsriptionPageState extends State<SubsriptionPage> {
                           ),
                           padding: const EdgeInsets.all(10.0),
                           width: MediaQuery.of(context).size.width,
-                          height: 150.0,
                           decoration: BoxDecoration(
                             color: Colors.white,
                             shape: BoxShape.rectangle,
                             borderRadius: BorderRadius.circular(5.0),
                           ),
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text('Original Price'),
-                                  Text(
-                                    '${e.planOriginalPrice}',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.w500),
-                                  )
-                                ],
+                              Text(
+                                'Plan ${_plans.indexOf(e) + 1} :',
+                                style: TextStyle(fontWeight: FontWeight.w500),
                               ),
-                              SizedBox(height: 5.0),
+                              SizedBox(height: 20.0),
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text('Selling Price'),
-                                  Text(
-                                    '${e.planSellingPrice}',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.w500),
-                                  )
-                                ],
-                              ),
-                              SizedBox(height: 5.0),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text('Discount'),
-                                  Text(
-                                    '${e.planDiscount}',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.w500),
-                                  )
-                                ],
-                              ),
-                              SizedBox(height: 5.0),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text('Duration'),
-                                  Text(
-                                    '${e.duration}',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.w500),
-                                  )
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Duration',
+                                        style: TextStyle(
+                                          fontSize: 13.0,
+                                          color: Colors.black54,
+                                        ),
+                                      ),
+                                      SizedBox(height: 8.0),
+                                      Text(
+                                        '${e.duration}',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Price',
+                                        style: TextStyle(
+                                          fontSize: 13.0,
+                                          color: Colors.black54,
+                                        ),
+                                      ),
+                                      SizedBox(height: 8.0),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            '${e.planSellingPrice}',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w700,
+                                              fontSize: 18.0,
+                                            ),
+                                          ),
+                                          SizedBox(width: 3.0),
+                                          Text(
+                                            '${e.planOriginalPrice}',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                              decoration:
+                                                  TextDecoration.lineThrough,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ],
                               ),
                               Divider(),

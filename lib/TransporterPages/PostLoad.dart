@@ -814,7 +814,7 @@ class _PostLoadState extends State<PostLoad> {
                               SizedBox(
                                 height: 16.0,
                               ),
-                              selectedPayTerm == payTerms[1]
+                              selectedPayTerm == payTerms[0]
                                   ? TextFormField(
                                       controller: advancePayController,
                                       keyboardType: TextInputType.number,

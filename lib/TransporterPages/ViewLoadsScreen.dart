@@ -51,28 +51,134 @@ class _ViewLoadsScreenState extends State<ViewLoadsScreen> {
                         ),
                         padding: const EdgeInsets.all(10.0),
                         width: MediaQuery.of(context).size.width,
-                        height: 310.0,
+                        // height: 310.0,
                         decoration: BoxDecoration(
                           color: Colors.white,
                           shape: BoxShape.rectangle,
                           borderRadius: BorderRadius.circular(5.0),
                         ),
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            infoRow(
-                                'From', '${e.source[0].substring(0, 20)}...'),
-                            infoRow('To',
-                                '${e.destination[e.destination.length - 1].substring(0, 20)}...'),
-                            infoRow('Material', '${e.material}'),
-                            infoRow('Tonnage', '${e.tonnage}'),
-                            infoRow('Truck Preferences', '${e.truckPref}'),
-                            infoRow('Expected Price', '${e.exPrice}'),
-                            infoRow('Payment Mode', '${e.payMode}'),
-                            infoRow('Created On', '${e.createdOn}'),
-                            infoRow('Expires On', '${e.expiresOn}'),
-                            infoRow('Contact Person', '${e.contactPerson}'),
-                            infoRow('Contact Person phone No.',
-                                '${e.contactPhone}'),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Container(
+                                  width: 15.0,
+                                  height: 15.0,
+                                  decoration: BoxDecoration(
+                                    color: Colors.transparent,
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: Colors.green[600],
+                                      width: 3.0,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 10.0),
+                                Text(
+                                  (e.source[0].length >= 40)
+                                      ? '${e.source[0].substring(0, 40)}...'
+                                      : '${e.source[0]}',
+                                  style: TextStyle(
+                                    fontSize: 15.0,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Container(
+                              margin: const EdgeInsets.symmetric(
+                                horizontal: 5.0,
+                                vertical: 3.0,
+                              ),
+                              height: 5.0,
+                              width: 1.5,
+                              color: Colors.grey,
+                            ),
+                            Container(
+                              margin: const EdgeInsets.symmetric(
+                                horizontal: 5.0,
+                                vertical: 3.0,
+                              ),
+                              height: 5.0,
+                              width: 1.5,
+                              color: Colors.grey,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Container(
+                                  width: 15.0,
+                                  height: 15.0,
+                                  decoration: BoxDecoration(
+                                    color: Colors.transparent,
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: Colors.red[600],
+                                      width: 3.0,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 10.0),
+                                Text(
+                                  (e.destination[0].length >= 40)
+                                      ? '${e.destination[0].substring(0, 40)}...'
+                                      : '${e.destination[0]}',
+                                  style: TextStyle(
+                                    fontSize: 15.0,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 30.0),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Truck Type',
+                                      style: TextStyle(
+                                        fontSize: 13.0,
+                                        color: Colors.black54,
+                                      ),
+                                    ),
+                                    SizedBox(height: 8.0),
+                                    Text(
+                                      '${e.truckPref}',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(width: 30.0),
+                                Text(
+                                  '${e.truckType[0]}',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 20.0),
+                            Text(
+                              'Products',
+                              style: TextStyle(
+                                fontSize: 13.0,
+                                color: Colors.black54,
+                              ),
+                            ),
+                            SizedBox(height: 8.0),
+                            Text(
+                              '${e.material}',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
                             Divider(),
                             Container(
                               width: double.infinity,
@@ -114,28 +220,135 @@ class _ViewLoadsScreenState extends State<ViewLoadsScreen> {
                             ),
                             padding: const EdgeInsets.all(10.0),
                             width: MediaQuery.of(context).size.width,
-                            height: 310.0,
+                            // height: 310.0,
                             decoration: BoxDecoration(
                               color: Colors.white,
                               shape: BoxShape.rectangle,
                               borderRadius: BorderRadius.circular(5.0),
                             ),
                             child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                infoRow('From',
-                                    '${e.source[0].substring(0, 20)}...'),
-                                infoRow('To',
-                                    '${e.destination[e.destination.length - 1].substring(0, 20)}...'),
-                                infoRow('Material', '${e.material}'),
-                                infoRow('Tonnage', '${e.tonnage}'),
-                                infoRow('Truck Preferences', '${e.truckPref}'),
-                                infoRow('Expected Price', '${e.exPrice}'),
-                                infoRow('Payment Mode', '${e.payMode}'),
-                                infoRow('Created On', '${e.createdOn}'),
-                                infoRow('Expires On', '${e.expiresOn}'),
-                                infoRow('Contact Person', '${e.contactPerson}'),
-                                infoRow('Contact Person phone No.',
-                                    '${e.contactPhone}'),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      width: 15.0,
+                                      height: 15.0,
+                                      decoration: BoxDecoration(
+                                        color: Colors.transparent,
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                          color: Colors.green[600],
+                                          width: 3.0,
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(width: 10.0),
+                                    Text(
+                                      (e.source[0].length >= 40)
+                                          ? '${e.source[0].substring(0, 40)}...'
+                                          : '${e.source[0]}',
+                                      style: TextStyle(
+                                        fontSize: 15.0,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Container(
+                                  margin: const EdgeInsets.symmetric(
+                                    horizontal: 5.0,
+                                    vertical: 3.0,
+                                  ),
+                                  height: 5.0,
+                                  width: 1.5,
+                                  color: Colors.grey,
+                                ),
+                                Container(
+                                  margin: const EdgeInsets.symmetric(
+                                    horizontal: 5.0,
+                                    vertical: 3.0,
+                                  ),
+                                  height: 5.0,
+                                  width: 1.5,
+                                  color: Colors.grey,
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      width: 15.0,
+                                      height: 15.0,
+                                      decoration: BoxDecoration(
+                                        color: Colors.transparent,
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                          color: Colors.red[600],
+                                          width: 3.0,
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(width: 10.0),
+                                    Text(
+                                      (e.destination[0].length >= 40)
+                                          ? '${e.destination[0].substring(0, 40)}...'
+                                          : '${e.destination[0]}',
+                                      style: TextStyle(
+                                        fontSize: 15.0,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 30.0),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Truck Type',
+                                          style: TextStyle(
+                                            fontSize: 13.0,
+                                            color: Colors.black54,
+                                          ),
+                                        ),
+                                        SizedBox(height: 8.0),
+                                        Text(
+                                          '${e.truckPref}',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(width: 30.0),
+                                    Text(
+                                      '${e.truckType[0]}',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 20.0),
+                                Text(
+                                  'Products',
+                                  style: TextStyle(
+                                    fontSize: 13.0,
+                                    color: Colors.black54,
+                                  ),
+                                ),
+                                SizedBox(height: 8.0),
+                                Text(
+                                  '${e.material}',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
                                 Divider(),
                                 Container(
                                   width: double.infinity,
@@ -168,7 +381,7 @@ class _ViewLoadsScreenState extends State<ViewLoadsScreen> {
                               ),
                               padding: const EdgeInsets.all(10.0),
                               width: MediaQuery.of(context).size.width,
-                              height: 310.0,
+                              height: 250.0,
                               decoration: BoxDecoration(
                                 color: Colors.grey,
                                 shape: BoxShape.rectangle,

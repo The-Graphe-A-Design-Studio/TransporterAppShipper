@@ -103,6 +103,8 @@ class Delivery {
   List<DeliveryTruck> deliveryTrucks;
   String deliveryStatus;
   Post load;
+  String modeName;
+  var payment;
 
   Delivery({
     this.deliveryId,
@@ -115,6 +117,8 @@ class Delivery {
     this.deliveryTrucks,
     this.deliveryStatus,
     this.load,
+    this.modeName,
+    this.payment,
   });
 
   factory Delivery.fromJson(Map<String, dynamic> parsedJson) {
@@ -129,11 +133,13 @@ class Delivery {
       quantity: parsedJson['quantity'],
       dealPrice: parsedJson['deal price'],
       gst: parsedJson['GST'],
-      totalPrice: parsedJson['total price'],
+      totalPrice: parsedJson['total amount'],
       deliveryTrucksStatus: parsedJson['delivery trucks']['status'],
       deliveryTrucks: tempTrucks,
       deliveryStatus: parsedJson['delivery status'],
       load: Post.fromJson(parsedJson['load details']),
+      modeName: parsedJson['payment mode']['mode name'],
+      payment: parsedJson['payment mode']['payment']
     );
   }
 }
