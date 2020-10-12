@@ -420,68 +420,80 @@ class _MyDeliveryPageState extends State<MyDeliveryPage> {
                                                 '1') ||
                                         e.modeName ==
                                             'Pay full after unloading')
-                                      Column(
-                                        children: e.deliveryTrucks
-                                            .map(
-                                              (t) => Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    'Driver Details ${e.deliveryTrucks.indexOf(t) + 1}',
-                                                    style: TextStyle(
-                                                      fontSize: 13.0,
-                                                      color: Colors.black54,
+                                      if (e.deliveryTrucksStatus == '0')
+                                        Text(
+                                            'Trucks will be assigned soon by the owner.')
+                                      else
+                                        Column(
+                                          children: e.deliveryTrucks
+                                              .map(
+                                                (t) => Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      'Driver Details ${e.deliveryTrucks.indexOf(t) + 1}',
+                                                      style: TextStyle(
+                                                        fontSize: 13.0,
+                                                        color: Colors.black54,
+                                                      ),
                                                     ),
-                                                  ),
-                                                  SizedBox(height: 8.0),
-                                                  GestureDetector(
-                                                    onTap: () => UrlLauncher.launch(
-                                                        "tel:${t.driverPhone}"),
-                                                    child: Row(
-                                                      children: [
-                                                        Icon(Icons.call),
-                                                        SizedBox(width: 5.0),
-                                                        Text(
-                                                          '${t.driverName}',
-                                                          style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.w700,
+                                                    SizedBox(height: 8.0),
+                                                    GestureDetector(
+                                                      onTap: () =>
+                                                          UrlLauncher.launch(
+                                                              "tel:${t.driverPhone}"),
+                                                      child: Row(
+                                                        children: [
+                                                          Icon(Icons.call),
+                                                          SizedBox(width: 5.0),
+                                                          Text(
+                                                            '${t.driverName}',
+                                                            style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w700,
+                                                            ),
                                                           ),
-                                                        ),
-                                                        Text(
-                                                          ' (OTP - ${t.otp} )',
-                                                          style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.w700,
+                                                          Text(
+                                                            ' (OTP - ${t.otp} )',
+                                                            style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w700,
+                                                            ),
                                                           ),
-                                                        ),
-                                                      ],
+                                                        ],
+                                                      ),
                                                     ),
-                                                  ),
-                                                  if (e.deliveryTrucks
-                                                          .indexOf(t) !=
-                                                      e.deliveryTrucks.length -
-                                                          1)
-                                                    SizedBox(height: 10.0),
-                                                ],
-                                              ),
-                                            )
-                                            .toList(),
-                                      )
+                                                    if (e.deliveryTrucks
+                                                            .indexOf(t) !=
+                                                        e.deliveryTrucks
+                                                                .length -
+                                                            1)
+                                                      SizedBox(height: 10.0),
+                                                  ],
+                                                ),
+                                              )
+                                              .toList(),
+                                        )
                                   ],
                                 ),
-                                if ((e.modeName == 'Advance Pay' ||
-                                        e.modeName ==
-                                            'Pay full after unloading') &&
-                                    e.payment['remaining amount']['status'] ==
-                                        '0')
+                                if ((e.modeName == 'Advance Pay' &&
+                                        e.payment['advance amount']['status'] ==
+                                            '1') ||
+                                    (e.modeName == 'Pay full after unloading' &&
+                                        e.payment['remaining amount']
+                                                ['status'] ==
+                                            '0'))
                                   SizedBox(height: 20.0),
-                                if ((e.modeName == 'Advance Pay' ||
-                                        e.modeName ==
-                                            'Pay full after unloading') &&
-                                    e.payment['remaining amount']['status'] ==
-                                        '0')
+                                if ((e.modeName == 'Advance Pay' &&
+                                        e.payment['advance amount']['status'] ==
+                                            '1') ||
+                                    (e.modeName == 'Pay full after unloading' &&
+                                        e.payment['remaining amount']
+                                                ['status'] ==
+                                            '0'))
                                   Text(
                                     'Pay Remaining Amount',
                                     style: TextStyle(
@@ -489,11 +501,13 @@ class _MyDeliveryPageState extends State<MyDeliveryPage> {
                                       color: Colors.black54,
                                     ),
                                   ),
-                                if ((e.modeName == 'Advance Pay' ||
-                                        e.modeName ==
-                                            'Pay full after unloading') &&
-                                    e.payment['remaining amount']['status'] ==
-                                        '0')
+                                if ((e.modeName == 'Advance Pay' &&
+                                        e.payment['advance amount']['status'] ==
+                                            '1') ||
+                                    (e.modeName == 'Pay full after unloading' &&
+                                        e.payment['remaining amount']
+                                                ['status'] ==
+                                            '0'))
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [

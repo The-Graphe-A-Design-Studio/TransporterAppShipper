@@ -437,7 +437,7 @@ class HTTPHandler {
 
       print(response.body);
 
-      if (json.decode(response.body).containsKey('success')) return null;
+      if (!(json.decode(response.body) is List<dynamic>)) return null;
 
       List<Delivery> dels = [];
       print(json.decode(response.body).length);
