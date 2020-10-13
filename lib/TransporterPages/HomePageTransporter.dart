@@ -1,6 +1,7 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shipperapp/BottomSheets/AccountBottomSheetLoggedIn.dart';
 import 'package:shipperapp/CommonPages/LoadingBody.dart';
 import 'package:shipperapp/HttpHandler.dart';
@@ -21,6 +22,9 @@ class _HomePageTransporterState extends State<HomePageTransporter> {
   List<PostLoad> activeLoad;
   List<PostLoad> inactiveLoad;
   bool loadData = true;
+
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
 
   @override
   void initState() {
@@ -46,6 +50,15 @@ class _HomePageTransporterState extends State<HomePageTransporter> {
     });
   }
 
+  void _onRefresh(BuildContext context) async {
+    // monitor network fetch
+    print('working properly');
+    getData();
+    await Future.delayed(Duration(milliseconds: 1000));
+    // if failed,use refreshFailed()
+    _refreshController.refreshCompleted();
+  }
+
   @override
   Widget build(BuildContext context) {
     if (loadData) {
@@ -58,120 +71,124 @@ class _HomePageTransporterState extends State<HomePageTransporter> {
           ? LoadingBody()
           : Stack(
               children: [
-                ListView(
-                  primary: true,
-                  children: <Widget>[
-                    SizedBox(
-                      height: 120.0,
-                    ),
-                    Image(
-                        image: AssetImage('assets/images/newOrder.png'),
-                        height: 300.0),
-                    SizedBox(
-                      height: 30.0,
-                    ),
-                    Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        "Let's Post a new Load",
-                        style: TextStyle(
-                          fontSize: 23.0,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                SmartRefresher(
+                  controller: _refreshController,
+                  onRefresh: () => _onRefresh(context),
+                  child: ListView(
+                    primary: true,
+                    children: <Widget>[
+                      SizedBox(
+                        height: 120.0,
+                      ),
+                      Image(
+                          image: AssetImage('assets/images/newOrder.png'),
+                          height: 300.0),
+                      SizedBox(
+                        height: 30.0,
+                      ),
+                      Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          "Let's Post a new Load",
+                          style: TextStyle(
+                            fontSize: 23.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 30.0,
-                    ),
-                    Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        "Tap to post a new load",
-                        style: TextStyle(
-                          color: Colors.white12,
-                          fontSize: 18.0,
+                      SizedBox(
+                        height: 30.0,
+                      ),
+                      Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          "Tap to post a new load",
+                          style: TextStyle(
+                            color: Colors.white12,
+                            fontSize: 18.0,
+                          ),
                         ),
                       ),
-                    ),
-                    Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        "for Shipping",
-                        style: TextStyle(
-                          color: Colors.white12,
-                          fontSize: 18.0,
+                      Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          "for Shipping",
+                          style: TextStyle(
+                            color: Colors.white12,
+                            fontSize: 18.0,
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 40.0,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.pushNamed(context, postLoad,
-                                arguments: widget.userTransporter)
-                            .then((value) {
-                          if (value != null) {
-                            if (value == true) {
-                              setState(() {
-                                loadData = true;
-                              });
+                      SizedBox(
+                        height: 40.0,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pushNamed(context, postLoad,
+                                  arguments: widget.userTransporter)
+                              .then((value) {
+                            if (value != null) {
+                              if (value == true) {
+                                setState(() {
+                                  loadData = true;
+                                });
+                              }
                             }
-                          }
-                        });
-                      },
-                      child: CircleAvatar(
-                        radius: 40.0,
-                        backgroundColor: Colors.white,
-                        child: Icon(
-                          Icons.add,
-                          color: Color(0xff252427),
-                          size: 35.0,
+                          });
+                        },
+                        child: CircleAvatar(
+                          radius: 40.0,
+                          backgroundColor: Colors.white,
+                          child: Icon(
+                            Icons.add,
+                            color: Color(0xff252427),
+                            size: 35.0,
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 60.0,
-                    ),
-                    ListView.builder(
-                      primary: false,
-                      shrinkWrap: true,
-                      itemCount: activeLoad.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return ListTile(
-                          title: Text(
-                            activeLoad[index].source.toString(),
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          subtitle: Text(
-                            activeLoad[index].destination.toString(),
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        );
-                      },
-                    ),
-                    ListView.builder(
-                      primary: false,
-                      shrinkWrap: true,
-                      itemCount: inactiveLoad.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return ListTile(
-                          title: Text(
-                            inactiveLoad[index].source.toString(),
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          subtitle: Text(
-                            inactiveLoad[index].destination.toString(),
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        );
-                      },
-                    ),
-                    SizedBox(
-                      height: 100.0,
-                    ),
-                  ],
+                      SizedBox(
+                        height: 60.0,
+                      ),
+                      ListView.builder(
+                        primary: false,
+                        shrinkWrap: true,
+                        itemCount: activeLoad.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return ListTile(
+                            title: Text(
+                              activeLoad[index].source.toString(),
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            subtitle: Text(
+                              activeLoad[index].destination.toString(),
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          );
+                        },
+                      ),
+                      ListView.builder(
+                        primary: false,
+                        shrinkWrap: true,
+                        itemCount: inactiveLoad.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return ListTile(
+                            title: Text(
+                              inactiveLoad[index].source.toString(),
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            subtitle: Text(
+                              inactiveLoad[index].destination.toString(),
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          );
+                        },
+                      ),
+                      SizedBox(
+                        height: 100.0,
+                      ),
+                    ],
+                  ),
                 ),
                 DraggableScrollableSheet(
                   initialChildSize: 0.08,
