@@ -29,14 +29,10 @@ class _SubsriptionPageState extends State<SubsriptionPage> {
   getData() async {
     subscriptionController = true;
     await SharedPreferences.getInstance().then((value) {
-      if (value.getString('plan_type') == '1') {
-        subscriptionEnd = DateTime.parse(value.getString('trial_period_upto'));
-        subscriptionStatus = value.getString('trial_period_status');
-      } else {
-        subscriptionEnd =
-            DateTime.parse(value.getString('subscription_period_upto'));
-        subscriptionStatus = value.getString('subscription_period_status');
-      }
+      subscriptionEnd = (widget.userTransporter.planType == '3')
+          ? DateTime.now()
+          : DateTime.parse(value.getString('period_upto'));
+      subscriptionStatus = value.getString('period_status');
     });
     await HTTPHandler()
         .getSubscriptionPlans()
@@ -169,7 +165,9 @@ class _SubsriptionPageState extends State<SubsriptionPage> {
                         width: MediaQuery.of(context).size.width / 2 - 20,
                         alignment: Alignment.center,
                         child: Text(
-                          'Ends on \n${subscriptionEnd.day} - ${subscriptionEnd.month} - ${subscriptionEnd.year}',
+                          (widget.userTransporter.planType == '3')
+                              ? 'Ends on \n00 - 00 - 0000'
+                              : 'Ends on \n${subscriptionEnd.day} - ${subscriptionEnd.month} - ${subscriptionEnd.year}',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Colors.red,

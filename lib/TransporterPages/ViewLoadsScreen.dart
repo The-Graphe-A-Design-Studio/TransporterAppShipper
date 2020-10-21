@@ -17,21 +17,6 @@ class ViewLoadsScreen extends StatefulWidget {
 }
 
 class _ViewLoadsScreenState extends State<ViewLoadsScreen> {
-  Widget infoRow(String title, String value) => Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(title),
-              Text(
-                value,
-                style: TextStyle(fontWeight: FontWeight.w500),
-              )
-            ],
-          ),
-          SizedBox(height: 5.0),
-        ],
-      );
 
   @override
   Widget build(BuildContext context) {

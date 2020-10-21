@@ -187,27 +187,14 @@ class HTTPHandler {
           body: {'phone_number': data[0], 'otp': data[1]});
       SharedPreferences.getInstance().then((value) async {
         value.setString('plan_type', (json.decode(result.body))['plan type']);
-        if ((json.decode(result.body))['plan type'] == '1') {
-          print('in trial');
-          value.setString('trial_period_status',
-              (json.decode(result.body))['trial period status']);
-          value
-              .setString('trial_period_upto',
-                  (json.decode(result.body))['trial period upto'])
-              .then((value1) {
-            print('data stored');
-          });
-        } else {
-          print('in subscription');
-          value.setString('subscription_period_status',
-              (json.decode(result.body))['subscription period status']);
-          value
-              .setString('subscription_period_upto',
-                  (json.decode(result.body))['subscription period upto'])
-              .then((value1) {
-            print('data stored');
-          });
-        }
+        value.setString('period_status',
+            (json.decode(result.body))['period status']);
+        value
+            .setString('period_upto',
+                (json.decode(result.body))['period upto'])
+            .then((value1) {
+          print('data stored');
+        });
       });
       return [PostResultOne.fromJson(json.decode(result.body)), result.body];
     } catch (error) {

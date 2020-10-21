@@ -78,11 +78,59 @@ class _HomePageTransporterState extends State<HomePageTransporter> {
                     primary: true,
                     children: <Widget>[
                       SizedBox(
-                        height: 120.0,
+                        height: 80.0,
                       ),
                       Image(
                           image: AssetImage('assets/images/newOrder.png'),
                           height: 300.0),
+                      SizedBox(height: 20.0),
+                      if (widget.userTransporter.planType != '2')
+                        Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 30.0),
+                          padding: const EdgeInsets.all(10.0),
+                          width: MediaQuery.of(context).size.width,
+                          color: Colors.white,
+                          child: Column(
+                            children: [
+                              Text(
+                                (widget.userTransporter.planType == '1')
+                                    ? 'You are on free trial!'
+                                    : 'Your free trial has expired!',
+                                style: TextStyle(
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 20.0,
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                    context,
+                                    subscription,
+                                    arguments: widget.userTransporter,
+                                  );
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 30.0,
+                                    vertical: 10.0,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.black,
+                                    shape: BoxShape.rectangle,
+                                    borderRadius: BorderRadius.circular(20.0),
+                                  ),
+                                  child: Text(
+                                    'Upgrade Now',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       SizedBox(
                         height: 30.0,
                       ),
