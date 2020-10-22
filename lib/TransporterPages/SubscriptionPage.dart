@@ -5,6 +5,7 @@ import 'package:shipperapp/HttpHandler.dart';
 import 'package:shipperapp/Models/SubscriptionPlan.dart';
 import 'package:shipperapp/Models/User.dart';
 import 'package:shipperapp/MyConstants.dart';
+import 'package:toast/toast.dart';
 
 class SubsriptionPage extends StatefulWidget {
   final UserTransporter userTransporter;
@@ -74,9 +75,21 @@ class _SubsriptionPageState extends State<SubsriptionPage> {
     HTTPHandler()
         .storeData(widget.userTransporter, selected, response)
         .then((value) {
-      if (value.success)
-        Navigator.pop(context);
-      else
+      if (value.success) {
+        Toast.show(
+          'You will be logged once your subscription is verified. Please login again!',
+          context,
+          gravity: Toast.CENTER,
+          duration: Toast.LENGTH_LONG,
+        );
+        Future.delayed(
+          Duration(milliseconds: 900),
+          () => HTTPHandler().signOut(
+            context,
+            userMobile: widget.userTransporter.mobileNumber,
+          ),
+        );
+      } else
         print('error');
     });
   }
