@@ -13,8 +13,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AccountBottomSheetLoggedIn extends StatefulWidget {
   final ScrollController scrollController;
   final UserTransporter userTransporter;
-  final List<PostLoad> activeLoads;
-  final List<PostLoad> inactiveLoads;
+  final List<PostLoad1> activeLoads;
+  final List<PostLoad1> inactiveLoads;
 
   AccountBottomSheetLoggedIn({
     Key key,

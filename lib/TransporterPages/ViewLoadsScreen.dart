@@ -3,8 +3,8 @@ import 'package:shipperapp/Models/PostLoad.dart';
 import 'package:shipperapp/MyConstants.dart';
 
 class ViewLoadsScreen extends StatefulWidget {
-  final List<PostLoad> activeLoads;
-  final List<PostLoad> inactiveLoads;
+  final List<PostLoad1> activeLoads;
+  final List<PostLoad1> inactiveLoads;
 
   ViewLoadsScreen({
     Key key,

@@ -214,13 +214,13 @@ class HTTPHandler {
     }
   }
 
-  Future<List<PostLoad>> getPostLoad(List data) async {
+  Future<List<PostLoad1>> getPostLoad(List data) async {
     try {
       var result = await http.post("$baseURLShipper/view_all_posts",
           body: {"customer_id": data[0], "post_status": data[1]});
       var ret = json.decode(result.body);
       print(ret);
-      List<PostLoad> list = [];
+      List<PostLoad1> list = [];
       if (ret == "null" || ret == null) {
         return list;
       }
@@ -228,7 +228,7 @@ class HTTPHandler {
       print(ret);
       for (var i in ret) {
         print(i.toString().contains("tonnage"));
-        list.add(PostLoad.fromJson(i, i.toString().contains("tonnage")));
+        list.add(PostLoad1.fromJson(i, i.toString().contains("tonnage")));
       }
       return list;
     } catch (error) {

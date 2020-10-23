@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:shipperapp/BottomSheets/AccountBottomSheetDummyLoading.dart';
 
 class LoadingBody extends StatelessWidget {
   @override
@@ -16,7 +15,9 @@ class LoadingBody extends StatelessWidget {
                 width: 200.0,
               ),
             ),
-            SizedBox(height: 120.0,),
+            SizedBox(
+              height: 120.0,
+            ),
             Spacer(),
           ],
         ),
@@ -28,20 +29,20 @@ class LoadingBody extends StatelessWidget {
             return Hero(
               tag: 'AnimeBottom',
               child: Container(
-                  margin: EdgeInsets.only(bottom: 0),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black,
-                        blurRadius: 10.0,
-                      ),
-                    ],
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(30.0),
-                        topRight: Radius.circular(30.0)),
-                  ),
-                  child: AccountBottomSheetDummyLoading(scrollController)),
+                margin: EdgeInsets.only(bottom: 0),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black,
+                      blurRadius: 10.0,
+                    ),
+                  ],
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(30.0),
+                      topRight: Radius.circular(30.0)),
+                ),
+              ),
             );
           },
         ),

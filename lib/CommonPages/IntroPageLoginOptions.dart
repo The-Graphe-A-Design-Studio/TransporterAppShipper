@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:shipperapp/BottomSheets/AccountBottomSheetLoggedOut.dart';
 import 'package:shipperapp/MyConstants.dart';
 
 class IntroPageLoginOptions extends StatefulWidget {
@@ -122,9 +121,7 @@ class _IntroPageLoginOptionsState extends State<IntroPageLoginOptions> {
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(30.0),
                           topRight: Radius.circular(30.0)),
-                    ),
-                    child: AccountBottomSheetLoggedOut(
-                        scrollController: scrollController)),
+                    ),),
               );
             },
           ),

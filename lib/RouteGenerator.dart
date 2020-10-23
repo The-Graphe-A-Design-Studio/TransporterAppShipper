@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:shipperapp/CommonPages/EmiCalculator.dart';
 import 'package:shipperapp/CommonPages/FadeTransition.dart';
-import 'package:shipperapp/CommonPages/FreightCalculator.dart';
 import 'package:shipperapp/CommonPages/IntroPageLoginOptions.dart';
-import 'package:shipperapp/CommonPages/TollCalculator.dart';
-import 'package:shipperapp/CommonPages/TripPlanner.dart';
 import 'package:shipperapp/MyConstants.dart';
 import 'package:shipperapp/SplashScreen.dart';
 import 'package:shipperapp/TransporterPages/HomePageTransporter.dart';
@@ -33,16 +29,6 @@ class RouteGenerator {
         return FadeRoute(page: IntroPageLoginOptions());
       case transporterOptionPage:
         return FadeRoute(page: TransporterOptionsPage());
-
-      //Pages which don't need LoggedIn User
-      case emiCalculatorPage:
-        return FadeRoute(page: EmiCalculator());
-      case freightCalculatorPage:
-        return FadeRoute(page: FreightCalculator());
-      case tollCalculatorPage:
-        return FadeRoute(page: TollCalculator());
-      case tripPlannerPage:
-        return FadeRoute(page: TripPlanner());
 
       //Pages once the user is LoggedIn - Transporter
       case homePageTransporter:

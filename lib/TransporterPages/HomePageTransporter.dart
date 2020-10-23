@@ -19,8 +19,8 @@ class HomePageTransporter extends StatefulWidget {
 }
 
 class _HomePageTransporterState extends State<HomePageTransporter> {
-  List<PostLoad> activeLoad;
-  List<PostLoad> inactiveLoad;
+  List<PostLoad1> activeLoad;
+  List<PostLoad1> inactiveLoad;
   bool loadData = true;
 
   RefreshController _refreshController =
@@ -71,173 +71,400 @@ class _HomePageTransporterState extends State<HomePageTransporter> {
           ? LoadingBody()
           : Stack(
               children: [
-                SmartRefresher(
-                  controller: _refreshController,
-                  onRefresh: () => _onRefresh(context),
-                  child: ListView(
-                    primary: true,
-                    children: <Widget>[
-                      SizedBox(
-                        height: 80.0,
-                      ),
-                      Image(
-                          image: AssetImage('assets/images/newOrder.png'),
-                          height: 300.0),
-                      SizedBox(height: 20.0),
-                      if (widget.userTransporter.planType != '2')
-                        Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 30.0),
-                          padding: const EdgeInsets.all(10.0),
-                          width: MediaQuery.of(context).size.width,
-                          color: Colors.white,
-                          child: Column(
-                            children: [
-                              Text(
-                                (widget.userTransporter.planType == '1')
-                                    ? 'You are on free trial!'
-                                    : 'Your free trial has expired!',
+                (activeLoad.length != 0)
+                    ? SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            SizedBox(height: 50.0),
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: Container(
+                                width: 100.0,
+                                margin: const EdgeInsets.only(right: 20.0),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 20.0,
+                                  vertical: 10.0,
+                                ),
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.rectangle,
+                                  borderRadius: BorderRadius.circular(20.0),
+                                  color: Colors.white,
+                                ),
+                                child: Text('Call Us'),
+                              ),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.symmetric(
+                                horizontal: 10.0,
+                                vertical: 20.0,
+                              ),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20.0),
+                              color: Colors.white,
+                              width: MediaQuery.of(context).size.width,
+                              height: 50.0,
+                              alignment: Alignment.centerLeft,
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.pushNamed(context, postLoad,
+                                          arguments: widget.userTransporter)
+                                      .then((value) {
+                                    if (value != null) {
+                                      if (value == true) {
+                                        setState(() {
+                                          loadData = true;
+                                        });
+                                      }
+                                    }
+                                  });
+                                },
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'Post a new load',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Container(
+                                        height: 5.0,
+                                        color: Colors.transparent,
+                                      ),
+                                    ),
+                                    Icon(Icons.chevron_right),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 25.0),
+                            Container(
+                              padding: const EdgeInsets.only(left: 20.0),
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                'Previous Loads',
                                 style: TextStyle(
+                                  color: Colors.white,
                                   fontSize: 20.0,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
-                              SizedBox(
-                                height: 20.0,
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 15.0),
+                              child: Divider(
+                                color: Colors.white,
                               ),
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.pushNamed(
-                                    context,
-                                    subscription,
-                                    arguments: widget.userTransporter,
-                                  );
-                                },
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 30.0,
-                                    vertical: 10.0,
-                                  ),
+                            ),
+                            Column(
+                              children: activeLoad.map((e) {
+                                return Container(
+                                  margin: const EdgeInsets.all(20.0),
+                                  padding: const EdgeInsets.all(10.0),
                                   decoration: BoxDecoration(
-                                    color: Colors.black,
+                                    color: Colors.white,
                                     shape: BoxShape.rectangle,
-                                    borderRadius: BorderRadius.circular(20.0),
+                                    borderRadius: BorderRadius.circular(5.0),
                                   ),
-                                  child: Text(
-                                    'Upgrade Now',
-                                    style: TextStyle(color: Colors.white),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            width: 15.0,
+                                            height: 15.0,
+                                            decoration: BoxDecoration(
+                                              color: Colors.transparent,
+                                              shape: BoxShape.circle,
+                                              border: Border.all(
+                                                color: Colors.green[600],
+                                                width: 3.0,
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(width: 10.0),
+                                          Flexible(
+                                            child: Text(
+                                              '${e.source[0]}',
+                                              style: TextStyle(
+                                                fontSize: 15.0,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Container(
+                                        margin: const EdgeInsets.symmetric(
+                                          horizontal: 5.0,
+                                          vertical: 3.0,
+                                        ),
+                                        height: 16.0,
+                                        width: 1.5,
+                                        color: Colors.grey,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            width: 15.0,
+                                            height: 15.0,
+                                            decoration: BoxDecoration(
+                                              color: Colors.transparent,
+                                              shape: BoxShape.circle,
+                                              border: Border.all(
+                                                color: Colors.red[600],
+                                                width: 3.0,
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(width: 10.0),
+                                          Flexible(
+                                            child: Text(
+                                              '${e.destination[e.destination.length - 1]}',
+                                              style: TextStyle(
+                                                fontSize: 15.0,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(height: 30.0),
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: [
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                'Truck Type',
+                                                style: TextStyle(
+                                                  fontSize: 13.0,
+                                                  color: Colors.black54,
+                                                ),
+                                              ),
+                                              SizedBox(height: 8.0),
+                                              Text(
+                                                '${e.truckPref}',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.w700,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(width: 30.0),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                'Products',
+                                                style: TextStyle(
+                                                  fontSize: 13.0,
+                                                  color: Colors.black54,
+                                                ),
+                                              ),
+                                              SizedBox(height: 8.0),
+                                              Text(
+                                                '${e.material}',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.w700,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ],
                                   ),
+                                );
+                              }).toList(),
+                            ),
+                          ],
+                        ),
+                      )
+                    : SmartRefresher(
+                        controller: _refreshController,
+                        onRefresh: () => _onRefresh(context),
+                        child: ListView(
+                          primary: true,
+                          children: <Widget>[
+                            SizedBox(
+                              height: 80.0,
+                            ),
+                            Image(
+                                image: AssetImage('assets/images/newOrder.png'),
+                                height: 300.0),
+                            SizedBox(height: 20.0),
+                            if (widget.userTransporter.planType != '2')
+                              Container(
+                                margin: const EdgeInsets.symmetric(
+                                    horizontal: 30.0),
+                                padding: const EdgeInsets.all(10.0),
+                                width: MediaQuery.of(context).size.width,
+                                color: Colors.white,
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      (widget.userTransporter.planType == '1')
+                                          ? 'You are on free trial!'
+                                          : 'Your free trial has expired!',
+                                      style: TextStyle(
+                                        fontSize: 20.0,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 20.0,
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.pushNamed(
+                                          context,
+                                          subscription,
+                                          arguments: widget.userTransporter,
+                                        );
+                                      },
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 30.0,
+                                          vertical: 10.0,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: Colors.black,
+                                          shape: BoxShape.rectangle,
+                                          borderRadius:
+                                              BorderRadius.circular(20.0),
+                                        ),
+                                        child: Text(
+                                          'Upgrade Now',
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
-                      SizedBox(
-                        height: 30.0,
-                      ),
-                      Align(
-                        alignment: Alignment.center,
-                        child: Text(
-                          "Let's Post a new Load",
-                          style: TextStyle(
-                            fontSize: 23.0,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 30.0,
-                      ),
-                      Align(
-                        alignment: Alignment.center,
-                        child: Text(
-                          "Tap to post a new load",
-                          style: TextStyle(
-                            color: Colors.white12,
-                            fontSize: 18.0,
-                          ),
-                        ),
-                      ),
-                      Align(
-                        alignment: Alignment.center,
-                        child: Text(
-                          "for Shipping",
-                          style: TextStyle(
-                            color: Colors.white12,
-                            fontSize: 18.0,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 40.0,
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.pushNamed(context, postLoad,
-                                  arguments: widget.userTransporter)
-                              .then((value) {
-                            if (value != null) {
-                              if (value == true) {
-                                setState(() {
-                                  loadData = true;
+                            SizedBox(
+                              height: 30.0,
+                            ),
+                            Align(
+                              alignment: Alignment.center,
+                              child: Text(
+                                "Let's Post a new Load",
+                                style: TextStyle(
+                                  fontSize: 23.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 30.0,
+                            ),
+                            Align(
+                              alignment: Alignment.center,
+                              child: Text(
+                                "Tap to post a new load",
+                                style: TextStyle(
+                                  color: Colors.white12,
+                                  fontSize: 18.0,
+                                ),
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.center,
+                              child: Text(
+                                "for Shipping",
+                                style: TextStyle(
+                                  color: Colors.white12,
+                                  fontSize: 18.0,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 40.0,
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.pushNamed(context, postLoad,
+                                        arguments: widget.userTransporter)
+                                    .then((value) {
+                                  if (value != null) {
+                                    if (value == true) {
+                                      setState(() {
+                                        loadData = true;
+                                      });
+                                    }
+                                  }
                                 });
-                              }
-                            }
-                          });
-                        },
-                        child: CircleAvatar(
-                          radius: 40.0,
-                          backgroundColor: Colors.white,
-                          child: Icon(
-                            Icons.add,
-                            color: Color(0xff252427),
-                            size: 35.0,
-                          ),
+                              },
+                              child: CircleAvatar(
+                                radius: 40.0,
+                                backgroundColor: Colors.white,
+                                child: Icon(
+                                  Icons.add,
+                                  color: Color(0xff252427),
+                                  size: 35.0,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 60.0,
+                            ),
+                            // ListView.builder(
+                            //   primary: false,
+                            //   shrinkWrap: true,
+                            //   itemCount: activeLoad.length,
+                            //   itemBuilder: (BuildContext context, int index) {
+                            //     return ListTile(
+                            //       title: Text(
+                            //         activeLoad[index].source.toString(),
+                            //         style: TextStyle(color: Colors.white),
+                            //       ),
+                            //       subtitle: Text(
+                            //         activeLoad[index].destination.toString(),
+                            //         style: TextStyle(color: Colors.white),
+                            //       ),
+                            //     );
+                            //   },
+                            // ),
+                            // ListView.builder(
+                            //   primary: false,
+                            //   shrinkWrap: true,
+                            //   itemCount: inactiveLoad.length,
+                            //   itemBuilder: (BuildContext context, int index) {
+                            //     return ListTile(
+                            //       title: Text(
+                            //         inactiveLoad[index].source.toString(),
+                            //         style: TextStyle(color: Colors.white),
+                            //       ),
+                            //       subtitle: Text(
+                            //         inactiveLoad[index].destination.toString(),
+                            //         style: TextStyle(color: Colors.white),
+                            //       ),
+                            //     );
+                            //   },
+                            // ),
+                            SizedBox(
+                              height: 100.0,
+                            ),
+                          ],
                         ),
                       ),
-                      SizedBox(
-                        height: 60.0,
-                      ),
-                      ListView.builder(
-                        primary: false,
-                        shrinkWrap: true,
-                        itemCount: activeLoad.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return ListTile(
-                            title: Text(
-                              activeLoad[index].source.toString(),
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            subtitle: Text(
-                              activeLoad[index].destination.toString(),
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          );
-                        },
-                      ),
-                      ListView.builder(
-                        primary: false,
-                        shrinkWrap: true,
-                        itemCount: inactiveLoad.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return ListTile(
-                            title: Text(
-                              inactiveLoad[index].source.toString(),
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            subtitle: Text(
-                              inactiveLoad[index].destination.toString(),
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          );
-                        },
-                      ),
-                      SizedBox(
-                        height: 100.0,
-                      ),
-                    ],
-                  ),
-                ),
                 DraggableScrollableSheet(
                   initialChildSize: 0.08,
                   minChildSize: 0.08,

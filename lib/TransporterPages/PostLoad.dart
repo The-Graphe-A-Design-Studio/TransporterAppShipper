@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:http/http.dart' as http;
-import 'package:shipperapp/BottomSheets/AccountBottomSheetDummy.dart';
 import 'package:shipperapp/CommonPages/LoadingBody.dart';
 import 'package:shipperapp/DialogScreens/DialogFailed.dart';
 import 'package:shipperapp/DialogScreens/DialogProcessing.dart';
@@ -1050,7 +1049,7 @@ class _PostLoadState extends State<PostLoad> {
                               topLeft: Radius.circular(30.0),
                               topRight: Radius.circular(30.0)),
                         ),
-                        child: AccountBottomSheetDummy(),
+                        // child: AccountBottomSheetDummy(),
                       ),
                     );
                   },

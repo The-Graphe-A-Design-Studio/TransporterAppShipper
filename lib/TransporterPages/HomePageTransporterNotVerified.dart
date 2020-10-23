@@ -95,22 +95,22 @@ class _HomePageTransporterNotVerifiedState
                         SizedBox(
                           height: 20.0,
                         ),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.pushNamed(context, postLoad);
-                          },
-                          child: FlatButton(
-                            onPressed: () {
-                              Navigator.pushNamed(
-                                context,
-                                homePageTransporter,
-                                arguments: widget.userTransporter,
-                              );
-                            },
-                            child: Text("Post Load (Temp)"),
-                            color: Colors.white,
-                          ),
-                        ),
+                        // GestureDetector(
+                        //   onTap: () {
+                        //     Navigator.pushNamed(context, postLoad);
+                        //   },
+                        //   child: FlatButton(
+                        //     onPressed: () {
+                        //       Navigator.pushNamed(
+                        //         context,
+                        //         homePageTransporter,
+                        //         arguments: widget.userTransporter,
+                        //       );
+                        //     },
+                        //     child: Text("Post Load (Temp)"),
+                        //     color: Colors.white,
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),
