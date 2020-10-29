@@ -197,7 +197,7 @@ class _UploadDocsState extends State<UploadDocs> {
                             image: DecorationImage(
                                 image:
                                     AssetImage("assets/images/logo_white.png"),
-                                fit: BoxFit.contain),
+                                fit: BoxFit.contain,),
                           ),
                         ),
                   Positioned(

@@ -301,12 +301,15 @@ class _AccountBottomSheetLoggedInState
                   title: Text(
                     widget.userTransporter.compName,
                     style: TextStyle(
+                      color: Colors.white,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   subtitle: Text(
                     '+${widget.userTransporter.mobileNumberCode} ${widget.userTransporter.mobileNumber}',
-                    style: TextStyle(color: Colors.black87),
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
                   ),
                 ),
                 Container(
@@ -318,8 +321,8 @@ class _AccountBottomSheetLoggedInState
                   child: Text(
                     'Upload all docs to be verified',
                     style: TextStyle(
+                      color: Colors.white,
                       fontSize: 22.0,
-                      color: Colors.black87,
                     ),
                   ),
                 ),
@@ -372,16 +375,20 @@ class _AccountBottomSheetLoggedInState
                       arguments: widget.userTransporter,
                     );
                   },
-                  leading: Icon(Icons.toc),
+                  leading: Icon(
+                    Icons.toc,
+                    color: Colors.white,
+                  ),
                   title: Text(
                     'Your Subscription',
                     style: TextStyle(
+                      color: Colors.white,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   subtitle: Text(
                     'View Plan',
-                    style: TextStyle(color: Colors.black87),
+                    style: TextStyle(color: Colors.white),
                   ),
                 ),
                 ListTile(
@@ -395,16 +402,22 @@ class _AccountBottomSheetLoggedInState
                       ],
                     );
                   },
-                  leading: Icon(Icons.ac_unit),
+                  leading: Icon(
+                    Icons.ac_unit,
+                    color: Colors.white,
+                  ),
                   title: Text(
                     'Your Loads',
                     style: TextStyle(
+                      color: Colors.white,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   subtitle: Text(
                     'Lorem Ipsum',
-                    style: TextStyle(color: Colors.black87),
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
                   ),
                 ),
                 ListTile(
@@ -415,16 +428,22 @@ class _AccountBottomSheetLoggedInState
                       arguments: widget.userTransporter,
                     );
                   },
-                  leading: Icon(Icons.ac_unit),
+                  leading: Icon(
+                    Icons.ac_unit,
+                    color: Colors.white,
+                  ),
                   title: Text(
                     'My Deliveries',
                     style: TextStyle(
+                      color: Colors.white,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   subtitle: Text(
                     'Lorem Ipsum',
-                    style: TextStyle(color: Colors.black87),
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
                   ),
                 ),
                 ListTile(
@@ -434,10 +453,14 @@ class _AccountBottomSheetLoggedInState
                       userMobile: widget.userTransporter.mobileNumber,
                     );
                   },
-                  leading: Icon(Icons.logout),
+                  leading: Icon(
+                    Icons.logout,
+                    color: Colors.white,
+                  ),
                   title: Text(
                     'Logout',
                     style: TextStyle(
+                      color: Colors.white,
                       fontWeight: FontWeight.w600,
                     ),
                   ),

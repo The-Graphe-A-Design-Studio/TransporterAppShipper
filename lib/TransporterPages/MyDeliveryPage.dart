@@ -25,6 +25,7 @@ class _MyDeliveryPageState extends State<MyDeliveryPage> {
   Razorpay _razorPayRemaining;
   Delivery selected;
   bool loadingDone = false;
+  Map<String, List<String>> locations = {};
 
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
@@ -158,7 +159,16 @@ class _MyDeliveryPageState extends State<MyDeliveryPage> {
   }
 
   getMyDels() {
-    HTTPHandler().myDel([widget.user.id]).then((value) {
+    HTTPHandler().myDel([widget.user.id]).then((value) async {
+      print(value);
+      for (Delivery d in value) {
+        locations[d.deliveryId] = [];
+        for (DeliveryTruck t in d.deliveryTrucks) {
+          String loc =
+              await HTTPHandler().getAddressOfDriver(t.latitude, t.longitude);
+          locations[d.deliveryId].add(loc);
+        }
+      }
       setState(() {
         this.delivery = value;
         // print('some ${value[0].deliveryTrucks.length}');
@@ -710,72 +720,84 @@ class _MyDeliveryPageState extends State<MyDeliveryPage> {
                                                 'Trucks will be assigned soon by the owner.')
                                           else
                                             Column(
-                                              children: e.deliveryTrucks
-                                                  .map(
-                                                    (t) => Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Text(
-                                                          'Driver Details ${e.deliveryTrucks.indexOf(t) + 1}',
-                                                          style: TextStyle(
-                                                            fontSize: 13.0,
-                                                            color:
-                                                                Colors.black54,
-                                                          ),
+                                              children: e.deliveryTrucks.map(
+                                                (t) {
+                                                  return Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        'Driver Details ${e.deliveryTrucks.indexOf(t) + 1}',
+                                                        style: TextStyle(
+                                                          fontSize: 13.0,
+                                                          color: Colors.black54,
                                                         ),
-                                                        SizedBox(height: 8.0),
-                                                        GestureDetector(
-                                                          onTap: () =>
-                                                              UrlLauncher.launch(
-                                                                  "tel:${t.driverPhone}"),
-                                                          child: Row(
-                                                            children: [
-                                                              Icon(Icons.call),
-                                                              SizedBox(
-                                                                  width: 5.0),
-                                                              Text(
-                                                                '${t.driverName}',
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w700,
-                                                                ),
+                                                      ),
+                                                      SizedBox(height: 8.0),
+                                                      GestureDetector(
+                                                        onTap: () =>
+                                                            UrlLauncher.launch(
+                                                                "tel:${t.driverPhone}"),
+                                                        child: Row(
+                                                          children: [
+                                                            Icon(Icons.call),
+                                                            SizedBox(
+                                                                width: 5.0),
+                                                            Text(
+                                                              '${t.driverName}',
+                                                              style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w700,
                                                               ),
-                                                              Text(
-                                                                ' (${t.truckNumber} )',
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w700,
-                                                                ),
+                                                            ),
+                                                            Text(
+                                                              ' (${t.truckNumber} )',
+                                                              style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w700,
                                                               ),
-                                                              Text(
-                                                                ' (OTP - ${t.otp} )',
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w700,
-                                                                ),
+                                                            ),
+                                                            Text(
+                                                              ' (OTP - ${t.otp} )',
+                                                              style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w700,
                                                               ),
-                                                            ],
-                                                          ),
+                                                            ),
+                                                          ],
                                                         ),
-                                                        if (e.deliveryTrucks
-                                                                .indexOf(t) !=
-                                                            e.deliveryTrucks
-                                                                    .length -
-                                                                1)
-                                                          SizedBox(
-                                                              height: 10.0),
-                                                      ],
-                                                    ),
-                                                  )
-                                                  .toList(),
+                                                      ),
+                                                      if (e.deliveryTrucks
+                                                              .indexOf(t) !=
+                                                          e.deliveryTrucks
+                                                                  .length -
+                                                              1)
+                                                        SizedBox(height: 10.0),
+                                                      SizedBox(height: 8.0),
+                                                      Row(
+                                                        children: [
+                                                          Text(
+                                                            "Current Loc. : ",
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                          Text(locations[
+                                                                  e.deliveryId][
+                                                              e.deliveryTrucks
+                                                                  .indexOf(t)]),
+                                                        ],
+                                                      ),
+                                                      // getDriverLoc(t),
+                                                    ],
+                                                  );
+                                                },
+                                              ).toList(),
                                             )
                                       ],
                                     ),

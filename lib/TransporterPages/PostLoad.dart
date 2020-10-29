@@ -796,7 +796,7 @@ class _PostLoadState extends State<PostLoad> {
                                     selectedPayTerm = value;
                                   });
                                 },
-                                items: (widget.userTransporter.planType == '1')
+                                items: (widget.userTransporter.planType == '3')
                                     ? [
                                         DropdownMenuItem(
                                           value: payTerms[0],

@@ -26,6 +26,7 @@ class _SubsriptionPageState extends State<SubsriptionPage> {
   List<SubscriptionPlan> _plans;
   Razorpay _razorpay;
   SubscriptionPlan selected;
+  var _scaffoldKey = GlobalKey<ScaffoldState>();
 
   getData() async {
     subscriptionController = true;
@@ -44,7 +45,7 @@ class _SubsriptionPageState extends State<SubsriptionPage> {
   void _openCheckOut(SubscriptionPlan s) async {
     selected = s;
     HTTPHandler()
-        .generateRazorpayOrderId((s.planSellingPrice * 100).round())
+        .generateRazorpayOrderId((double.parse(s.finalPrice) * 100).round())
         .then((value) {
       var options = {
         'key': RAZORPAY_ID,
@@ -96,12 +97,18 @@ class _SubsriptionPageState extends State<SubsriptionPage> {
 
   void _handlePaymentError(PaymentFailureResponse response) {
     print('Success => $response');
-    Navigator.of(context).popAndPushNamed('/Home');
+    Navigator.of(context).popAndPushNamed(
+      '/homePageTransporter',
+      arguments: widget.userTransporter,
+    );
   }
 
   void _handleExternalWallet(ExternalWalletResponse response) {
     print('Success => $response');
-    Navigator.of(context).popAndPushNamed('/Home');
+    Navigator.of(context).popAndPushNamed(
+      '/homePageTransporter',
+      arguments: widget.userTransporter,
+    );
   }
 
   @override
@@ -119,6 +126,7 @@ class _SubsriptionPageState extends State<SubsriptionPage> {
     if (!subscriptionController) getData();
 
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text(
           'Your Subscriptions',
@@ -281,7 +289,8 @@ class _SubsriptionPageState extends State<SubsriptionPage> {
                                 child: GestureDetector(
                                   onTap: () {
                                     print('buy now');
-                                    _openCheckOut(e);
+                                    // _openCheckOut(e);
+                                    _openModal(e);
                                   },
                                   child: Container(
                                     padding: const EdgeInsets.all(8.0),
@@ -307,4 +316,65 @@ class _SubsriptionPageState extends State<SubsriptionPage> {
             ),
     );
   }
+
+  void _openModal(SubscriptionPlan p) {
+    _scaffoldKey.currentState.showBottomSheet((context) => Container(
+          color: Colors.white,
+          width: MediaQuery.of(context).size.width,
+          height: 250.0,
+          padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Plan Details'),
+                  GestureDetector(
+                    onTap: () => Navigator.of(context).pop(),
+                    child: Icon(Icons.close),
+                  ),
+                ],
+              ),
+              Divider(),
+              item('Duration', p.duration),
+              item('Original Price', 'Rs. ${p.planOriginalPrice}'),
+              item('Selling Price', 'Rs. ${p.planSellingPrice}'),
+              item('GST', '18 %'),
+              item('Final Price', 'Rs. ${double.parse(p.finalPrice)}'),
+              SizedBox(height: 12.0),
+              GestureDetector(
+                onTap: () => _openCheckOut(p),
+                child: Container(
+                  width: double.infinity,
+                  height: 40.0,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: Colors.black,
+                    shape: BoxShape.rectangle,
+                    borderRadius: BorderRadius.circular(5.0),
+                  ),
+                  child: Text(
+                    'Continue',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              )
+            ],
+          ),
+        ));
+  }
+
+  Widget item(String title, String value) => Padding(
+        padding: const EdgeInsets.symmetric(vertical: 5.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(title),
+            Text(
+              value,
+              style: TextStyle(fontWeight: FontWeight.w500),
+            ),
+          ],
+        ),
+      );
 }

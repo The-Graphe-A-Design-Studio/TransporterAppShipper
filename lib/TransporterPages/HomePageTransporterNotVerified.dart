@@ -26,7 +26,7 @@ class _HomePageTransporterNotVerifiedState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xff252427),
+      backgroundColor: Colors.white,
       body: Stack(
         children: [
           Column(
@@ -39,8 +39,8 @@ class _HomePageTransporterNotVerifiedState
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Image(
-                            image: AssetImage('assets/images/newOrder.png'),
-                            height: 300.0),
+                            image: AssetImage('assets/images/logo_white.png'),
+                            height: 200.0),
                         SizedBox(
                           height: 30.0,
                         ),
@@ -49,7 +49,7 @@ class _HomePageTransporterNotVerifiedState
                           style: TextStyle(
                             fontSize: 23.0,
                             fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                            color: Colors.black87,
                           ),
                         ),
                         SizedBox(
@@ -57,12 +57,12 @@ class _HomePageTransporterNotVerifiedState
                         ),
                         Text("Tap to post a new load",
                             style: TextStyle(
-                              color: Colors.white12,
+                              color: Colors.black38,
                               fontSize: 18.0,
                             )),
                         Text("for Shipping",
                             style: TextStyle(
-                              color: Colors.white12,
+                              color: Colors.black38,
                               fontSize: 18.0,
                             )),
                         SizedBox(
@@ -88,8 +88,11 @@ class _HomePageTransporterNotVerifiedState
                                 });
                               });
                             },
-                            child: Text("Upload Docs to Continue..."),
-                            color: Colors.white,
+                            child: Text(
+                              "Upload Docs to Continue...",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            color: Colors.black87,
                           ),
                         ),
                         SizedBox(
@@ -129,13 +132,7 @@ class _HomePageTransporterNotVerifiedState
                 child: Container(
                     margin: EdgeInsets.only(bottom: 0),
                     decoration: BoxDecoration(
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black,
-                          blurRadius: 10.0,
-                        ),
-                      ],
+                      color: Colors.black87,
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(30.0),
                           topRight: Radius.circular(30.0)),

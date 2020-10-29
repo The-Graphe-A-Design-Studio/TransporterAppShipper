@@ -7,7 +7,7 @@ import 'package:shipperapp/Models/Bidder.dart';
 import 'package:shipperapp/Models/PostLoad.dart';
 
 class ViewBidsPerLoadScreen extends StatefulWidget {
-  final PostLoad load;
+  final PostLoad1 load;
 
   ViewBidsPerLoadScreen({Key key, @required this.load}) : super(key: key);
 

@@ -5,6 +5,8 @@ const autoCompleteLink =
     "https://maps.googleapis.com/maps/api/place/autocomplete/json?key=$GoogleApiKey&components=country:in&types=(cities)&input=";
 const autoCompleteLinkFullAdd =
     "https://maps.googleapis.com/maps/api/place/autocomplete/json?key=$GoogleApiKey&components=country:in&types=address&input=";
+const reverseGeocodingLink =
+    'https://maps.googleapis.com/maps/api/geocode/json?key=$GoogleMapsKey&latlng=';
 
 const RAZORPAY_ID = "rzp_test_Ox9H2BWMViEG65";
 const RAZORPAY_SECRET = "2rOaeIWZt4iOJUjMJGXRk5dw";
@@ -13,7 +15,6 @@ const RAZORPAY_SECRET = "2rOaeIWZt4iOJUjMJGXRk5dw";
 const String splashPage = "/";
 
 //Login or SignUp Pages
-const String introLoginOptionPage = "/introLoginPage";
 const String transporterOptionPage = "/transporterOptionPage";
 
 //Pages which don't need LoggedIn User

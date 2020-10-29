@@ -5,21 +5,24 @@ class LoadingBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Column(
-          children: <Widget>[
-            Spacer(),
-            Center(
-              child: Image(
-                image: AssetImage('assets/images/logo_white.png'),
-                height: 200.0,
-                width: 200.0,
+        Container(
+          color: Colors.white,
+          child: Column(
+            children: <Widget>[
+              Spacer(),
+              Center(
+                child: Image(
+                  image: AssetImage('assets/images/logo_white.png'),
+                  height: 200.0,
+                  width: 200.0,
+                ),
               ),
-            ),
-            SizedBox(
-              height: 120.0,
-            ),
-            Spacer(),
-          ],
+              SizedBox(
+                height: 120.0,
+              ),
+              Spacer(),
+            ],
+          ),
         ),
         DraggableScrollableSheet(
           initialChildSize: 0.15,

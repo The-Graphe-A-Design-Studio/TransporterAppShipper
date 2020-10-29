@@ -282,68 +282,73 @@ class _AccountBottomSheetUnknownState extends State<AccountBottomSheetUnknown> {
                 title: Text(
                   widget.userTransporter.compName,
                   style: TextStyle(
+                    color: Colors.white,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
                 subtitle: Text(
                   '+${widget.userTransporter.mobileNumberCode} ${widget.userTransporter.mobileNumber}',
-                  style: TextStyle(color: Colors.black87),
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.only(
-                  top: 30.0,
-                  left: 30.0,
-                ),
-                width: double.infinity,
-                child: Text(
-                  'Upload all docs to be verified',
                   style: TextStyle(
-                    fontSize: 22.0,
-                    color: Colors.black87,
+                    color: Colors.white,
                   ),
                 ),
               ),
-              Container(
-                margin: const EdgeInsets.only(top: 30.0),
-                height: 175.0,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    _listItem(
-                      map['pan card'],
-                      (map['pan card verified'].contains('1')) ? true : false,
-                      0,
+              if (widget.userTransporter.compName != '')
+                Container(
+                  margin: const EdgeInsets.only(
+                    top: 30.0,
+                    left: 30.0,
+                  ),
+                  width: double.infinity,
+                  child: Text(
+                    'Upload all docs to be verified',
+                    style: TextStyle(
+                      fontSize: 22.0,
+                      color: Colors.white,
                     ),
-                    _listItem(
-                      map['address front'],
-                      (map['address front verified'].contains('1'))
-                          ? true
-                          : false,
-                      1,
-                    ),
-                    _listItem(
-                      map['address back'],
-                      (map['address back verified'].contains('1'))
-                          ? true
-                          : false,
-                      2,
-                    ),
-                    _listItem(
-                      map['selfie'],
-                      (map['selfie verified'].contains('1')) ? true : false,
-                      3,
-                    ),
-                    _listItem(
-                      map['office address'],
-                      (map['office address verified'].contains('1'))
-                          ? true
-                          : false,
-                      4,
-                    ),
-                  ],
+                  ),
                 ),
-              ),
+              if (widget.userTransporter.compName != '')
+                Container(
+                  margin: const EdgeInsets.only(top: 30.0),
+                  height: 175.0,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      _listItem(
+                        map['pan card'],
+                        (map['pan card verified'].contains('1')) ? true : false,
+                        0,
+                      ),
+                      _listItem(
+                        map['address front'],
+                        (map['address front verified'].contains('1'))
+                            ? true
+                            : false,
+                        1,
+                      ),
+                      _listItem(
+                        map['address back'],
+                        (map['address back verified'].contains('1'))
+                            ? true
+                            : false,
+                        2,
+                      ),
+                      _listItem(
+                        map['selfie'],
+                        (map['selfie verified'].contains('1')) ? true : false,
+                        3,
+                      ),
+                      _listItem(
+                        map['office address'],
+                        (map['office address verified'].contains('1'))
+                            ? true
+                            : false,
+                        4,
+                      ),
+                    ],
+                  ),
+                ),
               SizedBox(height: 20.0),
               Material(
                 child: ListTile(
@@ -353,10 +358,14 @@ class _AccountBottomSheetUnknownState extends State<AccountBottomSheetUnknown> {
                       userMobile: widget.userTransporter.mobileNumber,
                     );
                   },
-                  leading: Icon(Icons.call),
+                  leading: Icon(
+                    Icons.call,
+                    color: Colors.white,
+                  ),
                   title: Text(
                     'Call Us',
                     style: TextStyle(
+                      color: Colors.white,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -370,10 +379,14 @@ class _AccountBottomSheetUnknownState extends State<AccountBottomSheetUnknown> {
                       userMobile: widget.userTransporter.mobileNumber,
                     );
                   },
-                  leading: Icon(Icons.logout),
+                  leading: Icon(
+                    Icons.logout,
+                    color: Colors.white,
+                  ),
                   title: Text(
                     'Logout',
                     style: TextStyle(
+                      color: Colors.white,
                       fontWeight: FontWeight.w600,
                     ),
                   ),

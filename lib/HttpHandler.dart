@@ -38,7 +38,7 @@ class HTTPHandler {
     await Future.delayed(Duration(seconds: 1), () {});
     Navigator.pop(context);
     Navigator.pushNamedAndRemoveUntil(
-        context, introLoginOptionPage, (route) => false);
+        context, transporterOptionPage, (route) => false);
   }
 
   Future<List<TruckCategory>> getTruckCategory() async {
@@ -187,11 +187,10 @@ class HTTPHandler {
           body: {'phone_number': data[0], 'otp': data[1]});
       SharedPreferences.getInstance().then((value) async {
         value.setString('plan_type', (json.decode(result.body))['plan type']);
-        value.setString('period_status',
-            (json.decode(result.body))['period status']);
+        value.setString(
+            'period_status', (json.decode(result.body))['period status']);
         value
-            .setString('period_upto',
-                (json.decode(result.body))['period upto'])
+            .setString('period_upto', (json.decode(result.body))['period upto'])
             .then((value1) {
           print('data stored');
         });
@@ -419,6 +418,7 @@ class HTTPHandler {
 
   Future<List<Delivery>> myDel(List data) async {
     try {
+      print('$baseURLShipper/my_deliveries');
       var response = await http
           .post('$baseURLShipper/my_deliveries', body: {'shipper_id': data[0]});
 
@@ -478,6 +478,17 @@ class HTTPHandler {
       print(response.body);
 
       return PostResultOne.fromJson(json.decode(response.body));
+    } catch (e) {
+      print(e);
+      throw e;
+    }
+  }
+
+  Future<String> getAddressOfDriver(String lat, String lng) async {
+    try {
+      var response = await http.get('$reverseGeocodingLink$lat,$lng');
+
+      return json.decode(response.body)['results'][0]['formatted_address'];
     } catch (e) {
       print(e);
       throw e;

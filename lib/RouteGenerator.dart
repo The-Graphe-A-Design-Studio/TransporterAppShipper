@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:shipperapp/CommonPages/FadeTransition.dart';
-import 'package:shipperapp/CommonPages/IntroPageLoginOptions.dart';
 import 'package:shipperapp/MyConstants.dart';
 import 'package:shipperapp/SplashScreen.dart';
 import 'package:shipperapp/TransporterPages/HomePageTransporter.dart';
@@ -24,9 +23,6 @@ class RouteGenerator {
       case splashPage:
         return FadeRoute(page: SplashScreen());
 
-      //Login or Signup Pages
-      case introLoginOptionPage:
-        return FadeRoute(page: IntroPageLoginOptions());
       case transporterOptionPage:
         return FadeRoute(page: TransporterOptionsPage());
 

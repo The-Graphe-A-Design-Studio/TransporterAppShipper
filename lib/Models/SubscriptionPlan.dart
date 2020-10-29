@@ -5,6 +5,7 @@ class SubscriptionPlan {
   double planSellingPrice;
   String planDiscount;
   String duration;
+  String finalPrice;
 
   SubscriptionPlan({
     this.planId,
@@ -13,6 +14,7 @@ class SubscriptionPlan {
     this.planSellingPrice,
     this.planDiscount,
     this.duration,
+    this.finalPrice,
   });
 
   factory SubscriptionPlan.fromJson(Map<String, dynamic> parsedJson) {
@@ -23,6 +25,7 @@ class SubscriptionPlan {
       planSellingPrice: double.parse(parsedJson['plan selling price']),
       planDiscount: parsedJson['plan discount'],
       duration: parsedJson['plan duration'],
+      finalPrice: parsedJson['final price'],
     );
   }
 }

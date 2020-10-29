@@ -72,6 +72,8 @@ class DeliveryTruck {
   String driverName;
   String driverPhone;
   String otp;
+  String latitude;
+  String longitude;
 
   DeliveryTruck({
     this.deleteTruckId,
@@ -79,6 +81,8 @@ class DeliveryTruck {
     this.driverName,
     this.driverPhone,
     this.otp,
+    this.latitude,
+    this.longitude,
   });
 
   factory DeliveryTruck.fromJson(Map<String, dynamic> parsedJson) {
@@ -88,6 +92,8 @@ class DeliveryTruck {
       driverName: parsedJson['driver name'],
       driverPhone: parsedJson['driver phone'],
       otp: (parsedJson['status'] == null) ? parsedJson['otp'] : '000000',
+      latitude: parsedJson['latitude'],
+      longitude: parsedJson['longitude'],
     );
   }
 }
@@ -128,18 +134,17 @@ class Delivery {
         tempTrucks.add(
             DeliveryTruck.fromJson(parsedJson['delivery trucks']['trucks'][i]));
     return Delivery(
-      deliveryId: parsedJson['delivery id'],
-      priceUnit: parsedJson['price unit'],
-      quantity: parsedJson['quantity'],
-      dealPrice: parsedJson['deal price'],
-      gst: parsedJson['GST'],
-      totalPrice: parsedJson['total amount'],
-      deliveryTrucksStatus: parsedJson['delivery trucks']['status'],
-      deliveryTrucks: tempTrucks,
-      deliveryStatus: parsedJson['delivery status'],
-      load: Post.fromJson(parsedJson['load details']),
-      modeName: parsedJson['payment mode']['mode name'],
-      payment: parsedJson['payment mode']['payment']
-    );
+        deliveryId: parsedJson['delivery id'],
+        priceUnit: parsedJson['price unit'],
+        quantity: parsedJson['quantity'],
+        dealPrice: parsedJson['deal price'],
+        gst: parsedJson['GST'],
+        totalPrice: parsedJson['total amount'],
+        deliveryTrucksStatus: parsedJson['delivery trucks']['status'],
+        deliveryTrucks: tempTrucks,
+        deliveryStatus: parsedJson['delivery status'],
+        load: Post.fromJson(parsedJson['load details']),
+        modeName: parsedJson['payment mode']['mode name'],
+        payment: parsedJson['payment mode']['payment']);
   }
 }

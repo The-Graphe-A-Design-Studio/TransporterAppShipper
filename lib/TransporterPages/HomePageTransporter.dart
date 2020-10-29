@@ -66,7 +66,7 @@ class _HomePageTransporterState extends State<HomePageTransporter> {
       getData();
     }
     return Scaffold(
-      backgroundColor: Color(0xff252427),
+      backgroundColor: Colors.white,
       body: (activeLoad == null || inactiveLoad == null)
           ? LoadingBody()
           : Stack(
@@ -90,6 +90,10 @@ class _HomePageTransporterState extends State<HomePageTransporter> {
                                   shape: BoxShape.rectangle,
                                   borderRadius: BorderRadius.circular(20.0),
                                   color: Colors.white,
+                                  border: Border.all(
+                                    color: Colors.black87,
+                                    width: 0.5,
+                                  ),
                                 ),
                                 child: Text('Call Us'),
                               ),
@@ -101,7 +105,7 @@ class _HomePageTransporterState extends State<HomePageTransporter> {
                               ),
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 20.0),
-                              color: Colors.white,
+                              color: Colors.black87,
                               width: MediaQuery.of(context).size.width,
                               height: 50.0,
                               alignment: Alignment.centerLeft,
@@ -126,7 +130,7 @@ class _HomePageTransporterState extends State<HomePageTransporter> {
                                     Text(
                                       'Post a new load',
                                       style: TextStyle(
-                                        color: Colors.black,
+                                        color: Colors.white,
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
@@ -136,7 +140,10 @@ class _HomePageTransporterState extends State<HomePageTransporter> {
                                         color: Colors.transparent,
                                       ),
                                     ),
-                                    Icon(Icons.chevron_right),
+                                    Icon(
+                                      Icons.chevron_right,
+                                      color: Colors.white,
+                                    ),
                                   ],
                                 ),
                               ),
@@ -148,7 +155,7 @@ class _HomePageTransporterState extends State<HomePageTransporter> {
                               child: Text(
                                 'Previous Loads',
                                 style: TextStyle(
-                                  color: Colors.white,
+                                  color: Colors.black,
                                   fontSize: 20.0,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -158,7 +165,7 @@ class _HomePageTransporterState extends State<HomePageTransporter> {
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 15.0),
                               child: Divider(
-                                color: Colors.white,
+                                color: Colors.black,
                               ),
                             ),
                             Column(
@@ -167,7 +174,7 @@ class _HomePageTransporterState extends State<HomePageTransporter> {
                                   margin: const EdgeInsets.all(20.0),
                                   padding: const EdgeInsets.all(10.0),
                                   decoration: BoxDecoration(
-                                    color: Colors.white,
+                                    color: Colors.black87,
                                     shape: BoxShape.rectangle,
                                     borderRadius: BorderRadius.circular(5.0),
                                   ),
@@ -196,6 +203,7 @@ class _HomePageTransporterState extends State<HomePageTransporter> {
                                             child: Text(
                                               '${e.source[0]}',
                                               style: TextStyle(
+                                                color: Colors.white,
                                                 fontSize: 15.0,
                                                 fontWeight: FontWeight.w500,
                                               ),
@@ -233,6 +241,7 @@ class _HomePageTransporterState extends State<HomePageTransporter> {
                                             child: Text(
                                               '${e.destination[e.destination.length - 1]}',
                                               style: TextStyle(
+                                                color: Colors.white,
                                                 fontSize: 15.0,
                                                 fontWeight: FontWeight.w500,
                                               ),
@@ -252,14 +261,15 @@ class _HomePageTransporterState extends State<HomePageTransporter> {
                                               Text(
                                                 'Truck Type',
                                                 style: TextStyle(
+                                                  color: Colors.white,
                                                   fontSize: 13.0,
-                                                  color: Colors.black54,
                                                 ),
                                               ),
                                               SizedBox(height: 8.0),
                                               Text(
                                                 '${e.truckPref}',
                                                 style: TextStyle(
+                                                  color: Colors.white,
                                                   fontWeight: FontWeight.w700,
                                                 ),
                                               ),
@@ -273,14 +283,15 @@ class _HomePageTransporterState extends State<HomePageTransporter> {
                                               Text(
                                                 'Products',
                                                 style: TextStyle(
+                                                  color: Colors.white,
                                                   fontSize: 13.0,
-                                                  color: Colors.black54,
                                                 ),
                                               ),
                                               SizedBox(height: 8.0),
                                               Text(
                                                 '${e.material}',
                                                 style: TextStyle(
+                                                  color: Colors.white,
                                                   fontWeight: FontWeight.w700,
                                                 ),
                                               ),
@@ -306,16 +317,16 @@ class _HomePageTransporterState extends State<HomePageTransporter> {
                               height: 80.0,
                             ),
                             Image(
-                                image: AssetImage('assets/images/newOrder.png'),
-                                height: 300.0),
-                            SizedBox(height: 20.0),
+                                image: AssetImage('assets/images/logo_white.png'),
+                                height: 200.0),
+                            SizedBox(height: 40.0),
                             if (widget.userTransporter.planType != '2')
                               Container(
                                 margin: const EdgeInsets.symmetric(
                                     horizontal: 30.0),
                                 padding: const EdgeInsets.all(10.0),
                                 width: MediaQuery.of(context).size.width,
-                                color: Colors.white,
+                                color: Colors.black,
                                 child: Column(
                                   children: [
                                     Text(
@@ -323,6 +334,7 @@ class _HomePageTransporterState extends State<HomePageTransporter> {
                                           ? 'You are on free trial!'
                                           : 'Your free trial has expired!',
                                       style: TextStyle(
+                                        color: Colors.white,
                                         fontSize: 20.0,
                                         fontWeight: FontWeight.w500,
                                       ),
@@ -344,14 +356,14 @@ class _HomePageTransporterState extends State<HomePageTransporter> {
                                           vertical: 10.0,
                                         ),
                                         decoration: BoxDecoration(
-                                          color: Colors.black,
+                                          color: Colors.white,
                                           shape: BoxShape.rectangle,
                                           borderRadius:
                                               BorderRadius.circular(20.0),
                                         ),
                                         child: Text(
                                           'Upgrade Now',
-                                          style: TextStyle(color: Colors.white),
+                                          style: TextStyle(color: Colors.black),
                                         ),
                                       ),
                                     ),
@@ -368,7 +380,7 @@ class _HomePageTransporterState extends State<HomePageTransporter> {
                                 style: TextStyle(
                                   fontSize: 23.0,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.white,
+                                  color: Colors.black,
                                 ),
                               ),
                             ),
@@ -380,7 +392,7 @@ class _HomePageTransporterState extends State<HomePageTransporter> {
                               child: Text(
                                 "Tap to post a new load",
                                 style: TextStyle(
-                                  color: Colors.white12,
+                                  color: Colors.black38,
                                   fontSize: 18.0,
                                 ),
                               ),
@@ -390,7 +402,7 @@ class _HomePageTransporterState extends State<HomePageTransporter> {
                               child: Text(
                                 "for Shipping",
                                 style: TextStyle(
-                                  color: Colors.white12,
+                                  color: Colors.black38,
                                   fontSize: 18.0,
                                 ),
                               ),
@@ -414,10 +426,10 @@ class _HomePageTransporterState extends State<HomePageTransporter> {
                               },
                               child: CircleAvatar(
                                 radius: 40.0,
-                                backgroundColor: Colors.white,
+                                backgroundColor: Colors.black,
                                 child: Icon(
                                   Icons.add,
-                                  color: Color(0xff252427),
+                                  color: Colors.white,
                                   size: 35.0,
                                 ),
                               ),
@@ -476,13 +488,7 @@ class _HomePageTransporterState extends State<HomePageTransporter> {
                       child: Container(
                         margin: EdgeInsets.only(bottom: 0),
                         decoration: BoxDecoration(
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black,
-                              blurRadius: 10.0,
-                            ),
-                          ],
+                          color: Colors.black87,
                           borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(30.0),
                               topRight: Radius.circular(30.0)),

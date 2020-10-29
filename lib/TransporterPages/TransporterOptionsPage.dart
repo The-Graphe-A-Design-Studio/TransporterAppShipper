@@ -12,6 +12,8 @@ import 'package:shipperapp/DialogScreens/DialogSuccess.dart';
 import 'package:shipperapp/HttpHandler.dart';
 import 'package:shipperapp/Models/User.dart';
 import 'package:shipperapp/MyConstants.dart';
+import 'package:sms_otp_auto_verify/sms_otp_auto_verify.dart';
+import 'package:toast/toast.dart';
 
 class TransporterOptionsPage extends StatefulWidget {
   TransporterOptionsPage({Key key}) : super(key: key);
@@ -36,6 +38,8 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
   String userToken;
   bool rememberMe = true;
 
+  String _otpCode = "";
+
   @override
   void initState() {
     super.initState();
@@ -55,49 +59,53 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
   }
 
   void postSignInRequest(BuildContext _context) {
-    DialogProcessing().showCustomDialog(context,
-        title: "OTP Verification", text: "Processing, Please Wait!");
-    HTTPHandler().registerVerifyOtpCustomer([
-      mobileNumberControllerSignIn.text,
-      otpController.text,
-    ]).then((value) async {
-      if (value[0].success) {
-        Navigator.pop(context);
-        DialogSuccess().showCustomDialog(context, title: "OTP Verification");
-        await Future.delayed(Duration(seconds: 1), () {});
-        Navigator.pop(context);
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        prefs.setBool("rememberMe", true);
-        prefs.setString("userData", value[1]);
-        if (json.decode(value[1])['verified'] == "1") {
-          Navigator.pushNamedAndRemoveUntil(
-            _context,
-            homePageTransporter,
-            (route) => false,
-            arguments: UserTransporter.fromJson(json.decode(value[1])),
-          );
+    if (_otpCode.length == 6) {
+      DialogProcessing().showCustomDialog(context,
+          title: "OTP Verification", text: "Processing, Please Wait!");
+      HTTPHandler().registerVerifyOtpCustomer([
+        mobileNumberControllerSignIn.text,
+        _otpCode,
+      ]).then((value) async {
+        if (value[0].success) {
+          Navigator.pop(context);
+          DialogSuccess().showCustomDialog(context, title: "OTP Verification");
+          await Future.delayed(Duration(seconds: 1), () {});
+          Navigator.pop(context);
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setBool("rememberMe", true);
+          prefs.setString("userData", value[1]);
+          if (json.decode(value[1])['verified'] == "1") {
+            Navigator.pushNamedAndRemoveUntil(
+              _context,
+              homePageTransporter,
+              (route) => false,
+              arguments: UserTransporter.fromJson(json.decode(value[1])),
+            );
+          } else {
+            Navigator.pushNamedAndRemoveUntil(
+              _context,
+              homePageTransporterNotVerified,
+              (route) => false,
+              arguments: UserTransporter.fromJson(json.decode(value[1])),
+            );
+          }
         } else {
-          Navigator.pushNamedAndRemoveUntil(
-            _context,
-            homePageTransporterNotVerified,
-            (route) => false,
-            arguments: UserTransporter.fromJson(json.decode(value[1])),
-          );
+          Navigator.pop(context);
+          DialogFailed().showCustomDialog(context,
+              title: "OTP Verification", text: value[0].message);
+          await Future.delayed(Duration(seconds: 3), () {});
+          Navigator.pop(context);
         }
-      } else {
+      }).catchError((error) async {
         Navigator.pop(context);
         DialogFailed().showCustomDialog(context,
-            title: "OTP Verification", text: value[0].message);
+            title: "OTP Verification", text: "Network Error");
         await Future.delayed(Duration(seconds: 3), () {});
         Navigator.pop(context);
-      }
-    }).catchError((error) async {
-      Navigator.pop(context);
-      DialogFailed().showCustomDialog(context,
-          title: "OTP Verification", text: "Network Error");
-      await Future.delayed(Duration(seconds: 3), () {});
-      Navigator.pop(context);
-    });
+      });
+    } else {
+      Toast.show('Enter Complete OTP', context);
+    }
   }
 
   void postOtpRequest(BuildContext _context) {
@@ -167,6 +175,11 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
     });
   }
 
+  _getSignatureCode() async {
+    String signature = await SmsRetrieved.getAppSignature();
+    print("signature $signature");
+  }
+
   Widget getOtpVerificationBottomSheetWidget(
       context, ScrollController scrollController) {
     return ListView(controller: scrollController, children: <Widget>[
@@ -228,37 +241,59 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
               Align(
                 alignment: Alignment.center,
                 child: Image(
-                  image: AssetImage('assets/images/logo_black.png'),
-                  height: 145.0,
-                  width: 145.0,
+                  image: AssetImage('assets/images/logo_white.png'),
+                  height: 125.0,
+                  width: 125.0,
                 ),
               ),
               SizedBox(
-                height: 20.0,
+                height: 40.0,
               ),
-              Align(
-                alignment: Alignment.center,
-                child: PinCodeTextField(
-                  autofocus: true,
-                  controller: otpController,
-                  highlight: true,
-                  highlightColor: Colors.black,
-                  defaultBorderColor: Colors.grey,
-                  hasTextBorderColor: Colors.black,
-                  pinBoxWidth: 32,
-                  maxLength: 6,
-                  wrapAlignment: WrapAlignment.center,
-                  pinBoxDecoration:
-                      ProvidedPinBoxDecoration.underlinedPinBoxDecoration,
-                  pinTextStyle: TextStyle(fontSize: 26.0),
-                  pinTextAnimatedSwitcherTransition:
-                      ProvidedPinBoxTextAnimation.scalingTransition,
-                  pinTextAnimatedSwitcherDuration: Duration(milliseconds: 150),
-                  highlightAnimationBeginColor: Colors.black,
-                  highlightAnimationEndColor: Colors.white12,
-                  keyboardType: TextInputType.number,
+              TextFieldPin(
+                borderStyeAfterTextChange: UnderlineInputBorder(
+                  borderRadius: BorderRadius.circular(5.0),
+                  borderSide: BorderSide(color: Colors.black87),
                 ),
+                borderStyle: UnderlineInputBorder(
+                  borderRadius: BorderRadius.circular(5.0),
+                  borderSide: BorderSide(color: Colors.black87),
+                ),
+                codeLength: 6,
+                boxSize: 40,
+                textStyle: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20.0,
+                ),
+                filledAfterTextChange: true,
+                filledColor: Colors.white,
+                onOtpCallback: (code, isAutofill) {
+                  print(code);
+                  this._otpCode = code;
+                },
               ),
+              // Align(
+              //   alignment: Alignment.center,
+              //   child: PinCodeTextField(
+              //     autofocus: true,
+              //     controller: otpController,
+              //     highlight: true,
+              //     highlightColor: Colors.black,
+              //     defaultBorderColor: Colors.grey,
+              //     hasTextBorderColor: Colors.black,
+              //     pinBoxWidth: 32,
+              //     maxLength: 6,
+              //     wrapAlignment: WrapAlignment.center,
+              //     pinBoxDecoration:
+              //         ProvidedPinBoxDecoration.underlinedPinBoxDecoration,
+              //     pinTextStyle: TextStyle(fontSize: 26.0),
+              //     pinTextAnimatedSwitcherTransition:
+              //         ProvidedPinBoxTextAnimation.scalingTransition,
+              //     pinTextAnimatedSwitcherDuration: Duration(milliseconds: 150),
+              //     highlightAnimationBeginColor: Colors.black,
+              //     highlightAnimationEndColor: Colors.white12,
+              //     keyboardType: TextInputType.number,
+              //   ),
+              // ),
               SizedBox(
                 height: 16.0,
               ),
@@ -355,13 +390,13 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                 Align(
                   alignment: Alignment.center,
                   child: Image(
-                    image: AssetImage('assets/images/logo_black.png'),
-                    height: 145.0,
-                    width: 145.0,
+                    image: AssetImage('assets/images/logo_white.png'),
+                    height: 125.0,
+                    width: 125.0,
                   ),
                 ),
                 SizedBox(
-                  height: 20.0,
+                  height: 40.0,
                 ),
                 Align(
                   alignment: Alignment.center,
@@ -532,6 +567,7 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
 
   @override
   Widget build(BuildContext context) {
+    _getSignatureCode();
     return WillPopScope(
       onWillPop: onBackPressed,
       child: Scaffold(
