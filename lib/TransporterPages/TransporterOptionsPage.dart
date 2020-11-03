@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pin_code_text_field/pin_code_text_field.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shipperapp/DialogScreens/DialogFailed.dart';
 import 'package:shipperapp/DialogScreens/DialogProcessing.dart';
@@ -58,6 +57,12 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
     mobileNumberControllerSignIn.clear();
   }
 
+  void saveOTP() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    prefs.setString('otp', _otpCode);
+  }
+
   void postSignInRequest(BuildContext _context) {
     if (_otpCode.length == 6) {
       DialogProcessing().showCustomDialog(context,
@@ -66,6 +71,7 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
         mobileNumberControllerSignIn.text,
         _otpCode,
       ]).then((value) async {
+        saveOTP();
         if (value[0].success) {
           Navigator.pop(context);
           DialogSuccess().showCustomDialog(context, title: "OTP Verification");
@@ -271,29 +277,6 @@ class _TransporterOptionsPageState extends State<TransporterOptionsPage> {
                   this._otpCode = code;
                 },
               ),
-              // Align(
-              //   alignment: Alignment.center,
-              //   child: PinCodeTextField(
-              //     autofocus: true,
-              //     controller: otpController,
-              //     highlight: true,
-              //     highlightColor: Colors.black,
-              //     defaultBorderColor: Colors.grey,
-              //     hasTextBorderColor: Colors.black,
-              //     pinBoxWidth: 32,
-              //     maxLength: 6,
-              //     wrapAlignment: WrapAlignment.center,
-              //     pinBoxDecoration:
-              //         ProvidedPinBoxDecoration.underlinedPinBoxDecoration,
-              //     pinTextStyle: TextStyle(fontSize: 26.0),
-              //     pinTextAnimatedSwitcherTransition:
-              //         ProvidedPinBoxTextAnimation.scalingTransition,
-              //     pinTextAnimatedSwitcherDuration: Duration(milliseconds: 150),
-              //     highlightAnimationBeginColor: Colors.black,
-              //     highlightAnimationEndColor: Colors.white12,
-              //     keyboardType: TextInputType.number,
-              //   ),
-              // ),
               SizedBox(
                 height: 16.0,
               ),

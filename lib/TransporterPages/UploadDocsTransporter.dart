@@ -1,16 +1,15 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:shipperapp/BottomSheets/AccountBottomSheetUnknown.dart';
 import 'package:shipperapp/DialogScreens/DialogFailed.dart';
 import 'package:shipperapp/DialogScreens/DialogProcessing.dart';
 import 'package:shipperapp/DialogScreens/DialogSuccess.dart';
 import 'package:shipperapp/HttpHandler.dart';
 import 'package:shipperapp/Models/User.dart';
-import 'package:toast/toast.dart';
 
 import '../MyConstants.dart';
 
@@ -46,11 +45,13 @@ class _UploadDocsState extends State<UploadDocs> {
       RefreshController(initialRefresh: false);
 
   final companyNameController = TextEditingController();
+  UserTransporter transporter;
 
   @override
   void initState() {
     super.initState();
     selectedWidgetMarker = WidgetMarker.values[widget.startFrom];
+    transporter = widget.userTransporter;
   }
 
   @override
@@ -259,7 +260,7 @@ class _UploadDocsState extends State<UploadDocs> {
                         title: "Uploading Pan Card",
                         text: "Processing, Please Wait!");
                     HTTPHandler().uploadDocsPic([
-                      widget.userTransporter.mobileNumber,
+                      transporter.mobileNumber,
                       "cu_pan_card",
                       panCard.path
                     ]).then((value) async {
@@ -527,7 +528,7 @@ class _UploadDocsState extends State<UploadDocs> {
                         title: "Uploading Address Proof",
                         text: "Processing, Please Wait!");
                     HTTPHandler().uploadAddProof([
-                      widget.userTransporter.mobileNumber,
+                      transporter.mobileNumber,
                       lst.indexOf(selectedAddProofType) + 1,
                       addFront.path,
                       addBack.path
@@ -696,7 +697,7 @@ class _UploadDocsState extends State<UploadDocs> {
                         title: "Uploading Selfie",
                         text: "Processing, Please Wait!");
                     HTTPHandler().uploadDocsPic([
-                      widget.userTransporter.mobileNumber,
+                      transporter.mobileNumber,
                       "cu_selfie",
                       selfie.path
                     ]).then((value) async {
@@ -886,7 +887,7 @@ class _UploadDocsState extends State<UploadDocs> {
                         title: "Uploading Office Address Proof",
                         text: "Processing, Please Wait!");
                     HTTPHandler().uploadOfficeAddPic([
-                      widget.userTransporter.mobileNumber,
+                      transporter.mobileNumber,
                       companyNameController.text.toString(),
                       offAdd.path
                     ]).then((value) async {
@@ -897,8 +898,7 @@ class _UploadDocsState extends State<UploadDocs> {
                         await Future.delayed(Duration(seconds: 1), () {});
                         Navigator.pop(context);
                         SharedPreferences.getInstance().then((value) {
-                          value.setString(
-                              "DocNumber${widget.userTransporter.id}", "4");
+                          value.setString("DocNumber${transporter.id}", "4");
                           setState(() {
                             selectedWidgetMarker =
                                 WidgetMarker.underVerification;
@@ -952,7 +952,8 @@ class _UploadDocsState extends State<UploadDocs> {
   }
 
   Widget getUnderVerificationWidget(context) {
-    return Padding(
+    return Container(
+      color: Colors.white,
       padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -995,7 +996,7 @@ class _UploadDocsState extends State<UploadDocs> {
           GestureDetector(
             onTap: () => HTTPHandler().signOut(
               context,
-              userMobile: widget.userTransporter.mobileNumber,
+              userMobile: transporter.mobileNumber,
             ),
             child: Container(
               padding: const EdgeInsets.symmetric(
@@ -1041,31 +1042,52 @@ class _UploadDocsState extends State<UploadDocs> {
   }
 
   void _onRefresh(BuildContext context) async {
-    // monitor network fetch
     print('working properly');
-    HTTPHandler().getUserDocumentsData(widget.userTransporter.id).then((value) {
+    HTTPHandler().getUserDocumentsData(transporter.id).then((value) {
       if (value['pan card verified'] == '1' &&
           value['address front verified'] == '1' &&
           value['address back verified'] == '1' &&
           value['selfie verified'] == '1' &&
           value['office address verified'] == '1') {
-        Toast.show('Verified! Please login again.', context,
-            gravity: Toast.CENTER);
-        HTTPHandler().signOut(
-          context,
-          userMobile: widget.userTransporter.mobileNumber,
-        );
+        // Toast.show('Verified! Please login again.', context,
+        //     gravity: Toast.CENTER);
+        // HTTPHandler().signOut(
+        //   context,
+        //   userMobile: widget.userTransporter.mobileNumber,
+        // );
+        reloadUser();
+        checkStatus();
       }
     });
     await Future.delayed(Duration(milliseconds: 1000));
-    // if failed,use refreshFailed()
     _refreshController.refreshCompleted();
+  }
+
+  void reloadUser() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    HTTPHandler().registerVerifyOtpCustomer(
+        [transporter.mobileNumber, prefs.getString('otp')]).then((value) async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setBool("rememberMe", true);
+      prefs.setString("userData", value[1]);
+      setState(() {
+        transporter = UserTransporter.fromJson(json.decode(value[1]));
+      });
+    });
+  }
+
+  checkStatus() {
+    if (transporter.verified == "1") {
+      Navigator.pushReplacementNamed(context, homePageTransporter,
+          arguments: transporter);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.black,
       body: SmartRefresher(
         onRefresh: () => _onRefresh(context),
         controller: _refreshController,
@@ -1090,10 +1112,6 @@ class _UploadDocsState extends State<UploadDocs> {
                           topLeft: Radius.circular(30.0),
                           topRight: Radius.circular(30.0)),
                     ),
-                    // child: AccountBottomSheetUnknown(
-                    //   scrollController: scrollController,
-                    //   userTransporter: widget.userTransporter,
-                    // ),
                   ),
                 );
               },
