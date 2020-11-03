@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shipperapp/BottomSheets/AccountBottomSheetUnknown.dart';
 import 'package:shipperapp/DialogScreens/DialogFailed.dart';
@@ -9,6 +10,9 @@ import 'package:shipperapp/DialogScreens/DialogProcessing.dart';
 import 'package:shipperapp/DialogScreens/DialogSuccess.dart';
 import 'package:shipperapp/HttpHandler.dart';
 import 'package:shipperapp/Models/User.dart';
+import 'package:toast/toast.dart';
+
+import '../MyConstants.dart';
 
 class UploadDocs extends StatefulWidget {
   final UserTransporter userTransporter;
@@ -37,6 +41,9 @@ class _UploadDocsState extends State<UploadDocs> {
   bool offAddDone = false;
   String selectedAddProofType;
   List<String> lst = ['Aadhar Card', 'Voter ID', 'Passport', 'Driving Licence'];
+
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
 
   final companyNameController = TextEditingController();
 
@@ -195,9 +202,9 @@ class _UploadDocsState extends State<UploadDocs> {
                             border: Border.all(color: Colors.white, width: 2.0),
                             borderRadius: BorderRadius.circular(10.0),
                             image: DecorationImage(
-                                image:
-                                    AssetImage("assets/images/logo_white.png"),
-                                fit: BoxFit.contain,),
+                              image: AssetImage("assets/images/logo_white.png"),
+                              fit: BoxFit.contain,
+                            ),
                           ),
                         ),
                   Positioned(
@@ -974,18 +981,43 @@ class _UploadDocsState extends State<UploadDocs> {
             "Please Wait while we",
             style: TextStyle(
                 fontWeight: FontWeight.w600,
-                color: Colors.white,
+                color: Colors.black87,
                 fontSize: 20.0),
           ),
           Text(
             "Verify Your Documents",
             style: TextStyle(
                 fontWeight: FontWeight.w600,
-                color: Colors.white,
+                color: Colors.black87,
                 fontSize: 24.0),
           ),
+          SizedBox(height: 30.0),
+          GestureDetector(
+            onTap: () => HTTPHandler().signOut(
+              context,
+              userMobile: widget.userTransporter.mobileNumber,
+            ),
+            child: Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20.0,
+                vertical: 10.0,
+              ),
+              decoration: BoxDecoration(
+                shape: BoxShape.rectangle,
+                borderRadius: BorderRadius.circular(20.0),
+                border: Border.all(color: Colors.black87),
+              ),
+              child: Text(
+                'Log Out',
+                style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black87,
+                    fontSize: 18.0),
+              ),
+            ),
+          ),
           SizedBox(
-            height: 100.0,
+            height: 70.0,
           ),
         ],
       ),
@@ -1008,42 +1040,66 @@ class _UploadDocsState extends State<UploadDocs> {
     return getPanCardWidget(context);
   }
 
+  void _onRefresh(BuildContext context) async {
+    // monitor network fetch
+    print('working properly');
+    HTTPHandler().getUserDocumentsData(widget.userTransporter.id).then((value) {
+      if (value['pan card verified'] == '1' &&
+          value['address front verified'] == '1' &&
+          value['address back verified'] == '1' &&
+          value['selfie verified'] == '1' &&
+          value['office address verified'] == '1') {
+        Toast.show('Verified! Please login again.', context,
+            gravity: Toast.CENTER);
+        HTTPHandler().signOut(
+          context,
+          userMobile: widget.userTransporter.mobileNumber,
+        );
+      }
+    });
+    await Future.delayed(Duration(milliseconds: 1000));
+    // if failed,use refreshFailed()
+    _refreshController.refreshCompleted();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xff252427),
-      body: Stack(
-        children: <Widget>[
-          getCustomWidget(context),
-          DraggableScrollableSheet(
-            initialChildSize: 0.08,
-            minChildSize: 0.08,
-            maxChildSize: 0.9,
-            builder: (BuildContext context, ScrollController scrollController) {
-              return Hero(
-                tag: 'AnimeBottom',
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black,
-                        blurRadius: 10.0,
-                      ),
-                    ],
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(30.0),
-                        topRight: Radius.circular(30.0)),
+      backgroundColor: Colors.white,
+      body: SmartRefresher(
+        onRefresh: () => _onRefresh(context),
+        controller: _refreshController,
+        enablePullDown: (selectedWidgetMarker == WidgetMarker.underVerification)
+            ? true
+            : false,
+        child: Stack(
+          children: <Widget>[
+            getCustomWidget(context),
+            DraggableScrollableSheet(
+              initialChildSize: 0.08,
+              minChildSize: 0.08,
+              maxChildSize: 0.9,
+              builder:
+                  (BuildContext context, ScrollController scrollController) {
+                return Hero(
+                  tag: 'AnimeBottom',
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(30.0),
+                          topRight: Radius.circular(30.0)),
+                    ),
+                    // child: AccountBottomSheetUnknown(
+                    //   scrollController: scrollController,
+                    //   userTransporter: widget.userTransporter,
+                    // ),
                   ),
-                  child: AccountBottomSheetUnknown(
-                    scrollController: scrollController,
-                    userTransporter: widget.userTransporter,
-                  ),
-                ),
-              );
-            },
-          ),
-        ],
+                );
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

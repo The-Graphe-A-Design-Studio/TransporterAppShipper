@@ -217,9 +217,19 @@ class _SubsriptionPageState extends State<SubsriptionPage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                'Plan ${_plans.indexOf(e) + 1} :',
-                                style: TextStyle(fontWeight: FontWeight.w500),
+                              Row(
+                                children: [
+                                  Text(
+                                    'Plan ${_plans.indexOf(e) + 1} : ',
+                                  ),
+                                  Text(
+                                    e.name,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 16.0,
+                                    ),
+                                  ),
+                                ],
                               ),
                               SizedBox(height: 20.0),
                               Row(

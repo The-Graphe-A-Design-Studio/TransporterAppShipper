@@ -787,10 +787,19 @@ class _MyDeliveryPageState extends State<MyDeliveryPage> {
                                                                     FontWeight
                                                                         .bold),
                                                           ),
-                                                          Text(locations[
-                                                                  e.deliveryId][
-                                                              e.deliveryTrucks
-                                                                  .indexOf(t)]),
+                                                          Text((locations[e.deliveryId][e
+                                                                          .deliveryTrucks
+                                                                          .indexOf(
+                                                                              t)]
+                                                                      .length >
+                                                                  30)
+                                                              ? '${locations[e.deliveryId][e.deliveryTrucks.indexOf(t)].substring(0, 30)}..'
+                                                              : locations[e
+                                                                      .deliveryId]
+                                                                  [
+                                                                  e.deliveryTrucks
+                                                                      .indexOf(
+                                                                          t)]),
                                                         ],
                                                       ),
                                                       // getDriverLoc(t),

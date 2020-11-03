@@ -42,7 +42,7 @@ class _PostLoadState extends State<PostLoad> {
   List<FilterChipWidget> filterChipList = [];
   List<GooglePlaces> suggestedCityTo = [];
   List<String> selectedTruckPrefs = [];
-  DateTime selectedDate = DateTime.now();
+  DateTime selectedDate = DateTime.now().add(Duration(hours: 5));
   TimeOfDay selectedTime = TimeOfDay.now();
 
   TruckCategory selectedTruckCategory;

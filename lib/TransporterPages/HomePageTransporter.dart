@@ -72,239 +72,243 @@ class _HomePageTransporterState extends State<HomePageTransporter> {
           : Stack(
               children: [
                 (activeLoad.length != 0)
-                    ? SingleChildScrollView(
-                        child: Column(
-                          children: [
-                            SizedBox(height: 50.0),
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: Container(
-                                width: 100.0,
-                                margin: const EdgeInsets.only(right: 20.0),
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 20.0,
-                                  vertical: 10.0,
-                                ),
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.rectangle,
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  color: Colors.white,
-                                  border: Border.all(
-                                    color: Colors.black87,
-                                    width: 0.5,
+                    ? SmartRefresher(
+                        controller: _refreshController,
+                        onRefresh: () => _onRefresh(context),
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              SizedBox(height: 50.0),
+                              Align(
+                                alignment: Alignment.centerRight,
+                                child: Container(
+                                  width: 100.0,
+                                  margin: const EdgeInsets.only(right: 20.0),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0,
+                                    vertical: 10.0,
                                   ),
-                                ),
-                                child: Text('Call Us'),
-                              ),
-                            ),
-                            Container(
-                              margin: const EdgeInsets.symmetric(
-                                horizontal: 10.0,
-                                vertical: 20.0,
-                              ),
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 20.0),
-                              color: Colors.black87,
-                              width: MediaQuery.of(context).size.width,
-                              height: 50.0,
-                              alignment: Alignment.centerLeft,
-                              child: GestureDetector(
-                                onTap: () {
-                                  Navigator.pushNamed(context, postLoad,
-                                          arguments: widget.userTransporter)
-                                      .then((value) {
-                                    if (value != null) {
-                                      if (value == true) {
-                                        setState(() {
-                                          loadData = true;
-                                        });
-                                      }
-                                    }
-                                  });
-                                },
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      'Post a new load',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Container(
-                                        height: 5.0,
-                                        color: Colors.transparent,
-                                      ),
-                                    ),
-                                    Icon(
-                                      Icons.chevron_right,
-                                      color: Colors.white,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 25.0),
-                            Container(
-                              padding: const EdgeInsets.only(left: 20.0),
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                'Previous Loads',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 20.0,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 15.0),
-                              child: Divider(
-                                color: Colors.black,
-                              ),
-                            ),
-                            Column(
-                              children: activeLoad.map((e) {
-                                return Container(
-                                  margin: const EdgeInsets.all(20.0),
-                                  padding: const EdgeInsets.all(10.0),
+                                  alignment: Alignment.center,
                                   decoration: BoxDecoration(
-                                    color: Colors.black87,
                                     shape: BoxShape.rectangle,
-                                    borderRadius: BorderRadius.circular(5.0),
+                                    borderRadius: BorderRadius.circular(20.0),
+                                    color: Colors.white,
+                                    border: Border.all(
+                                      color: Colors.black87,
+                                      width: 0.5,
+                                    ),
                                   ),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                  child: Text('Call Us'),
+                                ),
+                              ),
+                              Container(
+                                margin: const EdgeInsets.symmetric(
+                                  horizontal: 10.0,
+                                  vertical: 20.0,
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0),
+                                color: Colors.black87,
+                                width: MediaQuery.of(context).size.width,
+                                height: 50.0,
+                                alignment: Alignment.centerLeft,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.pushNamed(context, postLoad,
+                                            arguments: widget.userTransporter)
+                                        .then((value) {
+                                      if (value != null) {
+                                        if (value == true) {
+                                          setState(() {
+                                            loadData = true;
+                                          });
+                                        }
+                                      }
+                                    });
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          Container(
-                                            width: 15.0,
-                                            height: 15.0,
-                                            decoration: BoxDecoration(
-                                              color: Colors.transparent,
-                                              shape: BoxShape.circle,
-                                              border: Border.all(
-                                                color: Colors.green[600],
-                                                width: 3.0,
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(width: 10.0),
-                                          Flexible(
-                                            child: Text(
-                                              '${e.source[0]}',
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 15.0,
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      Container(
-                                        margin: const EdgeInsets.symmetric(
-                                          horizontal: 5.0,
-                                          vertical: 3.0,
+                                      Text(
+                                        'Post a new load',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w500,
                                         ),
-                                        height: 16.0,
-                                        width: 1.5,
-                                        color: Colors.grey,
                                       ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          Container(
-                                            width: 15.0,
-                                            height: 15.0,
-                                            decoration: BoxDecoration(
-                                              color: Colors.transparent,
-                                              shape: BoxShape.circle,
-                                              border: Border.all(
-                                                color: Colors.red[600],
-                                                width: 3.0,
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(width: 10.0),
-                                          Flexible(
-                                            child: Text(
-                                              '${e.destination[e.destination.length - 1]}',
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 15.0,
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
+                                      Expanded(
+                                        child: Container(
+                                          height: 5.0,
+                                          color: Colors.transparent,
+                                        ),
                                       ),
-                                      SizedBox(height: 30.0),
-                                      Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        children: [
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                'Truck Type',
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 13.0,
-                                                ),
-                                              ),
-                                              SizedBox(height: 8.0),
-                                              Text(
-                                                '${e.truckPref}',
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.w700,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          SizedBox(width: 30.0),
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                'Products',
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 13.0,
-                                                ),
-                                              ),
-                                              SizedBox(height: 8.0),
-                                              Text(
-                                                '${e.material}',
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.w700,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
+                                      Icon(
+                                        Icons.chevron_right,
+                                        color: Colors.white,
                                       ),
                                     ],
                                   ),
-                                );
-                              }).toList(),
-                            ),
-                          ],
+                                ),
+                              ),
+                              SizedBox(height: 25.0),
+                              Container(
+                                padding: const EdgeInsets.only(left: 20.0),
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  'Previous Loads',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 20.0,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 15.0),
+                                child: Divider(
+                                  color: Colors.black,
+                                ),
+                              ),
+                              Column(
+                                children: activeLoad.map((e) {
+                                  return Container(
+                                    margin: const EdgeInsets.all(20.0),
+                                    padding: const EdgeInsets.all(10.0),
+                                    decoration: BoxDecoration(
+                                      color: Colors.black87,
+                                      shape: BoxShape.rectangle,
+                                      borderRadius: BorderRadius.circular(5.0),
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Container(
+                                              width: 15.0,
+                                              height: 15.0,
+                                              decoration: BoxDecoration(
+                                                color: Colors.transparent,
+                                                shape: BoxShape.circle,
+                                                border: Border.all(
+                                                  color: Colors.green[600],
+                                                  width: 3.0,
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(width: 10.0),
+                                            Flexible(
+                                              child: Text(
+                                                '${e.source[0]}',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 15.0,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Container(
+                                          margin: const EdgeInsets.symmetric(
+                                            horizontal: 5.0,
+                                            vertical: 3.0,
+                                          ),
+                                          height: 16.0,
+                                          width: 1.5,
+                                          color: Colors.grey,
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Container(
+                                              width: 15.0,
+                                              height: 15.0,
+                                              decoration: BoxDecoration(
+                                                color: Colors.transparent,
+                                                shape: BoxShape.circle,
+                                                border: Border.all(
+                                                  color: Colors.red[600],
+                                                  width: 3.0,
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(width: 10.0),
+                                            Flexible(
+                                              child: Text(
+                                                '${e.destination[e.destination.length - 1]}',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 15.0,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(height: 30.0),
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
+                                          children: [
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  'Truck Type',
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 13.0,
+                                                  ),
+                                                ),
+                                                SizedBox(height: 8.0),
+                                                Text(
+                                                  '${e.truckPref}',
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.w700,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            SizedBox(width: 30.0),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  'Products',
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 13.0,
+                                                  ),
+                                                ),
+                                                SizedBox(height: 8.0),
+                                                Text(
+                                                  '${e.material}',
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.w700,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                            ],
+                          ),
                         ),
                       )
                     : SmartRefresher(
@@ -317,7 +321,8 @@ class _HomePageTransporterState extends State<HomePageTransporter> {
                               height: 80.0,
                             ),
                             Image(
-                                image: AssetImage('assets/images/logo_white.png'),
+                                image:
+                                    AssetImage('assets/images/logo_white.png'),
                                 height: 200.0),
                             SizedBox(height: 40.0),
                             if (widget.userTransporter.planType != '2')
