@@ -43,7 +43,7 @@ class _PostLoadState extends State<PostLoad> {
   List<GooglePlaces> suggestedCityTo = [];
   List<String> selectedTruckPrefs = [];
   DateTime selectedDate = DateTime.now().add(Duration(hours: 5));
-  TimeOfDay selectedTime = TimeOfDay.now();
+  TimeOfDay selectedTime;
 
   TruckCategory selectedTruckCategory;
   LoadMaterialType selectedLoadMaterialType;
@@ -54,7 +54,6 @@ class _PostLoadState extends State<PostLoad> {
   List<TruckPref> truckPref = [];
   List<String> priceUnit = ["Tonnage", "Truck"];
   List<String> payTerms = [
-    // "Negotiable",
     "Advance",
     "Full Pay to Driver after Unloading"
   ];
@@ -69,6 +68,8 @@ class _PostLoadState extends State<PostLoad> {
     super.initState();
     contactController.text = widget.userTransporter.compName;
     contactPhoneController.text = widget.userTransporter.mobileNumber;
+    selectedTime =
+        TimeOfDay(hour: selectedDate.hour, minute: selectedDate.minute);
     setState(() {});
   }
 

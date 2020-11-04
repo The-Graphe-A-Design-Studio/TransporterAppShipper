@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shipperapp/BottomSheets/AccountBottomSheetLoggedIn.dart';
 import 'package:shipperapp/CommonPages/LoadingBody.dart';
 import 'package:shipperapp/HttpHandler.dart';
@@ -25,6 +28,7 @@ class _HomePageTransporterState extends State<HomePageTransporter> {
 
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
+  UserTransporter transporter;
 
   @override
   void initState() {
@@ -33,16 +37,17 @@ class _HomePageTransporterState extends State<HomePageTransporter> {
     fcm.configure();
     super.initState();
     fcm.getToken().then((value) => print(value));
+    transporter = widget.userTransporter;
   }
 
   void getData() {
-    HTTPHandler().getPostLoad([widget.userTransporter.id, "0"]).then((value) {
+    HTTPHandler().getPostLoad([transporter.id, "0"]).then((value) {
       setState(() {
         inactiveLoad = [];
         inactiveLoad = value;
       });
     });
-    HTTPHandler().getPostLoad([widget.userTransporter.id, "1"]).then((value) {
+    HTTPHandler().getPostLoad([transporter.id, "1"]).then((value) {
       setState(() {
         activeLoad = [];
         activeLoad = value;
@@ -50,10 +55,25 @@ class _HomePageTransporterState extends State<HomePageTransporter> {
     });
   }
 
+  void reloadUser() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    HTTPHandler().registerVerifyOtpCustomer(
+        [transporter.mobileNumber, prefs.getString('otp')]).then((value) async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setBool("rememberMe", true);
+      prefs.setString("userData", value[1]);
+      getData();
+      setState(() {
+        transporter = UserTransporter.fromJson(json.decode(value[1]));
+      });
+    });
+  }
+
   void _onRefresh(BuildContext context) async {
     // monitor network fetch
     print('working properly');
-    getData();
+    reloadUser();
     await Future.delayed(Duration(milliseconds: 1000));
     // if failed,use refreshFailed()
     _refreshController.refreshCompleted();
@@ -115,7 +135,7 @@ class _HomePageTransporterState extends State<HomePageTransporter> {
                                 child: GestureDetector(
                                   onTap: () {
                                     Navigator.pushNamed(context, postLoad,
-                                            arguments: widget.userTransporter)
+                                            arguments: transporter)
                                         .then((value) {
                                       if (value != null) {
                                         if (value == true) {
@@ -185,72 +205,155 @@ class _HomePageTransporterState extends State<HomePageTransporter> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            Container(
-                                              width: 15.0,
-                                              height: 15.0,
-                                              decoration: BoxDecoration(
-                                                color: Colors.transparent,
-                                                shape: BoxShape.circle,
-                                                border: Border.all(
-                                                  color: Colors.green[600],
-                                                  width: 3.0,
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(width: 10.0),
-                                            Flexible(
-                                              child: Text(
-                                                '${e.source[0]}',
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 15.0,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
+                                        Column(
+                                          children: e.source
+                                              .map((e1) => Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Container(
+                                                            width: 15.0,
+                                                            height: 15.0,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: Colors
+                                                                  .transparent,
+                                                              shape: BoxShape
+                                                                  .circle,
+                                                              border:
+                                                                  Border.all(
+                                                                color: Colors
+                                                                    .green[600],
+                                                                width: 3.0,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          SizedBox(width: 10.0),
+                                                          Flexible(
+                                                            child: Text(
+                                                              e1,
+                                                              style: TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 15.0,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      Container(
+                                                        margin: const EdgeInsets
+                                                            .symmetric(
+                                                          horizontal: 5.0,
+                                                          vertical: 3.0,
+                                                        ),
+                                                        height: 5.0,
+                                                        width: 1.5,
+                                                        color: Colors.grey,
+                                                      ),
+                                                      Container(
+                                                        margin: const EdgeInsets
+                                                            .symmetric(
+                                                          horizontal: 5.0,
+                                                          vertical: 3.0,
+                                                        ),
+                                                        height: 5.0,
+                                                        width: 1.5,
+                                                        color: Colors.grey,
+                                                      ),
+                                                    ],
+                                                  ))
+                                              .toList(),
                                         ),
-                                        Container(
-                                          margin: const EdgeInsets.symmetric(
-                                            horizontal: 5.0,
-                                            vertical: 3.0,
-                                          ),
-                                          height: 16.0,
-                                          width: 1.5,
-                                          color: Colors.grey,
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            Container(
-                                              width: 15.0,
-                                              height: 15.0,
-                                              decoration: BoxDecoration(
-                                                color: Colors.transparent,
-                                                shape: BoxShape.circle,
-                                                border: Border.all(
-                                                  color: Colors.red[600],
-                                                  width: 3.0,
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(width: 10.0),
-                                            Flexible(
-                                              child: Text(
-                                                '${e.destination[e.destination.length - 1]}',
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 15.0,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
+                                        Column(
+                                          children: e.destination
+                                              .map((e1) => Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Container(
+                                                            width: 15.0,
+                                                            height: 15.0,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: Colors
+                                                                  .transparent,
+                                                              shape: BoxShape
+                                                                  .circle,
+                                                              border:
+                                                                  Border.all(
+                                                                color: Colors
+                                                                    .red[600],
+                                                                width: 3.0,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          SizedBox(width: 10.0),
+                                                          Flexible(
+                                                            child: Text(
+                                                              '$e1',
+                                                              style: TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 15.0,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      if (e.destination
+                                                              .indexOf(e1) !=
+                                                          (e.destination
+                                                                  .length -
+                                                              1))
+                                                        Container(
+                                                          margin:
+                                                              const EdgeInsets
+                                                                  .symmetric(
+                                                            horizontal: 5.0,
+                                                            vertical: 3.0,
+                                                          ),
+                                                          height: 5.0,
+                                                          width: 1.5,
+                                                          color: Colors.grey,
+                                                        ),
+                                                      if (e.destination
+                                                              .indexOf(e1) !=
+                                                          (e.destination
+                                                                  .length -
+                                                              1))
+                                                        Container(
+                                                          margin:
+                                                              const EdgeInsets
+                                                                  .symmetric(
+                                                            horizontal: 5.0,
+                                                            vertical: 3.0,
+                                                          ),
+                                                          height: 5.0,
+                                                          width: 1.5,
+                                                          color: Colors.grey,
+                                                        ),
+                                                    ],
+                                                  ))
+                                              .toList(),
                                         ),
                                         SizedBox(height: 30.0),
                                         Row(
@@ -325,7 +428,7 @@ class _HomePageTransporterState extends State<HomePageTransporter> {
                                     AssetImage('assets/images/logo_white.png'),
                                 height: 200.0),
                             SizedBox(height: 40.0),
-                            if (widget.userTransporter.planType != '2')
+                            if (transporter.planType != '2')
                               Container(
                                 margin: const EdgeInsets.symmetric(
                                     horizontal: 30.0),
@@ -335,7 +438,7 @@ class _HomePageTransporterState extends State<HomePageTransporter> {
                                 child: Column(
                                   children: [
                                     Text(
-                                      (widget.userTransporter.planType == '1')
+                                      (transporter.planType == '1')
                                           ? 'You are on free trial!'
                                           : 'Your free trial has expired!',
                                       style: TextStyle(
@@ -352,7 +455,7 @@ class _HomePageTransporterState extends State<HomePageTransporter> {
                                         Navigator.pushNamed(
                                           context,
                                           subscription,
-                                          arguments: widget.userTransporter,
+                                          arguments: transporter,
                                         );
                                       },
                                       child: Container(
@@ -418,7 +521,7 @@ class _HomePageTransporterState extends State<HomePageTransporter> {
                             GestureDetector(
                               onTap: () {
                                 Navigator.pushNamed(context, postLoad,
-                                        arguments: widget.userTransporter)
+                                        arguments: transporter)
                                     .then((value) {
                                   if (value != null) {
                                     if (value == true) {
@@ -442,40 +545,6 @@ class _HomePageTransporterState extends State<HomePageTransporter> {
                             SizedBox(
                               height: 60.0,
                             ),
-                            // ListView.builder(
-                            //   primary: false,
-                            //   shrinkWrap: true,
-                            //   itemCount: activeLoad.length,
-                            //   itemBuilder: (BuildContext context, int index) {
-                            //     return ListTile(
-                            //       title: Text(
-                            //         activeLoad[index].source.toString(),
-                            //         style: TextStyle(color: Colors.white),
-                            //       ),
-                            //       subtitle: Text(
-                            //         activeLoad[index].destination.toString(),
-                            //         style: TextStyle(color: Colors.white),
-                            //       ),
-                            //     );
-                            //   },
-                            // ),
-                            // ListView.builder(
-                            //   primary: false,
-                            //   shrinkWrap: true,
-                            //   itemCount: inactiveLoad.length,
-                            //   itemBuilder: (BuildContext context, int index) {
-                            //     return ListTile(
-                            //       title: Text(
-                            //         inactiveLoad[index].source.toString(),
-                            //         style: TextStyle(color: Colors.white),
-                            //       ),
-                            //       subtitle: Text(
-                            //         inactiveLoad[index].destination.toString(),
-                            //         style: TextStyle(color: Colors.white),
-                            //       ),
-                            //     );
-                            //   },
-                            // ),
                             SizedBox(
                               height: 100.0,
                             ),
@@ -500,7 +569,7 @@ class _HomePageTransporterState extends State<HomePageTransporter> {
                         ),
                         child: AccountBottomSheetLoggedIn(
                           scrollController: scrollController,
-                          userTransporter: widget.userTransporter,
+                          userTransporter: transporter,
                           activeLoads: activeLoad,
                           inactiveLoads: inactiveLoad,
                         ),

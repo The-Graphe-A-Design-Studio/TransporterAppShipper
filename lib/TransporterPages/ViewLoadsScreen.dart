@@ -22,10 +22,8 @@ class _ViewLoadsScreenState extends State<ViewLoadsScreen> {
       RefreshController(initialRefresh: false);
 
   void _onRefresh(BuildContext context) async {
-    // monitor network fetch
     print('working properly');
     await Future.delayed(Duration(milliseconds: 1000));
-    // if failed,use refreshFailed()
     _refreshController.refreshCompleted();
   }
 
@@ -50,7 +48,6 @@ class _ViewLoadsScreenState extends State<ViewLoadsScreen> {
                           ),
                           padding: const EdgeInsets.all(10.0),
                           width: MediaQuery.of(context).size.width,
-                          // height: 310.0,
                           decoration: BoxDecoration(
                             color: Colors.white,
                             shape: BoxShape.rectangle,
@@ -59,68 +56,127 @@ class _ViewLoadsScreenState extends State<ViewLoadsScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    width: 15.0,
-                                    height: 15.0,
-                                    decoration: BoxDecoration(
-                                      color: Colors.transparent,
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                        color: Colors.green[600],
-                                        width: 3.0,
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(width: 10.0),
-                                  Flexible(
-                                    child: Text(
-                                      '${e.source[0]}',
-                                      style: TextStyle(
-                                        fontSize: 15.0,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                              Column(
+                                children: e.source
+                                    .map((e1) => Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                Container(
+                                                  width: 15.0,
+                                                  height: 15.0,
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.transparent,
+                                                    shape: BoxShape.circle,
+                                                    border: Border.all(
+                                                      color: Colors.green[600],
+                                                      width: 3.0,
+                                                    ),
+                                                  ),
+                                                ),
+                                                SizedBox(width: 10.0),
+                                                Flexible(
+                                                  child: Text(
+                                                    '$e1',
+                                                    style: TextStyle(
+                                                      fontSize: 15.0,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            Container(
+                                              margin:
+                                                  const EdgeInsets.symmetric(
+                                                horizontal: 5.0,
+                                                vertical: 3.0,
+                                              ),
+                                              height: 5.0,
+                                              width: 1.5,
+                                              color: Colors.grey,
+                                            ),
+                                            Container(
+                                              margin:
+                                                  const EdgeInsets.symmetric(
+                                                horizontal: 5.0,
+                                                vertical: 3.0,
+                                              ),
+                                              height: 5.0,
+                                              width: 1.5,
+                                              color: Colors.grey,
+                                            ),
+                                          ],
+                                        ))
+                                    .toList(),
                               ),
-                              Container(
-                                margin: const EdgeInsets.symmetric(
-                                  horizontal: 5.0,
-                                  vertical: 3.0,
-                                ),
-                                height: 16.0,
-                                width: 1.5,
-                                color: Colors.grey,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    width: 15.0,
-                                    height: 15.0,
-                                    decoration: BoxDecoration(
-                                      color: Colors.transparent,
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                        color: Colors.red[600],
-                                        width: 3.0,
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(width: 10.0),
-                                  Flexible(
-                                    child: Text(
-                                      '${e.destination[0]}',
-                                      style: TextStyle(
-                                        fontSize: 15.0,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                              Column(
+                                children: e.destination
+                                    .map((e1) => Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                Container(
+                                                  width: 15.0,
+                                                  height: 15.0,
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.transparent,
+                                                    shape: BoxShape.circle,
+                                                    border: Border.all(
+                                                      color: Colors.red[600],
+                                                      width: 3.0,
+                                                    ),
+                                                  ),
+                                                ),
+                                                SizedBox(width: 10.0),
+                                                Flexible(
+                                                  child: Text(
+                                                    '$e1',
+                                                    style: TextStyle(
+                                                      fontSize: 15.0,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            if (e.destination.indexOf(e1) !=
+                                                (e.destination.length - 1))
+                                              Container(
+                                                margin:
+                                                    const EdgeInsets.symmetric(
+                                                  horizontal: 5.0,
+                                                  vertical: 3.0,
+                                                ),
+                                                height: 5.0,
+                                                width: 1.5,
+                                                color: Colors.grey,
+                                              ),
+                                            if (e.destination.indexOf(e1) !=
+                                                (e.destination.length - 1))
+                                              Container(
+                                                margin:
+                                                    const EdgeInsets.symmetric(
+                                                  horizontal: 5.0,
+                                                  vertical: 3.0,
+                                                ),
+                                                height: 5.0,
+                                                width: 1.5,
+                                                color: Colors.grey,
+                                              ),
+                                          ],
+                                        ))
+                                    .toList(),
                               ),
                               SizedBox(height: 30.0),
                               Row(
