@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -27,11 +29,12 @@ class _SubsriptionPageState extends State<SubsriptionPage> {
   Razorpay _razorpay;
   SubscriptionPlan selected;
   var _scaffoldKey = GlobalKey<ScaffoldState>();
+  UserTransporter transporter;
 
   getData() async {
     subscriptionController = true;
     await SharedPreferences.getInstance().then((value) {
-      subscriptionEnd = (widget.userTransporter.planType == '3')
+      subscriptionEnd = (transporter.planType == '3')
           ? DateTime.now()
           : DateTime.parse(value.getString('period_upto'));
       subscriptionStatus = value.getString('period_status');
@@ -40,6 +43,21 @@ class _SubsriptionPageState extends State<SubsriptionPage> {
         .getSubscriptionPlans()
         .then((value) => this._plans = value);
     setState(() {});
+  }
+
+  void reloadUser() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    HTTPHandler().registerVerifyOtpCustomer(
+        [transporter.mobileNumber, prefs.getString('otp')]).then((value) async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setBool("rememberMe", true);
+      prefs.setString("userData", value[1]);
+      getData();
+      setState(() {
+        transporter = UserTransporter.fromJson(json.decode(value[1]));
+      });
+    });
   }
 
   void _openCheckOut(SubscriptionPlan s) async {
@@ -51,10 +69,10 @@ class _SubsriptionPageState extends State<SubsriptionPage> {
         'key': RAZORPAY_ID,
         'amount': (s.planSellingPrice * 100).round(),
         'order_id': value,
-        'name': widget.userTransporter.compName,
+        'name': transporter.compName,
         'description': 'TruckWale',
         'prefill': {
-          'contact': widget.userTransporter.mobileNumber,
+          'contact': transporter.mobileNumber,
           'email': 'rishav@thegraphe.com',
         },
       };
@@ -73,23 +91,23 @@ class _SubsriptionPageState extends State<SubsriptionPage> {
     print('Order Id => ${response.orderId}');
     print('Signature => ${response.signature}');
 
-    HTTPHandler()
-        .storeData(widget.userTransporter, selected, response)
-        .then((value) {
+    HTTPHandler().storeData(transporter, selected, response).then((value) {
       if (value.success) {
-        Toast.show(
-          'You will be logged once your subscription is verified. Please login again!',
-          context,
-          gravity: Toast.CENTER,
-          duration: Toast.LENGTH_LONG,
-        );
-        Future.delayed(
-          Duration(milliseconds: 900),
-          () => HTTPHandler().signOut(
-            context,
-            userMobile: widget.userTransporter.mobileNumber,
-          ),
-        );
+        // Toast.show(
+        //   'You will be logged once your subscription is verified. Please login again!',
+        //   context,
+        //   gravity: Toast.CENTER,
+        //   duration: Toast.LENGTH_LONG,
+        // );
+        // Future.delayed(
+        //   Duration(milliseconds: 900),
+        //   () => HTTPHandler().signOut(
+        //     context,
+        //     userMobile: transporter.mobileNumber,
+        //   ),
+        // );
+        Navigator.of(context).pop();
+        reloadUser();
       } else
         print('error');
     });
@@ -99,7 +117,7 @@ class _SubsriptionPageState extends State<SubsriptionPage> {
     print('Success => $response');
     Navigator.of(context).popAndPushNamed(
       '/homePageTransporter',
-      arguments: widget.userTransporter,
+      arguments: transporter,
     );
   }
 
@@ -107,14 +125,14 @@ class _SubsriptionPageState extends State<SubsriptionPage> {
     print('Success => $response');
     Navigator.of(context).popAndPushNamed(
       '/homePageTransporter',
-      arguments: widget.userTransporter,
+      arguments: transporter,
     );
   }
 
   @override
   void initState() {
     super.initState();
-
+    transporter = widget.userTransporter;
     _razorpay = Razorpay();
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
@@ -186,7 +204,7 @@ class _SubsriptionPageState extends State<SubsriptionPage> {
                         width: MediaQuery.of(context).size.width / 2 - 20,
                         alignment: Alignment.center,
                         child: Text(
-                          (widget.userTransporter.planType == '3')
+                          (transporter.planType == '3')
                               ? 'Ends on \n00 - 00 - 0000'
                               : 'Ends on \n${subscriptionEnd.day} - ${subscriptionEnd.month} - ${subscriptionEnd.year}',
                           textAlign: TextAlign.center,
