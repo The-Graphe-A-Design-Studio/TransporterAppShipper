@@ -860,6 +860,9 @@ class _MyDeliveryPageState extends State<MyDeliveryPage> {
                                                         SizedBox(height: 10.0),
                                                       SizedBox(height: 8.0),
                                                       Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
                                                         children: [
                                                           Text(
                                                             "Current Loc. : ",
@@ -868,21 +871,35 @@ class _MyDeliveryPageState extends State<MyDeliveryPage> {
                                                                     FontWeight
                                                                         .bold),
                                                           ),
-                                                          Text((locations[e.deliveryId][e
-                                                                          .deliveryTrucks
-                                                                          .indexOf(
-                                                                              t)]
-                                                                      .length >
-                                                                  30)
-                                                              ? '${locations[e.deliveryId][e.deliveryTrucks.indexOf(t)].substring(0, 30)}..'
-                                                              : locations[e
-                                                                      .deliveryId]
-                                                                  [
-                                                                  e.deliveryTrucks
-                                                                      .indexOf(
-                                                                          t)]),
+                                                          GestureDetector(
+                                                            onTap: () => Navigator
+                                                                    .of(context)
+                                                                .pushNamed(
+                                                                    driverLocation,
+                                                                    arguments:
+                                                                        t),
+                                                            child: Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      right:
+                                                                          8.0),
+                                                              child: Text(
+                                                                "View Maps",
+                                                                style: TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold),
+                                                              ),
+                                                            ),
+                                                          ),
                                                         ],
                                                       ),
+                                                      SizedBox(height: 10.0),
+                                                      Text(locations[
+                                                              e.deliveryId][
+                                                          e.deliveryTrucks
+                                                              .indexOf(t)]),
                                                       // getDriverLoc(t),
                                                     ],
                                                   );

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/cupertino.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -489,6 +490,19 @@ class HTTPHandler {
       var response = await http.get('$reverseGeocodingLink$lat,$lng');
 
       return json.decode(response.body)['results'][0]['formatted_address'];
+    } catch (e) {
+      print(e);
+      throw e;
+    }
+  }
+
+   Future<LatLng> getDelLoc(String id) async {
+    try {
+      var response = await http.post(
+          'https://truckwale.co.in/api/truck_location',
+          body: {'delivery_truck_id': id});
+      return LatLng(double.parse(json.decode(response.body)['lat']),
+          double.parse(json.decode(response.body)['lng']));
     } catch (e) {
       print(e);
       throw e;

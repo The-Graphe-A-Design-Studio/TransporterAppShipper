@@ -11,6 +11,7 @@ import 'package:shipperapp/HttpHandler.dart';
 import 'package:shipperapp/Models/PostLoad.dart';
 import 'package:shipperapp/Models/User.dart';
 import 'package:shipperapp/MyConstants.dart';
+import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
 
 class HomePageTransporter extends StatefulWidget {
   final UserTransporter userTransporter;
@@ -101,24 +102,29 @@ class _HomePageTransporterState extends State<HomePageTransporter> {
                               SizedBox(height: 50.0),
                               Align(
                                 alignment: Alignment.centerRight,
-                                child: Container(
-                                  width: 100.0,
-                                  margin: const EdgeInsets.only(right: 20.0),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 20.0,
-                                    vertical: 10.0,
-                                  ),
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.rectangle,
-                                    borderRadius: BorderRadius.circular(20.0),
-                                    color: Colors.white,
-                                    border: Border.all(
-                                      color: Colors.black87,
-                                      width: 0.5,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    UrlLauncher.launch('tel:8488888822');
+                                  },
+                                  child: Container(
+                                    width: 100.0,
+                                    margin: const EdgeInsets.only(right: 20.0),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0,
+                                      vertical: 10.0,
                                     ),
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.rectangle,
+                                      borderRadius: BorderRadius.circular(20.0),
+                                      color: Colors.white,
+                                      border: Border.all(
+                                        color: Colors.black87,
+                                        width: 0.5,
+                                      ),
+                                    ),
+                                    child: Text('Call Us'),
                                   ),
-                                  child: Text('Call Us'),
                                 ),
                               ),
                               Container(

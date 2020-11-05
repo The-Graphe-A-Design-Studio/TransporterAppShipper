@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shipperapp/CommonPages/FadeTransition.dart';
 import 'package:shipperapp/MyConstants.dart';
 import 'package:shipperapp/SplashScreen.dart';
+import 'package:shipperapp/TransporterPages/DriverLocation.dart';
 import 'package:shipperapp/TransporterPages/HomePageTransporter.dart';
 import 'package:shipperapp/TransporterPages/HomePageTransporterNotVerified.dart';
 import 'package:shipperapp/TransporterPages/MyDeliveryPage.dart';
@@ -76,6 +77,12 @@ class RouteGenerator {
         ));
       case myDel:
         return FadeRoute(page: MyDeliveryPage(user: args));
+
+      case driverLocation:
+        return FadeRoute(
+            page: DriverLocation(
+          deliveryTruck: args,
+        ));
 
       default:
         return _errorRoute();
