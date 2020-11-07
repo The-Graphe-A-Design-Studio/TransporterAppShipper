@@ -61,7 +61,8 @@ class _UploadDocsState extends State<UploadDocs> {
   }
 
   Future getImageFromCamera(int i) async {
-    var image = await ImagePicker().getImage(source: ImageSource.camera);
+    var image = await ImagePicker()
+        .getImage(source: ImageSource.camera, imageQuality: 15);
     switch (i) {
       case 1:
         setState(() {
@@ -107,7 +108,10 @@ class _UploadDocsState extends State<UploadDocs> {
   }
 
   Future getImageFromGallery(int i) async {
-    var image = await ImagePicker().getImage(source: ImageSource.gallery);
+    var image = await ImagePicker().getImage(
+      source: ImageSource.gallery,
+      imageQuality: 15,
+    );
     switch (i) {
       case 1:
         setState(() {
@@ -202,10 +206,16 @@ class _UploadDocsState extends State<UploadDocs> {
                           decoration: BoxDecoration(
                             border: Border.all(color: Colors.white, width: 2.0),
                             borderRadius: BorderRadius.circular(10.0),
-                            image: DecorationImage(
-                              image: AssetImage("assets/images/logo_white.png"),
-                              fit: BoxFit.contain,
+                          ),
+                          child: Container(
+                            margin: const EdgeInsets.all(100.0),
+                            padding: const EdgeInsets.all(25.0),
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.white,
                             ),
+                            child: Image.asset("assets/images/logo_white.png"),
                           ),
                         ),
                   Positioned(
@@ -398,10 +408,16 @@ class _UploadDocsState extends State<UploadDocs> {
                           decoration: BoxDecoration(
                             border: Border.all(color: Colors.white, width: 2.0),
                             borderRadius: BorderRadius.circular(10.0),
-                            image: DecorationImage(
-                                image:
-                                    AssetImage("assets/images/logo_white.png"),
-                                fit: BoxFit.contain),
+                          ),
+                          child: Container(
+                            margin: const EdgeInsets.all(100.0),
+                            padding: const EdgeInsets.all(25.0),
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.white,
+                            ),
+                            child: Image.asset("assets/images/logo_white.png"),
                           ),
                         ),
                   Positioned(
@@ -468,10 +484,16 @@ class _UploadDocsState extends State<UploadDocs> {
                           decoration: BoxDecoration(
                             border: Border.all(color: Colors.white, width: 2.0),
                             borderRadius: BorderRadius.circular(10.0),
-                            image: DecorationImage(
-                                image:
-                                    AssetImage("assets/images/logo_white.png"),
-                                fit: BoxFit.contain),
+                          ),
+                          child: Container(
+                            margin: const EdgeInsets.all(100.0),
+                            padding: const EdgeInsets.all(25.0),
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.white,
+                            ),
+                            child: Image.asset("assets/images/logo_white.png"),
                           ),
                         ),
                   Positioned(
@@ -639,10 +661,16 @@ class _UploadDocsState extends State<UploadDocs> {
                           decoration: BoxDecoration(
                             border: Border.all(color: Colors.white, width: 2.0),
                             borderRadius: BorderRadius.circular(10.0),
-                            image: DecorationImage(
-                                image:
-                                    AssetImage("assets/images/logo_white.png"),
-                                fit: BoxFit.contain),
+                          ),
+                          child: Container(
+                            margin: const EdgeInsets.all(100.0),
+                            padding: const EdgeInsets.all(25.0),
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.white,
+                            ),
+                            child: Image.asset("assets/images/logo_white.png"),
                           ),
                         ),
                   Positioned(
@@ -829,10 +857,16 @@ class _UploadDocsState extends State<UploadDocs> {
                           decoration: BoxDecoration(
                             border: Border.all(color: Colors.white, width: 2.0),
                             borderRadius: BorderRadius.circular(10.0),
-                            image: DecorationImage(
-                                image:
-                                    AssetImage("assets/images/logo_white.png"),
-                                fit: BoxFit.contain),
+                          ),
+                          child: Container(
+                            margin: const EdgeInsets.all(100.0),
+                            padding: const EdgeInsets.all(25.0),
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.white,
+                            ),
+                            child: Image.asset("assets/images/logo_white.png"),
                           ),
                         ),
                   Positioned(
@@ -1049,12 +1083,6 @@ class _UploadDocsState extends State<UploadDocs> {
           value['address back verified'] == '1' &&
           value['selfie verified'] == '1' &&
           value['office address verified'] == '1') {
-        // Toast.show('Verified! Please login again.', context,
-        //     gravity: Toast.CENTER);
-        // HTTPHandler().signOut(
-        //   context,
-        //   userMobile: widget.userTransporter.mobileNumber,
-        // );
         reloadUser();
         checkStatus();
       }
