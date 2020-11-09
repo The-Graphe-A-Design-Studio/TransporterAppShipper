@@ -7,7 +7,6 @@ import 'package:shipperapp/HttpHandler.dart';
 import 'package:shipperapp/Models/SubscriptionPlan.dart';
 import 'package:shipperapp/Models/User.dart';
 import 'package:shipperapp/MyConstants.dart';
-import 'package:toast/toast.dart';
 
 class SubsriptionPage extends StatefulWidget {
   final UserTransporter userTransporter;
@@ -73,7 +72,6 @@ class _SubsriptionPageState extends State<SubsriptionPage> {
         'description': 'TruckWale',
         'prefill': {
           'contact': transporter.mobileNumber,
-          'email': 'rishav@thegraphe.com',
         },
       };
 
@@ -93,20 +91,7 @@ class _SubsriptionPageState extends State<SubsriptionPage> {
 
     HTTPHandler().storeData(transporter, selected, response).then((value) {
       if (value.success) {
-        // Toast.show(
-        //   'You will be logged once your subscription is verified. Please login again!',
-        //   context,
-        //   gravity: Toast.CENTER,
-        //   duration: Toast.LENGTH_LONG,
-        // );
-        // Future.delayed(
-        //   Duration(milliseconds: 900),
-        //   () => HTTPHandler().signOut(
-        //     context,
-        //     userMobile: transporter.mobileNumber,
-        //   ),
-        // );
-        Navigator.of(context).pop();
+        // Navigator.of(context).pop();
         reloadUser();
       } else
         print('error');
@@ -115,18 +100,10 @@ class _SubsriptionPageState extends State<SubsriptionPage> {
 
   void _handlePaymentError(PaymentFailureResponse response) {
     print('Success => $response');
-    Navigator.of(context).popAndPushNamed(
-      '/homePageTransporter',
-      arguments: transporter,
-    );
   }
 
   void _handleExternalWallet(ExternalWalletResponse response) {
     print('Success => $response');
-    Navigator.of(context).popAndPushNamed(
-      '/homePageTransporter',
-      arguments: transporter,
-    );
   }
 
   @override
@@ -371,7 +348,10 @@ class _SubsriptionPageState extends State<SubsriptionPage> {
               item('Final Price', 'Rs. ${double.parse(p.finalPrice)}'),
               SizedBox(height: 12.0),
               GestureDetector(
-                onTap: () => _openCheckOut(p),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  _openCheckOut(p);
+                },
                 child: Container(
                   width: double.infinity,
                   height: 40.0,
