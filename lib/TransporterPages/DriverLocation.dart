@@ -51,13 +51,13 @@ class _DriverLocationState extends State<DriverLocation> {
     HTTPHandler().getDelLoc(widget.deliveryTruck.deleteTruckId).then((value) {
       _lastMapPosition = value;
       _onAddMarkerButtonPressed();
-      _mapController.moveCamera(CameraUpdate.newLatLng(value));
+      _mapController.animateCamera(CameraUpdate.newLatLng(value));
     });
-    Timer.periodic(Duration(milliseconds: 100), (timer) {
+    Timer.periodic(Duration(seconds: 5), (timer) {
       HTTPHandler().getDelLoc(widget.deliveryTruck.deleteTruckId).then((value) {
         _lastMapPosition = value;
         _onAddMarkerButtonPressed();
-        _mapController.moveCamera(CameraUpdate.newLatLng(value));
+        _mapController.animateCamera(CameraUpdate.newLatLng(value));
       });
     });
   }
@@ -75,7 +75,7 @@ class _DriverLocationState extends State<DriverLocation> {
               onMapCreated: _onMapCreated,
               initialCameraPosition: CameraPosition(
                 target: _center,
-                zoom: 18.0,
+                zoom: 20.0,
               ),
               mapType: _currentMapType,
               markers: _markers,
