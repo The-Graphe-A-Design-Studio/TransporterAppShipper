@@ -79,7 +79,6 @@ class _ViewBidsPerLoadScreenState extends State<ViewBidsPerLoadScreen> {
                       ),
                       padding: const EdgeInsets.all(10.0),
                       width: MediaQuery.of(context).size.width,
-                      height: 190.0,
                       decoration: BoxDecoration(
                         color: Colors.white,
                         shape: BoxShape.rectangle,
