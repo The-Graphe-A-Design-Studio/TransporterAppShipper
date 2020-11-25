@@ -373,9 +373,9 @@ class _SubsriptionPageState extends State<SubsriptionPage> {
                 Divider(),
                 item('Duration', p.duration),
                 item('Original Price', 'Rs. ${p.planOriginalPrice}'),
-                item('Selling Price', 'Rs. $sellingPrice'),
+                item('Selling Price', 'Rs. ${sellingPrice.toStringAsFixed(2)}'),
                 item('GST', '18 %'),
-                item('Final Price', 'Rs. $finalPrice'),
+                item('Final Price', 'Rs. ${finalPrice.toStringAsFixed(2)}'),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
