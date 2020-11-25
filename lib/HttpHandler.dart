@@ -323,17 +323,20 @@ class HTTPHandler {
   Future<PostResultOne> storeData(
     UserTransporter user,
     SubscriptionPlan plan,
+    double price,
     PaymentSuccessResponse paymentResponse,
+    String coupon,
   ) async {
     try {
       var response = await http.post('$baseURL/subscription_payment', body: {
         'user_type': '1',
         'user_id': user.id,
-        'amount': plan.planSellingPrice.toString(),
+        'amount': price.toString(),
         'duration': plan.duration[0],
         'razorpay_order_id': paymentResponse.orderId ?? 'graphe123',
         'razorpay_payment_id': paymentResponse.paymentId,
         'razorpay_signature': paymentResponse.signature ?? 'graphe123',
+        'coupon': coupon,
       });
 
       return PostResultOne.fromJson(json.decode(response.body));
@@ -496,13 +499,25 @@ class HTTPHandler {
     }
   }
 
-   Future<LatLng> getDelLoc(String id) async {
+  Future<LatLng> getDelLoc(String id) async {
     try {
       var response = await http.post(
           'https://truckwale.co.in/api/truck_location',
           body: {'delivery_truck_id': id});
       return LatLng(double.parse(json.decode(response.body)['lat']),
           double.parse(json.decode(response.body)['lng']));
+    } catch (e) {
+      print(e);
+      throw e;
+    }
+  }
+
+  Future<Map> checkCoupon(String couponCode, String userId) async {
+    try {
+      var response = await http.get(
+          'https://truckwale.co.in/api/coupons?user_type=1&user_id=$userId&coupon=$couponCode');
+
+      return json.decode(response.body);
     } catch (e) {
       print(e);
       throw e;
