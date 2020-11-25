@@ -32,11 +32,12 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     doSomeAction().then((value) {
       if (value == true) {
-        if (userTransporter.verified=="1") {
+        if (userTransporter.verified == "1") {
           Navigator.pushReplacementNamed(context, homePageTransporter,
               arguments: userTransporter);
         } else {
-          Navigator.pushReplacementNamed(context, homePageTransporterNotVerified,
+          Navigator.pushReplacementNamed(
+              context, homePageTransporterNotVerified,
               arguments: userTransporter);
         }
       } else {
@@ -50,13 +51,27 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
-        child: Hero(
-          tag: "WhiteLogo",
-          child: Image(
-            image: AssetImage('assets/images/logo_white.png'),
-            height: 200.0,
-            width: 200.0,
-          ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Hero(
+              tag: "WhiteLogo",
+              child: Image(
+                image: AssetImage('assets/images/logo_white.png'),
+                height: 200.0,
+                width: 200.0,
+              ),
+            ),
+            SizedBox(height: 20.0),
+            Text(
+              'SHIPPER',
+              style: TextStyle(
+                color: Colors.black87,
+                fontWeight: FontWeight.w600,
+                fontSize: 22.0,
+              ),
+            ),
+          ],
         ),
       ),
     );
