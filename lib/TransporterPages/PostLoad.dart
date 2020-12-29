@@ -53,10 +53,7 @@ class _PostLoadState extends State<PostLoad> {
   List<TruckCategory> truckType = [];
   List<TruckPref> truckPref = [];
   List<String> priceUnit = ["Tonnage", "Truck"];
-  List<String> payTerms = [
-    "Advance",
-    "Full Pay to Driver after Unloading"
-  ];
+  List<String> payTerms = ["Advance", "Full Pay to Driver after Unloading"];
   bool loadData = true;
   bool loadPref = false;
 
@@ -1109,13 +1106,13 @@ class DynamicText extends StatelessWidget {
       readOnly: true,
       onTap: () async {
         Prediction p = await PlacesAutocomplete.show(
-            context: context,
-            apiKey: GoogleMapsKey,
-            mode: Mode.overlay,
-            language: "en",
-            startText: controller.text,
-            components: [Component(Component.country, "in")],
-            types: ["address"]);
+          context: context,
+          apiKey: GoogleMapsKey,
+          mode: Mode.overlay,
+          language: "en",
+          startText: controller.text,
+          components: [Component(Component.country, "in")],
+        );
         if (p != null) {
           controller.text = p.description;
         }

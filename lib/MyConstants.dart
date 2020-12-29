@@ -2,9 +2,9 @@
 const GoogleApiKey = "AIzaSyCSdJNFravZ9yjzisUAhLgohy_MWbS41XI";
 const GoogleMapsKey = "AIzaSyDH8iEIWiHLIRcSsJWm8Fh1qbgwt0JRAc0";
 const autoCompleteLink =
-    "https://maps.googleapis.com/maps/api/place/autocomplete/json?key=$GoogleApiKey&components=country:in&types=(cities)&input=";
+    "https://maps.googleapis.com/maps/api/place/autocomplete/json?key=$GoogleApiKey&components=country:in&input=";
 const autoCompleteLinkFullAdd =
-    "https://maps.googleapis.com/maps/api/place/autocomplete/json?key=$GoogleApiKey&components=country:in&types=address&input=";
+    "https://maps.googleapis.com/maps/api/place/autocomplete/json?key=$GoogleApiKey&components=country:in&input=";
 const reverseGeocodingLink =
     'https://maps.googleapis.com/maps/api/geocode/json?key=$GoogleMapsKey&latlng=';
 
